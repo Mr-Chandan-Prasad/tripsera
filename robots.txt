@@ -1,0 +1,11 @@
+# robots.txt
+
+User-agent: *
+Disallow: /admin/
+Disallow: /private/
+
+# Allow all other pages
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.yourwebsite.com/sitemap.xml

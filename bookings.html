@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookings - Chandan Prasad Travels</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1E3A8A, #A78BFA);
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            transform: scale(1.1);
+            color: #F97316;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #F97316, #FBBF24);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.5);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 700px;
+            text-align: center;
+        }
+
+        .qr-code {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen text-gray-800">
+    <!-- Navbar -->
+    <header class="fixed w-full top-0 left-0 z-50 bg-gradient-to-r from-blue-900 to-purple-800 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center px-6 py-4">
+            <a href="index.html" class="text-3xl font-bold text-white flex items-center space-x-2">
+                <i class="fas fa-plane-departure text-orange-400"></i>
+                <span
+                    class="bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">ChandanPrasad</span>
+                Travels
+            </a>
+            <nav class="hidden md:flex space-x-8 text-lg font-semibold">
+                <a href="index.html" class="nav-link text-white">Home</a>
+                <a href="destinations.html" class="nav-link text-white">Destinations</a>
+                <a href="services.html" class="nav-link text-white">Services</a>
+                <a href="gallery.html" class="nav-link text-white">Gallery</a>
+                <a href="bookings.html" class="nav-link text-orange-400 underline">Bookings</a>
+                <a href="contact.html" class="nav-link text-white">Contact</a>
+            </nav>
+            <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        <nav id="mobile-menu"
+            class="md:hidden hidden flex flex-col items-center space-y-4 py-6 bg-purple-900 text-white">
+            <a href="index.html" class="nav-link text-white">Home</a>
+            <a href="destinations.html" class="nav-link text-white">Destinations</a>
+            <a href="services.html" class="nav-link text-white">Services</a>
+            <a href="gallery.html" class="nav-link text-white">Gallery</a>
+            <a href="bookings.html" class="nav-link text-orange-400 underline">Bookings</a>
+            <a href="contact.html" class="nav-link text-white">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Bookings Section -->
+    <section class="container mx-auto py-20 px-6 text-center">
+        <h2 class="text-4xl font-bold mb-6 text-white fade-in">Book Your Adventure</h2>
+        <p class="mb-8 text-lg text-gray-200 fade-in" style="animation-delay: 0.2s">Let’s plan your dream trip with
+            ease!</p>
+        <div class="max-w-2xl mx-auto card p-8 rounded-xl shadow-2xl fade-in" style="animation-delay: 0.4s">
+            <form id="booking-form" class="space-y-6">
+                <p id="booking-id-display" class="text-sm text-gray-600 hidden">Your Booking ID: <span
+                        id="booking-id"></span></p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="booking-customer" placeholder="Your Name"
+                        class="border border-gray-300 p-3 rounded-md w-full focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                        required>
+                    <input type="email" id="booking-email" placeholder="Your Email"
+                        class="border border-gray-300 p-3 rounded-md w-full focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                        required>
+                </div>
+                <input type="tel" id="booking-mobile" placeholder="Mobile Number (e.g., +919876543210)"
+                    class="border border-gray-300 p-3 rounded-md w-full focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                    pattern="^\+?[1-9]\d{9,14}$" title="Enter a valid mobile number" required>
+                <textarea id="booking-address" placeholder="Your Address" rows="3"
+                    class="border border-gray-300 p-3 rounded-md w-full focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                    required></textarea>
+                <div>
+                    <label for="booking-image" class="block text-left text-sm font-medium text-gray-700 mb-1">Upload
+                        Your Photo (Optional)</label>
+                    <input type="file" id="booking-image" accept="image/*"
+                        class="border border-gray-300 p-3 rounded-md w-full text-gray-600">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <select id="booking-destination"
+                        class="border border-gray-300 p-3 rounded-md w-full focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                        required>
+                        <option value="">Select Destination</option>
+                    </select>
+                    <select id="booking-service"
+                        class="border border-gray-300 p-3 rounded-md w-full focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                        required>
+                        <option value="">Select Service</option>
+                    </select>
+                </div>
+                <div id="no-options" class="text-red-500 hidden">No destinations or services available. Contact admin.
+                </div>
+                <input type="date" id="booking-date"
+                    class="border border-gray-300 p-3 rounded-md w-full focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                    required>
+                <textarea id="booking-details" placeholder="Additional Details" rows="4"
+                    class="border border-gray-300 p-3 rounded-md w-full focus:ring-2 focus:ring-orange-400 focus:outline-none"></textarea>
+                <p id="booking-amount-display" class="text-lg font-semibold text-teal-600">Estimated Amount: ₹<span
+                        id="amount-value">0</span></p>
+                <button type="button" id="pay-now-btn"
+                    class="btn-primary text-white px-6 py-3 rounded-lg font-semibold w-full">Pay Now</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <h3 class="text-2xl font-bold mb-6">Pay via QR Code</h3>
+            <p class="mb-4 text-lg">Total Amount: ₹<span id="modal-amount">0</span></p>
+            <p class="mb-6 text-lg">Booking ID: <span id="modal-booking-id"></span></p>
+            <img id="qr-code" src="" alt="Scan to Pay" class="w-80 h-80 mx-auto mb-6 qr-code hidden">
+            <p id="no-qr-message" class="text-red-500 mb-6 hidden">QR code not set by admin.</p>
+            <div class="mb-6">
+                <label for="payment-proof" class="block text-sm font-medium text-gray-700 mb-1">Upload Payment Proof
+                    (Optional)</label>
+                <input type="file" id="payment-proof" accept="image/*"
+                    class="border border-gray-300 p-3 rounded-md w-full text-gray-600" onchange="previewProof(this)">
+                <img id="proof-preview" src="" alt="Payment Proof Preview" class="w-32 h-32 mx-auto mt-2 hidden">
+            </div>
+            <p class="mb-6 text-gray-700">Scan the QR code to pay. After payment, upload your proof here (optional) and
+                notify us with your Booking ID via WhatsApp (+91 8296724981) or email (<a
+                    href="/cdn-cgi/l/email-protection#84edeae2ebc4e7ece5eae0e5ea" class="text-blue-600"><span
+                        class="__cf_email__"
+                        data-cfemail="b0999e969fb09398919e94919e">[email&#160;protected]</span></a>) for confirmation.
+            </p>
+            <button id="close-modal"
+                class="btn-primary text-white px-6 py-3 rounded-lg font-semibold w-full">Close</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-purple-900 to-blue-900 text-white text-center p-6">
+        <div class="container mx-auto">
+            <h3 class="text-xl font-bold">ChandanPrasad Travel</h3>
+            <p class="mt-2">© 2025 ChandanPrasad Travel. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="#" class="text-orange-400 hover:text-yellow-300 transition transform hover:scale-125"><i
+                        class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-orange-400 hover:text-yellow-300 transition transform hover:scale-125"><i
+                        class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/mr_chandan_prasad_indian"
+                    class="text-orange-400 hover:text-yellow-300 transition transform hover:scale-125"><i
+                        class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/mr-chandan-prasad1947"
+                    class="text-orange-400 hover:text-yellow-300 transition transform hover:scale-125"><i
+                        class="fab fa-linkedin-in"></i></a>
+            </div>
+            <p class="text-sm mt-4">📍 Kesarhatti, Karnataka, India</p>
+            <p class="text-sm">📞 +91 8296724981 | ✉ <a href="/cdn-cgi/l/email-protection#84edeae2ebc4e7ece5eae0e5ea"
+                    class="hover:text-orange-400"><span class="__cf_email__"
+                        data-cfemail="b0999e969fb09398919e94919e">[email&#160;protected]</span></a></p>
+            <a href="admin.html"
+                class="mt-4 inline-block bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition transform hover:scale-105">Admin
+                Login</a>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById("mobile-menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+        menuBtn.addEventListener("click", () => mobileMenu.classList.toggle("hidden"));
+
+        // Load Destinations and Services
+        function loadOptions() {
+            const destinations = JSON.parse(localStorage.getItem('destinations')) || [];
+            const services = JSON.parse(localStorage.getItem('services')) || [];
+            const destSelect = document.getElementById('booking-destination');
+            const servSelect = document.getElementById('booking-service');
+            const noOptions = document.getElementById('no-options');
+
+            if (destinations.length === 0 || services.length === 0) {
+                noOptions.classList.remove('hidden');
+            }
+
+            destinations.forEach(dest => {
+                const option = document.createElement('option');
+                option.value = dest.name;
+                option.textContent = `${dest.name} (₹${(dest.price || 0).toLocaleString()})`;
+                option.dataset.price = dest.price || 0;
+                destSelect.appendChild(option);
+            });
+
+            services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.name;
+                option.textContent = `${service.name} (₹${(service.price || 0).toLocaleString()})`;
+                option.dataset.price = service.price || 0;
+                servSelect.appendChild(option);
+            });
+
+            const updateAmount = () => {
+                const destPrice = parseFloat(destSelect.selectedOptions[0]?.dataset.price || 0);
+                const servPrice = parseFloat(servSelect.selectedOptions[0]?.dataset.price || 0);
+                const total = destPrice + servPrice;
+                document.getElementById('amount-value').textContent = total.toLocaleString();
+                return total;
+            };
+            destSelect.addEventListener('change', updateAmount);
+            servSelect.addEventListener('change', updateAmount);
+        }
+
+        // Save Booking (Modified to match admin's format)
+        function saveBooking(bookingData) {
+            const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+            bookingData._id = Date.now().toString(); // Changed 'id' to '_id' for consistency with admin
+            const existingIndex = bookings.findIndex(b => b._id === bookingData._id);
+            if (existingIndex !== -1) {
+                bookings[existingIndex] = bookingData; // Update existing booking
+            } else {
+                bookings.push(bookingData); // Add new booking
+            }
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            document.getElementById('booking-form').reset();
+            document.getElementById('amount-value').textContent = '0';
+            return bookingData._id;
+        }
+
+        // Pay Now
+        document.getElementById('pay-now-btn').addEventListener('click', () => {
+            const bookingData = getBookingData();
+            if (!bookingData) return;
+
+            if (bookingData.amount === 0) {
+                alert('Please select a destination and service with a valid amount.');
+                return;
+            }
+
+            const handlePayment = () => {
+                const bookingId = saveBooking(bookingData);
+                showPaymentModal(bookingData.amount, bookingId, bookingData);
+            };
+
+            if (bookingData.imageFile) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    bookingData.image = event.target.result;
+                    delete bookingData.imageFile;
+                    handlePayment();
+                };
+                reader.readAsDataURL(bookingData.imageFile);
+            } else {
+                delete bookingData.imageFile;
+                handlePayment();
+            }
+        });
+
+        // Get Booking Data
+        function getBookingData() {
+            const customer = document.getElementById('booking-customer').value;
+            const email = document.getElementById('booking-email').value;
+            const mobile = document.getElementById('booking-mobile').value;
+            const address = document.getElementById('booking-address').value;
+            const imageFile = document.getElementById('booking-image').files[0];
+            const destination = document.getElementById('booking-destination').value;
+            const service = document.getElementById('booking-service').value;
+            const date = document.getElementById('booking-date').value;
+            const details = document.getElementById('booking-details').value;
+
+            if (!customer || !email || !mobile || !address || !destination || !service || !date) {
+                alert('Please fill in all required fields.');
+                return null;
+            }
+
+            const destPrice = parseFloat(document.getElementById('booking-destination').selectedOptions[0].dataset.price || 0);
+            const servPrice = parseFloat(document.getElementById('booking-service').selectedOptions[0].dataset.price || 0);
+            const amount = destPrice + servPrice;
+
+            return { customer, email, mobile, address, imageFile, destination, service, date, details, amount, paymentStatus: 'Pending' };
+        }
+
+        // Show Payment Modal
+        function showPaymentModal(amount, bookingId, bookingData) {
+            const modal = document.getElementById('payment-modal');
+            const qrCode = document.getElementById('qr-code');
+            const noQrMessage = document.getElementById('no-qr-message');
+            const qrData = localStorage.getItem('paymentQrCodeData');
+            const proofInput = document.getElementById('payment-proof');
+
+            document.getElementById('modal-amount').textContent = amount.toLocaleString();
+            document.getElementById('modal-booking-id').textContent = bookingId;
+            document.getElementById('booking-id').textContent = bookingId;
+            document.getElementById('booking-id-display').classList.remove('hidden');
+
+            if (qrData) {
+                qrCode.src = qrData;
+                qrCode.classList.remove('hidden');
+                noQrMessage.classList.add('hidden');
+            } else {
+                qrCode.classList.add('hidden');
+                noQrMessage.classList.remove('hidden');
+            }
+            modal.style.display = 'flex';
+
+            document.getElementById('close-modal').onclick = () => {
+                const paymentProof = proofInput.files[0];
+                if (paymentProof) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        bookingData.paymentProof = e.target.result;
+                        saveBooking(bookingData);
+                        modal.style.display = 'none';
+                        alert(`Booking saved as pending (Booking ID: ${bookingId}). Payment proof uploaded. Please notify us with your Booking ID for confirmation.`);
+                    };
+                    reader.readAsDataURL(paymentProof);
+                } else {
+                    modal.style.display = 'none';
+                    alert(`Booking saved as pending (Booking ID: ${bookingId}). Please complete payment and notify us with your Booking ID.`);
+                }
+            };
+        }
+
+        // Preview Payment Proof
+        function previewProof(input) {
+            const proofPreview = document.getElementById('proof-preview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    proofPreview.src = e.target.result;
+                    proofPreview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadOptions);
+    </script>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'92552a6e6fe544e8',t:'MTc0MjgwODc5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>

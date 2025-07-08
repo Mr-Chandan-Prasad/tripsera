@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ChandanPrasad Travels</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* [Existing styles remain unchanged] */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1E3A8A, #A78BFA);
+        }
+
+        .sidebar {
+            background: linear-gradient(to bottom, #1E3A8A, #60A5FA);
+            color: white;
+        }
+
+        .menu-item {
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background: #F97316;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #F97316, #FBBF24);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.5);
+        }
+
+        .btn-success {
+            background: #10B981;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .input-field {
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #F97316;
+            box-shadow: 0 0 5px rgba(249, 115, 22, 0.5);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-content img {
+            max-width: 300px;
+            max-height: 300px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: #000;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen text-gray-800">
+    <!-- [Login Screen remains unchanged] -->
+    <div id="login-screen" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-90">
+        <div class="card p-8 rounded-xl shadow-2xl w-full max-w-md fade-in">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Admin Login</h2>
+                <p class="text-gray-600 mt-2">ChandanPrasad Travels Dashboard</p>
+            </div>
+            <div class="mb-6">
+                <label for="admin-username" class="block text-gray-700 font-semibold mb-2">Username</label>
+                <input type="text" id="admin-username"
+                    class="input-field border p-3 rounded-md w-full focus:outline-none" placeholder="Enter username">
+            </div>
+            <div class="mb-6">
+                <label for="admin-password" class="block text-gray-700 font-semibold mb-2">Password</label>
+                <input type="password" id="admin-password"
+                    class="input-field border p-3 rounded-md w-full focus:outline-none" placeholder="••••••••">
+            </div>
+            <button id="login-btn" class="btn-primary text-white font-bold py-3 px-4 rounded-md w-full">Sign In</button>
+            <div id="login-error" class="mt-4 text-red-500 text-center hidden">Invalid username or password.</div>
+        </div>
+    </div>
+
+    <!-- [Main Dashboard structure remains unchanged] -->
+    <div id="dashboard" class="hidden">
+        <nav class="bg-gradient-to-r from-blue-900 to-purple-800 shadow-md fixed w-full z-10 text-white">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <button id="sidebar-toggle" class="text-white"><i class="fas fa-bars text-2xl"></i></button>
+                    <a href="#" class="text-xl font-bold"><span class="text-orange-400">ChandanPrasad</span> Admin</a>
+                    <a href="index.html" class="btn-primary text-white px-4 py-2 rounded-md"><i
+                            class="fas fa-home mr-2"></i> Home</a>
+                </div>
+                <div class="relative">
+                    <button id="profile-menu-button" class="flex items-center">
+                        <span id="profile-username" class="mr-2 text-sm font-medium hidden md:block">Admin</span>
+                        <img id="profile-pic" class="h-8 w-8 rounded-full"
+                            src="https://randomuser.me/api/portraits/men/1.jpg" alt="Profile">
+                    </button>
+                    <div id="profile-dropdown"
+                        class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden text-gray-800">
+                        <a href="#" data-content="profile-content"
+                            class="block px-4 py-2 hover:bg-gray-100 menu-item">Profile</a>
+                        <a href="#" data-content="profile-settings-content"
+                            class="block px-4 py-2 hover:bg-gray-100 menu-item">Settings</a>
+                        <a href="#" id="logout-btn" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="flex h-screen pt-16">
+            <div id="sidebar" class="w-64 fixed h-full overflow-y-auto transition-all duration-300 sidebar">
+                <div class="py-4">
+                    <ul class="mt-4">
+                        <li><a href="#" data-content="dashboard-content"
+                                class="menu-item active flex items-center px-4 py-3"><i
+                                    class="fas fa-tachometer-alt mr-3"></i>Dashboard</a></li>
+                        <li><a href="#" data-content="home-content" class="menu-item flex items-center px-4 py-3"><i
+                                    class="fas fa-home mr-3"></i>Home Page</a></li>
+                        <li><a href="#" data-content="destinations-content"
+                                class="menu-item flex items-center px-4 py-3"><i
+                                    class="fas fa-map-marker-alt mr-3"></i>Destinations</a></li>
+                        <li><a href="#" data-content="services-content" class="menu-item flex items-center px-4 py-3"><i
+                                    class="fas fa-concierge-bell mr-3"></i>Services</a></li>
+                        <li><a href="#" data-content="bookings-content" class="menu-item flex items-center px-4 py-3"><i
+                                    class="fas fa-calendar-check mr-3"></i>Bookings</a></li>
+                        <li><a href="#" data-content="customers-content"
+                                class="menu-item flex items-center px-4 py-3"><i
+                                    class="fas fa-users mr-3"></i>Customers</a></li>
+                        <li><a href="#" data-content="gallery-content" class="menu-item flex items-center px-4 py-3"><i
+                                    class="fas fa-images mr-3"></i>Gallery</a></li>
+                        <li><a href="#" data-content="testimonials-content"
+                                class="menu-item flex items-center px-4 py-3"><i
+                                    class="fas fa-comment-dots mr-3"></i>Testimonials</a></li>
+                        <li><a href="#" data-content="inquiries-content"
+                                class="menu-item flex items-center px-4 py-3"><i
+                                    class="fas fa-envelope mr-3"></i>Inquiries</a></li>
+                        <li><a href="#" data-content="settings-content" class="menu-item flex items-center px-4 py-3"><i
+                                    class="fas fa-cog mr-3"></i>Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="main-content" class="flex-1 ml-64 p-6 transition-all duration-300">
+                <!-- [Dashboard Content remains unchanged] -->
+                <div id="dashboard-content" class="content-section">
+                    <h1 class="text-3xl font-bold text-white mb-6 fade-in">Dashboard Overview</h1>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="card p-6 rounded-xl shadow-md fade-in">
+                            <h3 class="text-sm font-medium text-gray-600">Total Bookings</h3>
+                            <p class="mt-2 text-3xl font-semibold text-teal-600" id="total-bookings">0</p>
+                        </div>
+                        <div class="card p-6 rounded-xl shadow-md fade-in" style="animation-delay: 0.2s">
+                            <h3 class="text-sm font-medium text-gray-600">Revenue</h3>
+                            <p class="mt-2 text-3xl font-semibold text-orange-600" id="total-revenue">₹0</p>
+                        </div>
+                        <div class="card p-6 rounded-xl shadow-md fade-in" style="animation-delay: 0.4s">
+                            <h3 class="text-sm font-medium text-gray-600">New Customers</h3>
+                            <p class="mt-2 text-3xl font-semibold text-purple-600" id="new-customers">0</p>
+                        </div>
+                        <div class="card p-6 rounded-xl shadow-md fade-in" style="animation-delay: 0.6s">
+                            <h3 class="text-sm font-medium text-gray-600">Pending Inquiries</h3>
+                            <p class="mt-2 text-3xl font-semibold text-red-600" id="pending-inquiries">0</p>
+                        </div>
+                    </div>
+                    <div class="mt-8 card p-6 rounded-xl shadow-md fade-in" style="animation-delay: 0.8s">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Manage Payment QR Code</h2>
+                        <div class="space-y-4">
+                            <input type="file" id="qr-file" accept="image/*"
+                                class="input-field border p-3 rounded-md w-full text-gray-600">
+                            <button id="save-qr"
+                                class="btn-primary text-white px-6 py-3 rounded-md font-semibold w-full">Save QR
+                                Code</button>
+                            <img id="qr-preview" src="" alt="Current QR Code"
+                                class="w-48 h-48 mx-auto mt-4 hidden cursor-pointer"
+                                onerror="this.classList.add('hidden'); document.getElementById('qr-status').textContent = 'Error loading QR code.';">
+                            <p id="qr-status" class="text-sm text-gray-600 text-center">No QR code set yet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- [Home Page Management remains unchanged] -->
+                <div id="home-content" class="content-section hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6">Home Page Management</h1>
+                    <div class="card p-6 rounded-xl shadow-md mb-6">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Manage Advertisements</h2>
+                        <form id="ads-form" class="space-y-4">
+                            <input type="text" id="ad-title" placeholder="Ad Title"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <textarea id="ad-desc" placeholder="Ad Description" rows="3"
+                                class="input-field border p-3 rounded-md w-full" required></textarea>
+                            <input type="file" id="ad-image" accept="image/*"
+                                class="input-field border p-3 rounded-md w-full text-gray-600" required>
+                            <button type="submit" class="btn-primary text-white px-4 py-2 rounded-md">Add
+                                Advertisement</button>
+                        </form>
+                    </div>
+                    <div id="ads-list" class="card p-6 rounded-xl shadow-md mb-6">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Advertisements List</h2>
+                        <div id="ads-items" class="space-y-4"></div>
+                    </div>
+                    <div class="card p-6 rounded-xl shadow-md mb-6">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Manage New Destinations</h2>
+                        <form id="new-destinations-form" class="space-y-4">
+                            <select id="new-destination-select" class="input-field border p-3 rounded-md w-full"
+                                required>
+                                <option value="">Select a Destination</option>
+                            </select>
+                            <button type="submit" class="btn-primary text-white px-4 py-2 rounded-md">Add as New
+                                Destination</button>
+                        </form>
+                    </div>
+                    <div id="new-destinations-list" class="card p-6 rounded-xl shadow-md mb-6">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">New Destinations List</h2>
+                        <div id="new-destinations-items" class="space-y-4"></div>
+                    </div>
+                    <div class="card p-6 rounded-xl shadow-md mb-6">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Manage Best Packages/Offers</h2>
+                        <form id="offers-form" class="space-y-4">
+                            <input type="text" id="offer-title" placeholder="Offer Title"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <textarea id="offer-desc" placeholder="Offer Description" rows="3"
+                                class="input-field border p-3 rounded-md w-full" required></textarea>
+                            <input type="number" id="offer-price" placeholder="Price (₹)"
+                                class="input-field border p-3 rounded-md w-full" min="0" required>
+                            <input type="file" id="offer-image" accept="image/*"
+                                class="input-field border p-3 rounded-md w-full text-gray-600" required>
+                            <button type="submit" class="btn-primary text-white px-4 py-2 rounded-md">Add Offer</button>
+                        </form>
+                    </div>
+                    <div id="offers-list" class="card p-6 rounded-xl shadow-md">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Offers List</h2>
+                        <div id="offers-items" class="space-y-4"></div>
+                    </div>
+                </div>
+
+                <!-- [Bookings Content updated for deletion] -->
+                <div id="bookings-content" class="content-section hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6">Bookings Management</h1>
+                    <div class="card p-6 rounded-xl shadow-md mb-6">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Add New Booking</h2>
+                        <form id="bookings-form" class="space-y-4">
+                            <input type="text" id="booking-customer" placeholder="Customer Name"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <input type="email" id="booking-email" placeholder="Customer Email"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <input type="tel" id="booking-mobile" placeholder="Mobile Number"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <textarea id="booking-address" placeholder="Address" rows="3"
+                                class="input-field border p-3 rounded-md w-full" required></textarea>
+                            <input type="file" id="booking-payment-proof" accept="image/*"
+                                class="input-field border p-3 rounded-md w-full" placeholder="Payment Proof (Optional)">
+                            <select id="booking-destination" class="input-field border p-3 rounded-md w-full" required>
+                                <option value="">Select Destination</option>
+                            </select>
+                            <select id="booking-service" class="input-field border p-3 rounded-md w-full" required>
+                                <option value="">Select Service</option>
+                            </select>
+                            <input type="date" id="booking-date" class="input-field border p-3 rounded-md w-full"
+                                required>
+                            <input type="text" id="booking-details" placeholder="Booking Details"
+                                class="input-field border p-3 rounded-md w-full">
+                            <input type="number" id="booking-amount" placeholder="Amount (₹)"
+                                class="input-field border p-3 rounded-md w-full" min="0" required>
+                            <button type="submit" class="btn-primary text-white px-4 py-2 rounded-md">Add
+                                Booking</button>
+                        </form>
+                    </div>
+                    <div id="bookings-list" class="card p-6 rounded-xl shadow-md"></div>
+                </div>
+
+                <!-- [Destinations Content remains unchanged] -->
+                <div id="destinations-content" class="content-section hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6">Destinations Management</h1>
+                    <div class="card p-6 rounded-xl shadow-md mb-6">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Add New Destination</h2>
+                        <form id="destinations-form" class="space-y-4">
+                            <input type="text" id="destination-name" placeholder="Destination Name"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <input type="text" id="destination-desc" placeholder="Description"
+                                class="input-field border p-3 rounded-md w-full">
+                            <input type="text" id="destination-image" placeholder="Image URL"
+                                class="input-field border p-3 rounded-md w-full">
+                            <input type="number" id="destination-price" placeholder="Price (₹)"
+                                class="input-field border p-3 rounded-md w-full" min="0" required>
+                            <button type="submit" class="btn-primary text-white px-4 py-2 rounded-md">Add
+                                Destination</button>
+                        </form>
+                    </div>
+                    <div id="destinations-list" class="card p-6 rounded-xl shadow-md"></div>
+                </div>
+
+                <!-- [Services Content remains unchanged] -->
+                <div id="services-content" class="content-section hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6">Services Management</h1>
+                    <div class="card p-6 rounded-xl shadow-md mb-6">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Add New Service</h2>
+                        <form id="services-form" class="space-y-4">
+                            <input type="text" id="service-name" placeholder="Service Name"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <input type="text" id="service-desc" placeholder="Description"
+                                class="input-field border p-3 rounded-md w-full">
+                            <input type="text" id="service-image" placeholder="Image URL"
+                                class="input-field border p-3 rounded-md w-full">
+                            <input type="number" id="service-price" placeholder="Price (₹)"
+                                class="input-field border p-3 rounded-md w-full" min="0" required>
+                            <button type="submit" class="btn-primary text-white px-4 py-2 rounded-md">Add
+                                Service</button>
+                        </form>
+                    </div>
+                    <div id="services-list" class="card p-6 rounded-xl shadow-md"></div>
+                </div>
+
+                <!-- [Customers Content remains unchanged] -->
+                <div id="customers-content" class="content-section hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6">Customers Management</h1>
+                    <div id="customers-list" class="card p-6 rounded-xl shadow-md"></div>
+                </div>
+
+                <!-- [Gallery Content remains unchanged] -->
+                <div id="gallery-content" class="content-section hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6">Gallery Management</h1>
+                    <div class="card p-6 rounded-xl shadow-md mb-6">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Add New Image to Gallery</h2>
+                        <form id="gallery-form" class="space-y-4">
+                            <input type="text" id="gallery-title" placeholder="Image Title (e.g., Goa Beach)"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <input type="file" id="gallery-image" accept="image/*"
+                                class="input-field border p-3 rounded-md w-full text-gray-600" required>
+                            <button type="submit" class="btn-primary text-white px-4 py-2 rounded-md">Add Image</button>
+                        </form>
+                    </div>
+                    <div id="gallery-list" class="card p-6 rounded-xl shadow-md">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Gallery Images</h2>
+                        <div id="gallery-images" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+                    </div>
+                </div>
+
+                <!-- [Testimonials Content remains unchanged] -->
+                <div id="testimonials-content" class="content-section hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6">Testimonials Management</h1>
+                    <div class="card p-6 rounded-xl shadow-md mb-6">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Add New Testimonial</h2>
+                        <form id="testimonials-form" class="space-y-4">
+                            <input type="text" id="testimonial-author" placeholder="Author Name (optional)"
+                                class="input-field border p-3 rounded-md w-full">
+                            <textarea id="testimonial-text" placeholder="Testimonial Text" rows="4"
+                                class="input-field border p-3 rounded-md w-full" required></textarea>
+                            <button type="submit" class="btn-primary text-white px-4 py-2 rounded-md">Add
+                                Testimonial</button>
+                        </form>
+                    </div>
+                    <div id="testimonials-list" class="card p-6 rounded-xl shadow-md"></div>
+                </div>
+
+                <!-- [Inquiries Content updated for deletion] -->
+                <div id="inquiries-content" class="content-section hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6">Inquiries Management</h1>
+                    <div id="inquiries-list" class="card p-6 rounded-xl shadow-md"></div>
+                </div>
+
+                <!-- [Settings Content updated for saving] -->
+                <div id="settings-content" class="content-section hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6">Settings Management</h1>
+                    <div class="card p-6 rounded-xl shadow-md">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Site Settings</h2>
+                        <form id="settings-form" class="space-y-4">
+                            <input type="text" id="company-name" placeholder="Company Name"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <input type="tel" id="contact-number" placeholder="Contact Number"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <input type="email" id="contact-email" placeholder="Contact Email"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <input type="text" id="company-address" placeholder="Company Address"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <button type="submit" class="btn-primary text-white px-4 py-2 rounded-md">Save
+                                Settings</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- [Profile Content remains unchanged] -->
+                <div id="profile-content" class="content-section hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6">Admin Profile</h1>
+                    <div class="card p-6 rounded-xl shadow-md">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Edit Profile</h2>
+                        <form id="profile-form" class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <img id="profile-pic-preview" src="https://randomuser.me/api/portraits/men/1.jpg"
+                                    alt="Profile Preview" class="w-24 h-24 rounded-full">
+                                <input type="file" id="profile-pic-input" accept="image/*"
+                                    class="input-field border p-3 rounded-md w-full text-gray-600">
+                            </div>
+                            <input type="text" id="profile-username-input" placeholder="Username"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <input type="email" id="profile-email" placeholder="Email"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <button type="submit" class="btn-primary text-white px-4 py-2 rounded-md">Save
+                                Profile</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- [Profile Settings Content remains unchanged] -->
+                <div id="profile-settings-content" class="content-section hidden">
+                    <h1 class="text-3xl font-bold text-white mb-6">Profile Settings</h1>
+                    <div class="card p-6 rounded-xl shadow-md">
+                        <h2 class="text-lg font-semibold mb-4 text-gray-800">Change Password</h2>
+                        <form id="password-form" class="space-y-4">
+                            <input type="password" id="current-password" placeholder="Current Password"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <input type="password" id="new-password" placeholder="New Password"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <input type="password" id="confirm-password" placeholder="Confirm New Password"
+                                class="input-field border p-3 rounded-md w-full" required>
+                            <button type="submit" class="btn-primary text-white px-4 py-2 rounded-md">Change
+                                Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- [Modals remain unchanged] -->
+    <div id="qr-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <img id="qr-modal-image" src="" alt="Enlarged QR Code">
+            <p class="mt-4 text-gray-600">Scan this QR code for payment</p>
+        </div>
+    </div>
+    <div id="payment-proof-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">×</span>
+            <img id="payment-proof-modal-image" src="" alt="Payment Proof">
+            <p class="mt-4 text-gray-600">Payment Proof</p>
+        </div>
+    </div>
+
+    <script>
+        let token = localStorage.getItem('token') || null;
+
+        // [Sidebar Toggle, Profile Dropdown, Menu Navigation remain unchanged]
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+            sidebar.classList.toggle('-ml-64');
+            mainContent.classList.toggle('ml-64');
+            mainContent.classList.toggle('ml-0');
+        });
+        const profileButton = document.getElementById('profile-menu-button');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        profileButton.addEventListener('click', () => profileDropdown.classList.toggle('hidden'));
+        const menuItems = document.querySelectorAll('.menu-item');
+        const contentSections = document.querySelectorAll('.content-section');
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                menuItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                const contentId = item.getAttribute('data-content');
+                contentSections.forEach(section => section.classList.add('hidden'));
+                document.getElementById(contentId).classList.remove('hidden');
+                if (contentId === 'dashboard-content') updateDashboardStats();
+                else if (contentId === 'home-content') {
+                    renderAds();
+                    renderNewDestinations();
+                    renderOffers();
+                } else if (contentId === 'bookings-content') {
+                    populateBookingOptions();
+                    renderBookings();
+                } else if (contentId === 'destinations-content') renderDestinations();
+                else if (contentId === 'services-content') renderServices();
+                else if (contentId === 'gallery-content') renderGallery();
+                else if (contentId === 'customers-content') renderCustomers();
+                else if (contentId === 'testimonials-content') renderTestimonials();
+                else if (contentId === 'inquiries-content') renderInquiries();
+                else if (contentId === 'settings-content') loadSettings();
+                else if (contentId === 'profile-content') loadProfile();
+            });
+        });
+
+        // [Login Logic remains unchanged]
+        const loginBtn = document.getElementById('login-btn');
+        const loginScreen = document.getElementById('login-screen');
+        const dashboard = document.getElementById('dashboard');
+        const loginError = document.getElementById('login-error');
+        loginBtn.addEventListener('click', () => {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            if (username === 'admin' && password === 'admin') {
+                token = 'fake-jwt-token';
+                localStorage.setItem('token', token);
+                loginScreen.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+                loadAllData();
+                document.getElementById('profile-username').textContent = username;
+            } else {
+                loginError.classList.remove('hidden');
+                setTimeout(() => loginError.classList.add('hidden'), 3000);
+            }
+        });
+        document.getElementById('logout-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            token = null;
+            localStorage.removeItem('token');
+            dashboard.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            document.getElementById('admin-username').value = '';
+            document.getElementById('admin-password').value = '';
+        });
+
+        // [fetchData remains unchanged]
+        function fetchData(endpoint, method = 'GET', body = null, id = null) {
+            return new Promise((resolve, reject) => {
+                let data = JSON.parse(localStorage.getItem(endpoint)) || [];
+                if (method === 'GET') {
+                    resolve(data);
+                } else if (method === 'POST') {
+                    const newItem = { _id: Date.now().toString(), ...body };
+                    data.push(newItem);
+                    localStorage.setItem(endpoint, JSON.stringify(data));
+                    resolve(newItem);
+                } else if (method === 'PUT' && id) {
+                    data = data.map(item => item._id === id ? { ...item, ...body } : item);
+                    localStorage.setItem(endpoint, JSON.stringify(data));
+                    resolve(data.find(item => item._id === id));
+                } else if (method === 'DELETE' && id) {
+                    data = data.filter(item => item._id !== id);
+                    localStorage.setItem(endpoint, JSON.stringify(data));
+                    resolve(null);
+                } else {
+                    reject(new Error('Invalid fetchData operation'));
+                }
+            });
+        }
+
+        // [loadAllData remains unchanged]
+        function loadAllData() {
+            renderDestinations();
+            renderServices();
+            renderBookings();
+            renderGallery();
+            renderCustomers();
+            renderTestimonials();
+            renderInquiries();
+            updateDashboardStats();
+            loadQrPreview();
+            loadProfileData();
+            renderAds();
+            renderNewDestinations();
+            renderOffers();
+        }
+
+        // [Dashboard Stats remains unchanged]
+        function updateDashboardStats() {
+            fetchData('bookings').then(bookings => {
+                const paidBookings = bookings.filter(b => b.paymentStatus === 'Paid');
+                document.getElementById('total-bookings').textContent = bookings.length;
+                document.getElementById('total-revenue').textContent = `₹${paidBookings.reduce((sum, b) => sum + (b.amount || 0), 0).toLocaleString()}`;
+                document.getElementById('new-customers').textContent = new Set(bookings.map(b => b.email)).size;
+                document.getElementById('pending-inquiries').textContent = bookings.filter(b => b.paymentStatus === 'Pending').length;
+            }).catch(err => console.error('Error updating dashboard stats:', err));
+        }
+
+        // [QR Code Management remains unchanged]
+        function loadQrPreview() {
+            const qrData = localStorage.getItem('paymentQrCodeData');
+            const qrPreview = document.getElementById('qr-preview');
+            const qrStatus = document.getElementById('qr-status');
+            if (qrData) {
+                qrPreview.src = qrData;
+                qrPreview.classList.remove('hidden');
+                qrStatus.textContent = 'Click the QR code to enlarge for scanning.';
+                qrStatus.classList.remove('text-gray-600');
+                qrStatus.classList.add('text-green-600');
+            } else {
+                qrPreview.classList.add('hidden');
+                qrStatus.textContent = 'No QR code set yet.';
+                qrStatus.classList.remove('text-green-600');
+                qrStatus.classList.add('text-gray-600');
+            }
+        }
+        document.getElementById('save-qr').addEventListener('click', () => {
+            const qrFile = document.getElementById('qr-file').files[0];
+            if (!qrFile) return alert('Please select an image file.');
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                localStorage.setItem('paymentQrCodeData', event.target.result);
+                loadQrPreview();
+                alert('QR code saved successfully!');
+                document.getElementById('qr-file').value = '';
+            };
+            reader.readAsDataURL(qrFile);
+        });
+        const qrPreview = document.getElementById('qr-preview');
+        const qrModal = document.getElementById('qr-modal');
+        const qrModalImage = document.getElementById('qr-modal-image');
+        const closeModal = document.querySelector('#qr-modal .close-modal');
+        qrPreview.addEventListener('click', () => {
+            if (!qrPreview.classList.contains('hidden')) {
+                qrModalImage.src = qrPreview.src;
+                qrModal.style.display = 'flex';
+            }
+        });
+        closeModal.addEventListener('click', () => qrModal.style.display = 'none');
+        qrModal.addEventListener('click', (e) => { if (e.target === qrModal) qrModal.style.display = 'none'; });
+
+        // [Advertisements Management remains unchanged]
+        document.getElementById('ads-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const file = document.getElementById('ad-image').files[0];
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const adData = {
+                    title: document.getElementById('ad-title').value,
+                    desc: document.getElementById('ad-desc').value,
+                    image: event.target.result,
+                };
+                fetchData('advertisements', 'POST', adData).then(() => {
+                    document.getElementById('ads-form').reset();
+                    renderAds();
+                    alert('Advertisement added successfully!');
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+        function renderAds() {
+            fetchData('advertisements').then(ads => {
+                const list = document.getElementById('ads-items');
+                list.innerHTML = '';
+                if (!ads.length) list.innerHTML = '<p class="text-gray-600">No advertisements yet.</p>';
+                ads.forEach(item => {
+                    list.innerHTML += `
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <div class="flex items-center space-x-4">
+                                <img src="${item.image}" alt="${item.title}" class="w-16 h-16 object-cover rounded-md">
+                                <div>
+                                    <p class="font-semibold text-gray-800">${item.title}</p>
+                                    <p class="text-sm text-gray-600">${item.desc}</p>
+                                </div>
+                            </div>
+                            <button class="delete-ad text-red-600 hover:text-red-800" data-id="${item._id}"><i class="fas fa-trash"></i></button>
+                        </div>`;
+                });
+                attachDeleteListeners('.delete-ad', deleteAd);
+            });
+        }
+        function deleteAd(id) {
+            if (confirm('Are you sure?')) {
+                fetchData('advertisements', 'DELETE', null, id).then(() => renderAds());
+            }
+        }
+
+        // [New Destinations Management remains unchanged]
+        function populateNewDestinationsSelect() {
+            fetchData('destinations').then(destinations => {
+                const select = document.getElementById('new-destination-select');
+                select.innerHTML = '<option value="">Select a Destination</option>';
+                if (!destinations || destinations.length === 0) {
+                    select.innerHTML += '<option value="" disabled>No destinations available</option>';
+                    return;
+                }
+                destinations.forEach(dest => {
+                    if (dest._id && dest.name) {
+                        select.innerHTML += `<option value="${dest._id}">${dest.name}</option>`;
+                    }
+                });
+            });
+        }
+        document.getElementById('new-destinations-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const destId = document.getElementById('new-destination-select').value;
+            if (!destId) {
+                alert('Please select a destination.');
+                return;
+            }
+            fetchData('destinations').then(destinations => {
+                const selectedDest = destinations.find(d => d._id === destId);
+                if (!selectedDest) {
+                    alert('Selected destination not found.');
+                    return;
+                }
+                fetchData('newDestinations').then(newDestinations => {
+                    if (!newDestinations) newDestinations = [];
+                    if (newDestinations.some(d => d._id === selectedDest._id)) {
+                        alert('This destination is already in the new destinations list.');
+                        return;
+                    }
+                    newDestinations.unshift(selectedDest);
+                    if (newDestinations.length > 3) newDestinations.pop();
+                    localStorage.setItem('newDestinations', JSON.stringify(newDestinations));
+                    renderNewDestinations();
+                    alert('New destination added successfully!');
+                });
+            });
+        });
+        function renderNewDestinations() {
+            fetchData('newDestinations').then(newDestinations => {
+                const list = document.getElementById('new-destinations-items');
+                list.innerHTML = '';
+                if (!newDestinations || newDestinations.length === 0) {
+                    list.innerHTML = '<p class="text-gray-600">No new destinations yet.</p>';
+                } else {
+                    newDestinations.forEach(dest => {
+                        list.innerHTML += `
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <div class="flex items-center space-x-4">
+                                    <img src="${dest.image || 'https://via.placeholder.com/150'}" alt="${dest.name}" class="w-16 h-16 object-cover rounded-md" onerror="this.src='https://via.placeholder.com/150';">
+                                    <div>
+                                        <p class="font-semibold text-gray-800">${dest.name}</p>
+                                        <p class="text-sm text-gray-600">${dest.desc || 'N/A'}</p>
+                                    </div>
+                                </div>
+                                <button class="delete-new-dest text-red-600 hover:text-red-800" data-id="${dest._id}"><i class="fas fa-trash"></i></button>
+                            </div>`;
+                    });
+                    attachDeleteListeners('.delete-new-dest', deleteNewDestination);
+                }
+                populateNewDestinationsSelect();
+            });
+        }
+        function deleteNewDestination(id) {
+            if (confirm('Are you sure you want to delete this destination?')) {
+                fetchData('newDestinations').then(newDestinations => {
+                    const updatedDestinations = newDestinations.filter(dest => dest._id !== id);
+                    localStorage.setItem('newDestinations', JSON.stringify(updatedDestinations));
+                    renderNewDestinations();
+                });
+            }
+        }
+
+        // [Offers Management remains unchanged]
+        document.getElementById('offers-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const file = document.getElementById('offer-image').files[0];
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const offerData = {
+                    title: document.getElementById('offer-title').value,
+                    desc: document.getElementById('offer-desc').value,
+                    price: parseFloat(document.getElementById('offer-price').value || 0),
+                    image: event.target.result,
+                };
+                fetchData('offers', 'POST', offerData).then(() => {
+                    document.getElementById('offers-form').reset();
+                    renderOffers();
+                    alert('Offer added successfully!');
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+        function renderOffers() {
+            fetchData('offers').then(offers => {
+                const list = document.getElementById('offers-items');
+                list.innerHTML = '';
+                if (!offers.length) list.innerHTML = '<p class="text-gray-600">No offers yet.</p>';
+                offers.forEach(item => {
+                    list.innerHTML += `
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <div class="flex items-center space-x-4">
+                                <img src="${item.image}" alt="${item.title}" class="w-16 h-16 object-cover rounded-md">
+                                <div>
+                                    <p class="font-semibold text-gray-800">${item.title}</p>
+                                    <p class="text-sm text-gray-600">${item.desc}</p>
+                                    <p class="text-sm text-teal-600">₹${item.price.toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <button class="delete-offer text-red-600 hover:text-red-800" data-id="${item._id}"><i class="fas fa-trash"></i></button>
+                        </div>`;
+                });
+                attachDeleteListeners('.delete-offer', deleteOffer);
+            });
+        }
+        function deleteOffer(id) {
+            if (confirm('Are you sure?')) {
+                fetchData('offers', 'DELETE', null, id).then(() => renderOffers());
+            }
+        }
+
+        // [Bookings Management updated for deletion]
+        function populateBookingOptions() {
+            fetchData('destinations').then(destinations => {
+                const destSelect = document.getElementById('booking-destination');
+                destSelect.innerHTML = '<option value="">Select Destination</option>';
+                destinations.forEach(dest => {
+                    destSelect.innerHTML += `<option value="${dest.name}">${dest.name}</option>`;
+                });
+            });
+            fetchData('services').then(services => {
+                const servSelect = document.getElementById('booking-service');
+                servSelect.innerHTML = '<option value="">Select Service</option>';
+                services.forEach(serv => {
+                    servSelect.innerHTML += `<option value="${serv.name}">${serv.name}</option>`;
+                });
+            });
+        }
+        document.getElementById('bookings-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const bookingData = {
+                customer: document.getElementById('booking-customer').value,
+                email: document.getElementById('booking-email').value,
+                mobile: document.getElementById('booking-mobile').value,
+                address: document.getElementById('booking-address').value,
+                destination: document.getElementById('booking-destination').value,
+                service: document.getElementById('booking-service').value,
+                date: document.getElementById('booking-date').value,
+                details: document.getElementById('booking-details').value,
+                amount: parseFloat(document.getElementById('booking-amount').value || 0),
+                paymentStatus: 'Pending',
+                paymentProof: null
+            };
+            const paymentProofFile = document.getElementById('booking-payment-proof').files[0];
+            try {
+                if (paymentProofFile) {
+                    bookingData.paymentProof = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.readAsDataURL(paymentProofFile);
+                    });
+                }
+                await fetchData('bookings', 'POST', bookingData);
+                document.getElementById('bookings-form').reset();
+                renderBookings();
+                renderCustomers();
+                updateDashboardStats();
+                alert('Booking added successfully!');
+            } catch (error) {
+                console.error('Error adding booking:', error);
+                alert('Failed to add booking. Please try again.');
+            }
+        });
+        function renderBookings() {
+            fetchData('bookings').then(bookings => {
+                const list = document.getElementById('bookings-list');
+                list.innerHTML = '<h2 class="text-lg font-semibold mb-4 text-gray-800">Bookings List</h2>';
+                if (!bookings.length) list.innerHTML += '<p class="text-gray-600">No bookings yet.</p>';
+                else {
+                    bookings.forEach(item => {
+                        list.innerHTML += `
+                            <div class="flex justify-between items-start py-3 border-b border-gray-200">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-md flex items-center justify-center">
+                                        ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover rounded-md">` : '<i class="fas fa-user text-gray-400"></i>'}
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">Booking ID: ${item._id}</p>
+                                        <p class="text-sm text-gray-600">Customer: ${item.customer}</p>
+                                        <p class="text-sm text-gray-600">Email: ${item.email}</p>
+                                        <p class="text-sm text-gray-600">Mobile: ${item.mobile}</p>
+                                        <p class="text-sm text-gray-600">Destination: ${item.destination || 'N/A'}</p>
+                                        <p class="text-sm text-gray-600">Service: ${item.service || 'N/A'}</p>
+                                        <p class="text-sm text-gray-600">Date: ${item.date || 'N/A'}</p>
+                                        <p class="text-sm text-gray-600">Details: ${item.details || 'N/A'}</p>
+                                        <p class="text-sm text-teal-600">Amount: ₹${(item.amount || 0).toLocaleString()}</p>
+                                        <p class="text-sm ${item.paymentStatus === 'Paid' ? 'text-green-600' : 'text-orange-600'}">Status: ${item.paymentStatus}</p>
+                                        ${item.paymentProof ? `<button class="view-payment-proof text-blue-600 hover:underline text-sm mt-1" data-src="${item.paymentProof}">View Payment Proof</button>` : '<p class="text-sm text-gray-600">No payment proof uploaded</p>'}
+                                    </div>
+                                </div>
+                                <div class="space-x-2">
+                                    <button class="mark-paid btn-success text-white px-2 py-1 rounded" data-id="${item._id}" ${item.paymentStatus === 'Paid' ? 'disabled' : ''}>Mark Paid</button>
+                                    <button class="delete-booking text-red-600 hover:text-red-800" data-id="${item._id}"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>`;
+                    });
+                }
+                attachMarkPaidListeners();
+                attachDeleteListeners('.delete-booking', deleteBooking);
+                attachPaymentProofListeners();
+            }).catch(err => console.error('Error rendering bookings:', err));
+        }
+        function markBookingPaid(id) {
+            if (confirm(`Confirm payment received for Booking ID: ${id}?`)) {
+                fetchData('bookings', 'PUT', { paymentStatus: 'Paid' }, id).then(() => {
+                    renderBookings();
+                    updateDashboardStats();
+                    alert(`Booking ID: ${id} marked as paid!`);
+                });
+            }
+        }
+        function deleteBooking(id) {
+            if (confirm('Are you sure you want to delete this booking?')) {
+                fetchData('bookings', 'DELETE', null, id).then(() => {
+                    renderBookings();
+                    renderCustomers();
+                    updateDashboardStats();
+                    alert(`Booking ID: ${id} deleted successfully!`);
+                }).catch(err => console.error('Error deleting booking:', err));
+            }
+        }
+        const paymentProofModal = document.getElementById('payment-proof-modal');
+        const paymentProofImage = document.getElementById('payment-proof-modal-image');
+        const paymentProofCloseModal = document.querySelector('#payment-proof-modal .close-modal');
+        function viewPaymentProof(imageSrc) {
+            paymentProofImage.src = imageSrc;
+            paymentProofModal.style.display = 'flex';
+        }
+        paymentProofCloseModal.addEventListener('click', () => paymentProofModal.style.display = 'none');
+        paymentProofModal.addEventListener('click', (e) => { if (e.target === paymentProofModal) paymentProofModal.style.display = 'none'; });
+
+        // [Destinations Management remains unchanged]
+        document.getElementById('destinations-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const destData = {
+                name: document.getElementById('destination-name').value,
+                desc: document.getElementById('destination-desc').value,
+                image: document.getElementById('destination-image').value || 'https://via.placeholder.com/150',
+                price: parseFloat(document.getElementById('destination-price').value || 0),
+            };
+            fetchData('destinations', 'POST', destData).then(() => {
+                document.getElementById('destinations-form').reset();
+                renderDestinations();
+                populateBookingOptions();
+                populateNewDestinationsSelect();
+            });
+        });
+        function renderDestinations() {
+            fetchData('destinations').then(destinations => {
+                const list = document.getElementById('destinations-list');
+                list.innerHTML = '<h2 class="text-lg font-semibold mb-4 text-gray-800">Destinations List</h2>';
+                if (!destinations.length) list.innerHTML += '<p class="text-gray-600">No destinations yet.</p>';
+                destinations.forEach(item => {
+                    list.innerHTML += `
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200">
+                            <div class="flex items-center space-x-4">
+                                <img src="${item.image}" class="w-16 h-16 object-cover rounded-md" onerror="this.src='https://via.placeholder.com/150'">
+                                <div>
+                                    <p class="font-semibold text-gray-800">${item.name}</p>
+                                    <p class="text-sm text-gray-600">${item.desc || 'N/A'}</p>
+                                    <p class="text-sm text-teal-600">₹${(item.price || 0).toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <button class="delete-destination text-red-600 hover:text-red-800" data-id="${item._id}"><i class="fas fa-trash"></i></button>
+                        </div>`;
+                });
+                attachDeleteListeners('.delete-destination', deleteDestination);
+            });
+        }
+        function deleteDestination(id) {
+            if (confirm('Are you sure?')) {
+                fetchData('destinations', 'DELETE', null, id).then(() => {
+                    renderDestinations();
+                    renderNewDestinations();
+                    populateBookingOptions();
+                });
+            }
+        }
+
+        // [Services Management remains unchanged]
+        document.getElementById('services-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const serviceData = {
+                name: document.getElementById('service-name').value,
+                desc: document.getElementById('service-desc').value,
+                image: document.getElementById('service-image').value || 'https://via.placeholder.com/150',
+                price: parseFloat(document.getElementById('service-price').value || 0),
+            };
+            fetchData('services', 'POST', serviceData).then(() => {
+                document.getElementById('services-form').reset();
+                renderServices();
+                populateBookingOptions();
+            });
+        });
+        function renderServices() {
+            fetchData('services').then(services => {
+                const list = document.getElementById('services-list');
+                list.innerHTML = '<h2 class="text-lg font-semibold mb-4 text-gray-800">Services List</h2>';
+                if (!services.length) list.innerHTML += '<p class="text-gray-600">No services yet.</p>';
+                services.forEach(item => {
+                    list.innerHTML += `
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200">
+                            <div class="flex items-center space-x-4">
+                                <img src="${item.image}" class="w-16 h-16 object-cover rounded-md" onerror="this.src='https://via.placeholder.com/150'">
+                                <div>
+                                    <p class="font-semibold text-gray-800">${item.name}</p>
+                                    <p class="text-sm text-gray-600">${item.desc || 'N/A'}</p>
+                                    <p class="text-sm text-teal-600">₹${(item.price || 0).toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <button class="delete-service text-red-600 hover:text-red-800" data-id="${item._id}"><i class="fas fa-trash"></i></button>
+                        </div>`;
+                });
+                attachDeleteListeners('.delete-service', deleteService);
+            });
+        }
+        function deleteService(id) {
+            if (confirm('Are you sure?')) {
+                fetchData('services', 'DELETE', null, id).then(() => {
+                    renderServices();
+                    populateBookingOptions();
+                });
+            }
+        }
+
+        // [Customers Management remains unchanged]
+        function renderCustomers() {
+            fetchData('bookings').then(bookings => {
+                const customersMap = new Map();
+                bookings.forEach(booking => {
+                    customersMap.set(booking.email, {
+                        name: booking.customer,
+                        email: booking.email,
+                        mobile: booking.mobile,
+                        address: booking.address,
+                        bookings: (customersMap.get(booking.email)?.bookings || 0) + 1,
+                    });
+                });
+                const customers = Array.from(customersMap.values());
+                const list = document.getElementById('customers-list');
+                list.innerHTML = '<h2 class="text-lg font-semibold mb-4 text-gray-800">Customers List</h2>';
+                if (!customers.length) list.innerHTML += '<p class="text-gray-600">No customers yet.</p>';
+                customers.forEach(customer => {
+                    list.innerHTML += `
+                        <div class="py-3 border-b border-gray-200">
+                            <p class="font-semibold text-gray-800">${customer.name}</p>
+                            <p class="text-sm text-gray-600">Email: ${customer.email}</p>
+                            <p class="text-sm text-gray-600">Mobile: ${customer.mobile}</p>
+                            <p class="text-sm text-gray-600">Address: ${customer.address}</p>
+                            <p class="text-sm text-teal-600">Bookings: ${customer.bookings}</p>
+                        </div>`;
+                });
+            });
+        }
+
+        // [Gallery Management remains unchanged - no limit enforced]
+        document.getElementById('gallery-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const file = document.getElementById('gallery-image').files[0];
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const galleryData = {
+                    title: document.getElementById('gallery-title').value,
+                    image: event.target.result,
+                };
+                fetchData('gallery', 'POST', galleryData).then(() => {
+                    document.getElementById('gallery-form').reset();
+                    renderGallery();
+                    alert('Image added successfully!');
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+        function renderGallery() {
+            fetchData('gallery').then(gallery => {
+                const list = document.getElementById('gallery-images');
+                list.innerHTML = '';
+                if (!gallery.length) list.innerHTML = '<p class="text-gray-600">No images yet.</p>';
+                gallery.forEach(item => {
+                    list.innerHTML += `
+                        <div class="relative">
+                            <img src="${item.image}" alt="${item.title}" class="w-full h-48 object-cover rounded-md">
+                            <p class="text-sm text-gray-800 mt-2">${item.title}</p>
+                            <button class="delete-gallery text-red-600 hover:text-red-800 absolute top-2 right-2 bg-white rounded-full p-1" data-id="${item._id}"><i class="fas fa-trash"></i></button>
+                        </div>`;
+                });
+                attachDeleteListeners('.delete-gallery', deleteGalleryImage);
+            });
+        }
+        function deleteGalleryImage(id) {
+            if (confirm('Are you sure?')) {
+                fetchData('gallery', 'DELETE', null, id).then(() => renderGallery());
+            }
+        }
+
+        // [Testimonials Management remains unchanged]
+        document.getElementById('testimonials-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const testimonialData = {
+                author: document.getElementById('testimonial-author').value || 'Anonymous',
+                text: document.getElementById('testimonial-text').value,
+            };
+            fetchData('testimonials', 'POST', testimonialData).then(() => {
+                document.getElementById('testimonials-form').reset();
+                renderTestimonials();
+                alert('Testimonial added successfully!');
+            });
+        });
+        function renderTestimonials() {
+            fetchData('testimonials').then(testimonials => {
+                const list = document.getElementById('testimonials-list');
+                list.innerHTML = '<h2 class="text-lg font-semibold mb-4 text-gray-800">Testimonials List</h2>';
+                if (!testimonials.length) list.innerHTML += '<p class="text-gray-600">No testimonials yet.</p>';
+                testimonials.forEach(item => {
+                    list.innerHTML += `
+                        <div class="flex justify-between items-center py-3 border-b border-gray-200">
+                            <div>
+                                <p class="font-semibold text-gray-800">${item.author}</p>
+                                <p class="text-sm text-gray-600">"${item.text}"</p>
+                            </div>
+                            <button class="delete-testimonial text-red-600 hover:text-red-800" data-id="${item._id}"><i class="fas fa-trash"></i></button>
+                        </div>`;
+                });
+                attachDeleteListeners('.delete-testimonial', deleteTestimonial);
+            });
+        }
+        function deleteTestimonial(id) {
+            if (confirm('Are you sure?')) {
+                fetchData('testimonials', 'DELETE', null, id).then(() => renderTestimonials());
+            }
+        }
+
+        // [Inquiries Management updated for deletion]
+        function renderInquiries() {
+            fetchData('inquiries').then(inquiries => {
+                const list = document.getElementById('inquiries-list');
+                list.innerHTML = '<h2 class="text-lg font-semibold mb-4 text-gray-800">Inquiries List</h2>';
+                if (!inquiries || inquiries.length === 0) {
+                    list.innerHTML += '<p class="text-gray-600">No inquiries yet. Submit inquiries via the contact form on the main site.</p>';
+                } else {
+                    inquiries.forEach(item => {
+                        list.innerHTML += `
+                            <div class="flex justify-between items-center py-3 border-b border-gray-200">
+                                <div>
+                                    <p class="font-semibold text-gray-800">Inquiry ID: ${item._id}</p>
+                                    <p class="text-sm text-gray-600">Name: ${item.name}</p>
+                                    <p class="text-sm text-gray-600">Email: ${item.email}</p>
+                                    <p class="text-sm text-gray-600">Phone: ${item.phone || 'N/A'}</p>
+                                    <p class="text-sm text-gray-600">Message: ${item.message}</p>
+                                    <p class="text-sm text-gray-600">Date: ${new Date(parseInt(item._id)).toLocaleString()}</p>
+                                </div>
+                                <button class="delete-inquiry text-red-600 hover:text-red-800" data-id="${item._id}"><i class="fas fa-trash"></i></button>
+                            </div>`;
+                    });
+                }
+                attachDeleteListeners('.delete-inquiry', deleteInquiry);
+            }).catch(err => console.error('Error rendering inquiries:', err));
+        }
+        function deleteInquiry(id) {
+            if (confirm('Are you sure you want to delete this inquiry?')) {
+                fetchData('inquiries', 'DELETE', null, id).then(() => {
+                    renderInquiries();
+                    updateDashboardStats();
+                    alert('Inquiry deleted successfully!');
+                }).catch(err => console.error('Error deleting inquiry:', err));
+            }
+        }
+
+        // [Settings Management updated for consistency]
+        document.getElementById('settings-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const settings = {
+                companyName: document.getElementById('company-name').value,
+                contactNumber: document.getElementById('contact-number').value,
+                contactEmail: document.getElementById('contact-email').value,
+                companyAddress: document.getElementById('company-address').value,
+            };
+            localStorage.setItem('siteSettings', JSON.stringify(settings));
+            alert('Settings saved successfully!');
+            // Notify other pages (optional: could use an event, but for simplicity, rely on page reload)
+        });
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('siteSettings')) || {
+                companyName: 'ChandanPrasad Travels',
+                contactNumber: '+91 8296724981',
+                contactEmail: 'chandanprasad@gmail.com',
+                companyAddress: 'Kesarhatti, Karnataka, India',
+            };
+            document.getElementById('company-name').value = settings.companyName;
+            document.getElementById('contact-number').value = settings.contactNumber;
+            document.getElementById('contact-email').value = settings.contactEmail;
+            document.getElementById('company-address').value = settings.companyAddress;
+        }
+
+        // [Profile Management remains unchanged]
+        function loadProfileData() {
+            const profile = JSON.parse(localStorage.getItem('adminProfile')) || {
+                username: 'admin',
+                email: 'admin@chandanprasad.com',
+                pic: 'https://randomuser.me/api/portraits/men/1.jpg',
+            };
+            document.getElementById('profile-username').textContent = profile.username;
+            document.getElementById('profile-pic').src = profile.pic;
+        }
+        function loadProfile() {
+            const profile = JSON.parse(localStorage.getItem('adminProfile')) || {
+                username: 'admin',
+                email: 'admin@chandanprasad.com',
+                pic: 'https://randomuser.me/api/portraits/men/1.jpg',
+            };
+            document.getElementById('profile-username-input').value = profile.username;
+            document.getElementById('profile-email').value = profile.email;
+            document.getElementById('profile-pic-preview').src = profile.pic;
+        }
+        document.getElementById('profile-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const file = document.getElementById('profile-pic-input').files[0];
+            const profile = {
+                username: document.getElementById('profile-username-input').value,
+                email: document.getElementById('profile-email').value,
+                pic: document.getElementById('profile-pic-preview').src,
+            };
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    profile.pic = event.target.result;
+                    localStorage.setItem('adminProfile', JSON.stringify(profile));
+                    loadProfileData();
+                    alert('Profile updated successfully!');
+                    document.getElementById('profile-pic-input').value = '';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                localStorage.setItem('adminProfile', JSON.stringify(profile));
+                loadProfileData();
+                alert('Profile updated successfully!');
+            }
+        });
+        document.getElementById('password-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            if (currentPassword !== 'admin') {
+                alert('Current password is incorrect.');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match.');
+                return;
+            }
+            alert('Password changed successfully! (Note: This is a simulation; actual password not stored.)');
+            document.getElementById('password-form').reset();
+        });
+
+        // [Helper Functions updated for reliability]
+        function attachDeleteListeners(className, deleteFunction) {
+            const buttons = document.querySelectorAll(className);
+            buttons.forEach(button => {
+                button.removeEventListener('click', handleDelete); // Remove existing listeners to prevent duplicates
+                button.addEventListener('click', handleDelete);
+                function handleDelete() {
+                    const id = button.getAttribute('data-id');
+                    deleteFunction(id);
+                }
+            });
+        }
+        function attachMarkPaidListeners() {
+            const buttons = document.querySelectorAll('.mark-paid');
+            buttons.forEach(button => {
+                button.removeEventListener('click', handleMarkPaid);
+                button.addEventListener('click', handleMarkPaid);
+                function handleMarkPaid() {
+                    const id = button.getAttribute('data-id');
+                    markBookingPaid(id);
+                }
+            });
+        }
+        function attachPaymentProofListeners() {
+            const buttons = document.querySelectorAll('.view-payment-proof');
+            buttons.forEach(button => {
+                button.removeEventListener('click', handleViewProof);
+                button.addEventListener('click', handleViewProof);
+                function handleViewProof() {
+                    const src = button.getAttribute('data-src');
+                    viewPaymentProof(src);
+                }
+            });
+        }
+
+        // [Initialize remains unchanged]
+        document.addEventListener('DOMContentLoaded', () => {
+            if (token) {
+                loginScreen.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+                loadAllData();
+            }
+            loadQrPreview();
+            populateBookingOptions();
+        });
+    </script>
+</body>
+
+</html>
