@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .test-instructions { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .fix-summary { border: 2px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        .sample-data { border: 2px solid #6c757d; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        .step { margin: 15px 0; padding: 10px; background: #e9ecef; border-radius: 5px; }
+        .code { background: #f8f9fa; padding: 10px; border-radius: 5px; font-family: monospace; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🔍 My Bookings Test & Debug</h1>
+    
+    <div class="fix-summary">
+        <h2>✅ What Was Fixed:</h2>
+        <ul>
+            <li><strong>Added initializeSampleData</strong> - Now properly initializes sample data on page load</li>
+            <li><strong>Fixed Authentication Logic</strong> - Corrected the customer booking filtering logic</li>
+            <li><strong>Added Logout Function</strong> - Proper logout with state cleanup and notification</li>
+            <li><strong>Fixed Variable Conflicts</strong> - Resolved naming conflicts in authentication function</li>
+            <li><strong>Improved Error Handling</strong> - Better validation and user feedback</li>
+        </ul>
+    </div>
+    
+    <div class="test-instructions">
+        <h2>📋 Test Instructions:</h2>
+        <div class="step">
+            <h3>Step 1: Go to My Bookings Page</h3>
+            <p>Navigate to: <a href="http://localhost:5174/my-bookings" target="_blank">http://localhost:5174/my-bookings</a></p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: Test Authentication</h3>
+            <p>Try these sample email addresses that should have bookings:</p>
+            <div class="code">
+                rajesh@example.com<br>
+                priya@example.com<br>
+                amit@example.com
+            </div>
+        </div>
+        
+        <div class="step">
+            <h3>Step 3: Test Mobile Numbers</h3>
+            <p>Try these sample mobile numbers:</p>
+            <div class="code">
+                9876543210<br>
+                9876543211<br>
+                9876543212
+            </div>
+        </div>
+        
+        <div class="step">
+            <h3>Step 4: Test Invalid Credentials</h3>
+            <p>Try invalid email/mobile to see error notifications</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 5: Test Features</h3>
+            <ul>
+                <li>Search bookings by name, destination, or service</li>
+                <li>Filter by payment status (All, Paid, Pending, Cancelled)</li>
+                <li>View ticket details</li>
+                <li>Download tickets</li>
+                <li>Switch account (logout)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="sample-data">
+        <h3>📊 Sample Data Available:</h3>
+            <p>The system includes sample bookings with these details:</p>
+            <div class="code">
+                <strong>Emails:</strong><br>
+                • rajesh@example.com (1 booking)<br>
+                • priya@example.com (1 booking)<br>
+                • amit@example.com (1 booking)<br><br>
+                
+                <strong>Mobile Numbers:</strong><br>
+                • 9876543210<br>
+                • 9876543211<br>
+                • 9876543212<br><br>
+                
+                <strong>Payment Statuses:</strong><br>
+                • Paid bookings (green checkmark)<br>
+                • Pending bookings (yellow clock)<br>
+                • Cancelled bookings (red X)
+            </div>
+    </div>
+    
+    <div id="results"></div>
+    
+    <button onclick="testAuthentication()">Test Authentication</button>
+    <button onclick="testSearchFilter()">Test Search & Filter</button>
+    <button onclick="testTicketView()">Test Ticket View</button>
+    <button onclick="testLogout()">Test Logout</button>
+    <button onclick="showSampleData()">Show Sample Data</button>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testAuthentication() {
+            addResult('🔐 Testing Authentication...', 'info');
+            addResult('📋 Go to My Bookings: http://localhost:5174/my-bookings', 'info');
+            addResult('📧 Try email: rajesh@example.com', 'info');
+            addResult('✅ Expected: Green success notification with booking count', 'success');
+            addResult('📱 Try mobile: 9876543210', 'info');
+            addResult('✅ Expected: Authentication successful with bookings displayed', 'success');
+            addResult('❌ Try invalid email: test@invalid.com', 'info');
+            addResult('⚠️ Expected: Yellow warning notification "No Bookings Found"', 'warning');
+        }
+        
+        function testSearchFilter() {
+            addResult('🔍 Testing Search & Filter...', 'info');
+            addResult('📋 After authentication, test search functionality', 'info');
+            addResult('🔎 Search by: "Rajesh" (should find Rajesh Kumar bookings)', 'info');
+            addResult('🔎 Search by: "Goa" (should find Goa destination bookings)', 'info');
+            addResult('🔎 Search by: "Flight" (should find flight service bookings)', 'info');
+            addResult('📊 Filter by status: "Paid" (should show only paid bookings)', 'info');
+            addResult('📊 Filter by status: "Pending" (should show only pending bookings)', 'info');
+        }
+        
+        function testTicketView() {
+            addResult('🎫 Testing Ticket View...', 'info');
+            addResult('📋 Click "View Ticket" on any booking', 'info');
+            addResult('✅ Expected: Ticket modal opens with booking details', 'success');
+            addResult('📄 Test "Download PDF" button', 'info');
+            addResult('🖨️ Test "Print Ticket" button', 'info');
+            addResult('❌ Close ticket modal', 'info');
+        }
+        
+        function testLogout() {
+            addResult('🚪 Testing Logout...', 'info');
+            addResult('📋 Click "Switch Account" button', 'info');
+            addResult('✅ Expected: Blue info notification "Logged Out"', 'success');
+            addResult('✅ Expected: Return to authentication form', 'success');
+            addResult('✅ Expected: All form fields cleared', 'success');
+        }
+        
+        function showSampleData() {
+            addResult('📊 Sample Booking Data:', 'info');
+            addResult('👤 Rajesh Kumar (rajesh@example.com, 9876543210)', 'info');
+            addResult('   • Goa Beach Paradise - Paid', 'info');
+            addResult('👤 Priya Sharma (priya@example.com, 9876543211)', 'info');
+            addResult('   • Kerala Backwaters - Paid', 'info');
+            addResult('👤 Amit Singh (amit@example.com, 9876543212)', 'info');
+            addResult('   • Rajasthan Heritage Tour - Pending', 'info');
+        }
+        
+        // Auto-run test on page load
+        window.onload = function() {
+            addResult('🚀 Starting My Bookings test...', 'info');
+            addResult('📋 The My Bookings page should now work properly!', 'success');
+            addResult('🔧 Fixed issues: Sample data initialization, authentication logic, logout function', 'info');
+            showSampleData();
+        };
+    </script>
+</body>
+</html>

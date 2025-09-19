@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tripsera Test Suite - Index</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 15px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header { 
+            background: linear-gradient(135deg, #ff6b6b, #ffa500); 
+            color: white; 
+            padding: 30px; 
+            text-align: center; 
+        }
+        .header h1 { margin: 0; font-size: 2.5em; font-weight: 300; }
+        .header p { margin: 10px 0 0 0; opacity: 0.9; font-size: 1.1em; }
+        .content { padding: 30px; }
+        .test-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+            margin: 20px 0; 
+        }
+        .test-card { 
+            border: 2px solid #e1e5e9; 
+            border-radius: 10px; 
+            padding: 20px; 
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        .test-card:hover { 
+            border-color: #007bff; 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 25px rgba(0,123,255,0.15);
+        }
+        .test-card h3 { 
+            margin: 0 0 10px 0; 
+            color: #2c3e50; 
+            font-size: 1.3em; 
+        }
+        .test-card p { 
+            margin: 0 0 15px 0; 
+            color: #6c757d; 
+            line-height: 1.5; 
+        }
+        .test-link { 
+            display: inline-block; 
+            background: #007bff; 
+            color: white; 
+            padding: 10px 20px; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            transition: background 0.3s ease;
+            font-weight: 500;
+        }
+        .test-link:hover { 
+            background: #0056b3; 
+            color: white; 
+            text-decoration: none; 
+        }
+        .category { 
+            margin: 30px 0; 
+            padding: 20px; 
+            background: #f8f9fa; 
+            border-radius: 10px; 
+            border-left: 5px solid #007bff; 
+        }
+        .category h2 { 
+            margin: 0 0 20px 0; 
+            color: #2c3e50; 
+            font-size: 1.8em; 
+        }
+        .stats { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 20px; 
+            margin: 30px 0; 
+        }
+        .stat-card { 
+            background: linear-gradient(135deg, #667eea, #764ba2); 
+            color: white; 
+            padding: 20px; 
+            border-radius: 10px; 
+            text-align: center; 
+        }
+        .stat-number { 
+            font-size: 2.5em; 
+            font-weight: bold; 
+            margin: 0; 
+        }
+        .stat-label { 
+            font-size: 1.1em; 
+            opacity: 0.9; 
+            margin: 5px 0 0 0; 
+        }
+        .footer { 
+            background: #2c3e50; 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+            margin-top: 30px; 
+        }
+        .emoji { font-size: 1.2em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Tripsera Test Suite</h1>
+            <p>Comprehensive testing tools for the Tripsera travel booking platform</p>
+        </div>
+        
+        <div class="content">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">22</div>
+                    <div class="stat-label">Test Files</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Coverage</div>
+                </div>
+            </div>
+
+            <div class="category">
+                <h2><span class="emoji">💳</span> Payment & Booking Tests</h2>
+                <div class="test-grid">
+                    <div class="test-card">
+                        <h3>Payment Data Debug</h3>
+                        <p>Debug and analyze payment data, check transaction IDs, and fix missing data in the system.</p>
+                        <a href="html/test-payment-data-debug.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Payment IDs Fix</h3>
+                        <p>Test the fix for payment IDs display issue in admin panel - booking vs transaction ID confusion.</p>
+                        <a href="html/test-payment-ids-fix.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Full IDs Display</h3>
+                        <p>Test that booking and transaction IDs are fully visible without truncation in admin panel.</p>
+                        <a href="html/test-full-ids-display.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Payment Booking IDs</h3>
+                        <p>Verify that Payment ID and Booking ID are displayed correctly in tickets and admin panel.</p>
+                        <a href="html/test-payment-booking-ids.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Payment Proof</h3>
+                        <p>Test payment proof functionality and ensure it's visible in admin panel.</p>
+                        <a href="html/test-payment-proof.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Amount Display</h3>
+                        <p>Test amount display in admin panel and ensure all booking amounts are visible.</p>
+                        <a href="html/test-amount-display.html" class="test-link">Run Test</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category">
+                <h2><span class="emoji">🎫</span> Booking & Ticket Tests</h2>
+                <div class="test-grid">
+                    <div class="test-card">
+                        <h3>Booking Duplication</h3>
+                        <p>Test for duplicate booking issues and ensure proper booking flow without duplications.</p>
+                        <a href="html/test-booking-duplication.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>My Bookings</h3>
+                        <p>Test the "My Bookings" functionality and ensure users can view their booking history.</p>
+                        <a href="html/test-my-bookings.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Ticket Fix</h3>
+                        <p>Test ticket generation and ensure all information is properly displayed in travel tickets.</p>
+                        <a href="html/test-ticket-fix.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Ticket No Add-ons</h3>
+                        <p>Test ticket display when no add-ons are selected to ensure proper formatting.</p>
+                        <a href="html/test-ticket-no-addons.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Booking Cancellation</h3>
+                        <p>Test the new booking cancellation feature for both users and administrators.</p>
+                        <a href="html/test-booking-cancellation.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Group Tour Logic</h3>
+                        <p>Test that car-related add-ons are disabled when Group Tour service is selected.</p>
+                        <a href="html/test-group-tour-logic.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Availability Reset</h3>
+                        <p>Test the new "Reset All Counts" button in Availability Management section.</p>
+                        <a href="html/test-availability-reset.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Admin Service Coordination</h3>
+                        <p>Test the new admin interface for setting service-destination compatibility.</p>
+                        <a href="html/test-admin-service-coordination.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Ticket Close Button Fix</h3>
+                        <p>Test the fix for ticket modal close button not working after booking completion.</p>
+                        <a href="html/test-ticket-close-fix.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Group Tour Predefined Dates</h3>
+                        <p>Test the new feature that allows admins to set predefined dates for Group Tours.</p>
+                        <a href="html/test-group-tour-predefined-dates.html" class="test-link">Run Test</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category">
+                <h2><span class="emoji">⚙️</span> System & Integration Tests</h2>
+                <div class="test-grid">
+                    <div class="test-card">
+                        <h3>Availability System</h3>
+                        <p>Test the new tour/service availability management system and capacity tracking.</p>
+                        <a href="html/test-availability-system.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>QR Code Settings</h3>
+                        <p>Test QR code settings functionality in admin panel and ensure proper configuration.</p>
+                        <a href="html/test-qr-settings.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>QR Code Integration</h3>
+                        <p>Test QR code integration with payment process and ensure real-time updates.</p>
+                        <a href="html/test-qr-integration.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Coordination Test</h3>
+                        <p>Test coordination between home page and admin page to ensure data consistency.</p>
+                        <a href="html/test-coordination.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>LocalStorage Test</h3>
+                        <p>Test localStorage functionality and data persistence across the application.</p>
+                        <a href="html/test-localStorage.html" class="test-link">Run Test</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category">
+                <h2><span class="emoji">🔔</span> UI & Notification Tests</h2>
+                <div class="test-grid">
+                    <div class="test-card">
+                        <h3>Notifications</h3>
+                        <p>Test the new styled notification system and ensure all alert() messages are replaced.</p>
+                        <a href="html/test-notifications.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Inquiries</h3>
+                        <p>Test the inquiries functionality and ensure contact form submissions work properly.</p>
+                        <a href="html/test-inquiries.html" class="test-link">Run Test</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category">
+                <h2><span class="emoji">🗄️</span> Database & Connection Tests</h2>
+                <div class="test-grid">
+                    <div class="test-card">
+                        <h3>Firebase Setup</h3>
+                        <p>Test Firebase integration, migration, and cloud database setup for Tripsera.</p>
+                        <a href="html/test-firebase-setup.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Database Connection</h3>
+                        <p>Test database connection and ensure proper data retrieval and storage.</p>
+                        <a href="html/test-database-connection.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>MySQL Connection</h3>
+                        <p>Test MySQL database connection and configuration.</p>
+                        <a href="html/test-mysql-connection.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>MySQL Setup</h3>
+                        <p>Test MySQL setup process and database initialization.</p>
+                        <a href="html/test-mysql-setup.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Kannada Text</h3>
+                        <p>Test Kannada text display and ensure proper rendering on the home page.</p>
+                        <a href="html/test-kannada.html" class="test-link">Run Test</a>
+                    </div>
+                    <div class="test-card">
+                        <h3>Complete MySQL Setup</h3>
+                        <p>Complete MySQL database setup test with all fixes and troubleshooting guide.</p>
+                        <a href="html/test-complete-mysql-setup.html" class="test-link">Run Test</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category">
+                <h2><span class="emoji">📋</span> Quick Test Guide</h2>
+                <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border-left: 5px solid #2196f3;">
+                    <h3 style="margin-top: 0; color: #1976d2;">How to Use These Tests:</h3>
+                    <ol style="color: #424242; line-height: 1.6;">
+                        <li><strong>Start with Payment Tests</strong> - These are the most critical for the booking system</li>
+                        <li><strong>Run Booking Tests</strong> - Ensure the core booking functionality works</li>
+                        <li><strong>Check System Tests</strong> - Verify integrations and configurations</li>
+                        <li><strong>Test UI Components</strong> - Ensure notifications and forms work</li>
+                        <li><strong>Verify Database</strong> - Check data persistence and connections</li>
+                    </ol>
+                    <p style="color: #424242; margin-bottom: 0;"><strong>Note:</strong> All tests are designed to work with the main application running on <code>http://localhost:5174</code></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🧪 Tripsera Test Suite | Organized and Professional Testing Environment</p>
+            <p>All test files are now properly organized in the <code>tests/html/</code> directory</p>
+        </div>
+    </div>
+</body>
+</html>

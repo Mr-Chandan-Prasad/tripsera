@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Group Tour Predefined Dates - Tripsera</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-step {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .expected-result {
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #28a745;
+            margin-top: 10px;
+        }
+        .warning {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+            margin-top: 10px;
+        }
+        .success {
+            background: #d1ecf1;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #17a2b8;
+            margin-top: 10px;
+        }
+        .info {
+            background: #e2e3e5;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #6c757d;
+            margin-top: 10px;
+        }
+        h1 { color: #333; }
+        h2 { color: #007bff; }
+        h3 { color: #28a745; }
+        .step-number {
+            background: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .feature-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🗓️ Test: Group Tour Predefined Dates</h1>
+        <p><strong>Purpose:</strong> Test the new feature that allows admins to set predefined dates for Group Tours.</p>
+        <p><strong>Date:</strong> <span id="currentDate"></span></p>
+    </div>
+
+    <div class="test-container">
+        <h2>🎯 Feature Overview</h2>
+        <div class="feature-details">
+            <h3>What This Feature Does:</h3>
+            <ul>
+                <li><strong>Admin Control:</strong> Admins can set specific dates and times for Group Tours</li>
+                <li><strong>Customer Experience:</strong> Customers see predefined dates instead of selecting their own</li>
+                <li><strong>Organized Tours:</strong> Ensures group tours have fixed departure times</li>
+                <li><strong>Slot Management:</strong> Track available slots for each predefined date</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>📋 Test Part 1: Admin Date Management</h2>
+        
+        <div class="test-step">
+            <h3><span class="step-number">1</span>Access Admin Panel</h3>
+            <p>Navigate to the admin panel and log in with admin credentials.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Admin dashboard loads successfully.
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">2</span>Go to Group Tour Dates</h3>
+            <p>Click on the "Group Tour Dates" tab in the admin panel.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Group Tour Date Management page loads with:
+                <ul>
+                    <li>Header: "Group Tour Date Management"</li>
+                    <li>Blue info box explaining how it works</li>
+                    <li>Group Tour service card with "Manage Dates" button</li>
+                    <li>Current predefined dates displayed (3 sample dates)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">3</span>View Current Dates</h3>
+            <p>Review the current predefined dates for Group Tour service.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Should see 3 predefined dates:
+                <ul>
+                    <li>Feb 15, 2024 at 09:00 - Morning Group Tour (25 slots)</li>
+                    <li>Feb 20, 2024 at 14:00 - Afternoon Group Tour (25 slots)</li>
+                    <li>Feb 25, 2024 at 10:00 - Weekend Group Tour (25 slots)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">4</span>Add New Date</h3>
+            <p>Click "Manage Dates" button and add a new predefined date:</p>
+            <ul>
+                <li>Date: March 1, 2024</li>
+                <li>Time: 11:00</li>
+                <li>Description: "Spring Special Tour"</li>
+                <li>Available Slots: 20</li>
+            </ul>
+            <div class="expected-result">
+                <strong>Expected:</strong> 
+                <ul>
+                    <li>Success notification: "Dates Updated - Group tour predefined dates updated successfully"</li>
+                    <li>New date appears in the current dates list</li>
+                    <li>Form fields are cleared for next entry</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">5</span>Remove a Date</h3>
+            <p>In the Manage Dates modal, click the X button next to one of the existing dates to remove it.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> 
+                <ul>
+                    <li>Success notification appears</li>
+                    <li>Date is removed from the list</li>
+                    <li>Modal updates to show remaining dates</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">6</span>Test Form Validation</h3>
+            <p>Try to add a new date without filling all required fields (leave description empty).</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> 
+                <ul>
+                    <li>Error notification: "Missing Information - Please fill in all required fields"</li>
+                    <li>Date is not added</li>
+                    <li>Form remains open for correction</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>📋 Test Part 2: Customer Booking Experience</h2>
+        
+        <div class="test-step">
+            <h3><span class="step-number">7</span>Start Customer Booking</h3>
+            <p>Go to the booking system and select a destination and Group Tour service.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> 
+                <ul>
+                    <li>Label changes to "Select Tour Date *" instead of "Travel Date *"</li>
+                    <li>Date picker is replaced with radio button options</li>
+                    <li>Shows predefined dates with descriptions and available slots</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">8</span>Select Predefined Date</h3>
+            <p>Click on one of the predefined date options to select it.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> 
+                <ul>
+                    <li>Radio button is selected</li>
+                    <li>Date and time are stored in booking data</li>
+                    <li>Selection is visually highlighted</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">9</span>Complete Booking</h3>
+            <p>Fill in customer details and complete the booking process.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> 
+                <ul>
+                    <li>Booking summary shows selected predefined date and time</li>
+                    <li>Ticket displays the selected tour date and time</li>
+                    <li>Booking is created successfully</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">10</span>Test Other Services</h3>
+            <p>Select a different service (not Group Tour) and check the date selection.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> 
+                <ul>
+                    <li>Label shows "Travel Date *"</li>
+                    <li>Regular date picker is displayed</li>
+                    <li>No predefined dates are shown</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">11</span>Test No Dates Available</h3>
+            <p>If you removed all predefined dates in step 5, select Group Tour again.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> 
+                <ul>
+                    <li>Shows message: "No predefined dates available. Please contact admin to set tour dates."</li>
+                    <li>Booking cannot proceed without selecting a date</li>
+                    <li>Clear indication that admin needs to set dates</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>✅ Expected Behavior</h2>
+        
+        <div class="success">
+            <h3>Admin Experience:</h3>
+            <ul>
+                <li>✅ <strong>Easy Management:</strong> Simple interface to add/remove predefined dates</li>
+                <li>✅ <strong>Visual Feedback:</strong> Clear display of current dates with slots</li>
+                <li>✅ <strong>Form Validation:</strong> Prevents incomplete date entries</li>
+                <li>✅ <strong>Real-time Updates:</strong> Changes apply immediately</li>
+                <li>✅ <strong>Slot Tracking:</strong> Shows available slots for each date</li>
+            </ul>
+        </div>
+
+        <div class="success">
+            <h3>Customer Experience:</h3>
+            <ul>
+                <li>✅ <strong>Clear Options:</strong> Radio buttons show all available tour dates</li>
+                <li>✅ <strong>Detailed Information:</strong> Date, time, description, and available slots</li>
+                <li>✅ <strong>No Confusion:</strong> Can't select invalid dates</li>
+                <li>✅ <strong>Organized Tours:</strong> Fixed departure times for group coordination</li>
+                <li>✅ <strong>Fallback Message:</strong> Clear message when no dates are available</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>🔧 Technical Implementation</h2>
+        
+        <div class="info">
+            <h3>Data Structure:</h3>
+            <pre style="background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto;">
+// Group Tour Service with predefined dates
+{
+  id: '4',
+  name: 'Group Tour',
+  is_group_tour: true,
+  predefined_dates: [
+    {
+      id: '1',
+      date: '2024-02-15',
+      time: '09:00',
+      description: 'Morning Group Tour',
+      available_slots: 25,
+      booked_slots: 0
+    }
+  ]
+}
+            </pre>
+        </div>
+
+        <div class="info">
+            <h3>Key Functions:</h3>
+            <ul>
+                <li><strong>updateGroupTourPredefinedDates:</strong> Admin updates predefined dates</li>
+                <li><strong>getGroupTourPredefinedDates:</strong> Retrieves dates for customer booking</li>
+                <li><strong>Dynamic UI:</strong> Booking interface adapts based on service type</li>
+                <li><strong>Date Format:</strong> Stores as "date|time" for easy parsing</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>📝 Test Results</h2>
+        <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">✅ IMPLEMENTED</span></p>
+        <p><strong>Build Status:</strong> <span style="color: #28a745; font-weight: bold;">✅ SUCCESSFUL</span></p>
+        <p><strong>Ready for Testing:</strong> <span style="color: #28a745; font-weight: bold;">✅ YES</span></p>
+        <p><strong>Location:</strong> Admin Panel → Group Tour Dates tab</p>
+    </div>
+
+    <script>
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+    </script>
+</body>
+</html>

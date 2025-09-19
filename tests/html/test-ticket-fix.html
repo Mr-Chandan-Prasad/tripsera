@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Fix Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .test-instructions { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .fix-summary { border: 2px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Ticket Fix Test</h1>
+    
+    <div class="fix-summary">
+        <h2>✅ What Was Fixed:</h2>
+        <ul>
+            <li><strong>Enhanced "No add-ons selected" message</strong> with better styling and icon</li>
+            <li><strong>Added safety check</strong> to ensure selectedAddOns is always an array</li>
+            <li><strong>Added debug logging</strong> to track data flow</li>
+            <li><strong>Improved visual design</strong> of the no add-ons state</li>
+        </ul>
+    </div>
+    
+    <div class="test-instructions">
+        <h2>📋 Test Instructions:</h2>
+        <ol>
+            <li>Open <strong>Booking Page</strong>: <a href="http://localhost:5174/bookings" target="_blank">http://localhost:5174/bookings</a></li>
+            <li>Fill in the booking form and proceed to <strong>Step 3 (Add-ons)</strong></li>
+            <li><strong>DO NOT select any add-ons</strong> - leave them all unselected</li>
+            <li>Proceed to <strong>Step 4 (Summary)</strong> and complete the booking</li>
+            <li>Check if the ticket shows the <strong>enhanced "No add-ons selected" message</strong> with:</li>
+            <ul>
+                <li>📦 Icon</li>
+                <li>"No add-ons selected" text</li>
+                <li>"You can add extra services during booking" subtitle</li>
+            </ul>
+            <li>Verify the ticket displays correctly with base package only</li>
+            <li>Check browser console for debug logs</li>
+        </ol>
+    </div>
+    
+    <div id="results"></div>
+    
+    <button onclick="testNoAddOnsScenario()">Test No Add-ons Scenario</button>
+    <button onclick="testWithAddOnsScenario()">Test With Add-ons Scenario</button>
+    <button onclick="checkConsoleLogs()">Check Console Logs</button>
+    <button onclick="simulateBothScenarios()">Simulate Both Scenarios</button>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testNoAddOnsScenario() {
+            addResult('🔄 Testing no add-ons scenario...', 'info');
+            
+            const bookingData = {
+                id: 'test-no-addons-123',
+                customer_name: 'Test User (No Add-ons)',
+                email: 'test@example.com',
+                mobile: '9876543210',
+                destination_id: '1',
+                service_id: '1',
+                booking_date: new Date().toISOString(),
+                seats_selected: 2,
+                base_amount: 10000,
+                addons_total: 0,
+                total_amount: 10000,
+                payment_status: 'paid',
+                transaction_id: 'TXN-NO-ADDONS-123'
+            };
+            
+            const selectedAddOns = []; // Empty array - no add-ons selected
+            
+            addResult('✅ No add-ons test data created:', 'success');
+            addResult(`- Base Amount: ₹${bookingData.base_amount}`, 'info');
+            addResult(`- Add-ons Total: ₹${bookingData.addons_total}`, 'info');
+            addResult(`- Total Amount: ₹${bookingData.total_amount}`, 'info');
+            addResult(`- Selected Add-ons: ${selectedAddOns.length}`, 'info');
+            
+            // Store test data
+            localStorage.setItem('testBookingDataNoAddons', JSON.stringify(bookingData));
+            localStorage.setItem('testSelectedAddOnsNoAddons', JSON.stringify(selectedAddOns));
+            
+            addResult('💾 Test data stored in localStorage', 'success');
+            addResult('🎯 Expected result: "No add-ons selected" message with 📦 icon', 'info');
+        }
+        
+        function testWithAddOnsScenario() {
+            addResult('🔄 Testing with add-ons scenario...', 'info');
+            
+            const bookingData = {
+                id: 'test-with-addons-456',
+                customer_name: 'Test User (With Add-ons)',
+                email: 'test@example.com',
+                mobile: '9876543210',
+                destination_id: '1',
+                service_id: '1',
+                booking_date: new Date().toISOString(),
+                seats_selected: 2,
+                base_amount: 10000,
+                addons_total: 3500,
+                total_amount: 13500,
+                payment_status: 'paid',
+                transaction_id: 'TXN-WITH-ADDONS-456'
+            };
+            
+            const selectedAddOns = [
+                {
+                    addon: {
+                        id: '1',
+                        name: 'Photography Package',
+                        description: 'Professional photography during your trip',
+                        price: 2000,
+                        category: 'Services'
+                    },
+                    quantity: 1,
+                    totalPrice: 2000
+                },
+                {
+                    addon: {
+                        id: '2',
+                        name: 'Airport Transfer',
+                        description: 'Pickup and drop from airport',
+                        price: 1500,
+                        category: 'Transportation'
+                    },
+                    quantity: 1,
+                    totalPrice: 1500
+                }
+            ];
+            
+            addResult('✅ With add-ons test data created:', 'success');
+            addResult(`- Base Amount: ₹${bookingData.base_amount}`, 'info');
+            addResult(`- Add-ons Total: ₹${bookingData.addons_total}`, 'info');
+            addResult(`- Total Amount: ₹${bookingData.total_amount}`, 'info');
+            addResult(`- Selected Add-ons: ${selectedAddOns.length}`, 'info');
+            
+            // Store test data
+            localStorage.setItem('testBookingDataWithAddons', JSON.stringify(bookingData));
+            localStorage.setItem('testSelectedAddOnsWithAddons', JSON.stringify(selectedAddOns));
+            
+            addResult('💾 Test data stored in localStorage', 'success');
+            addResult('🎯 Expected result: List of selected add-ons with prices', 'info');
+        }
+        
+        function checkConsoleLogs() {
+            addResult('🔄 Checking console logs...', 'info');
+            addResult('📋 Open browser console (F12) and look for:', 'info');
+            addResult('- "BookingInterface - Passing to TicketGenerator:"', 'info');
+            addResult('- "TicketGenerator - selectedAddOns:"', 'info');
+            addResult('- "TicketGenerator - safeSelectedAddOns:"', 'info');
+            addResult('🔍 These logs will help debug any issues', 'info');
+        }
+        
+        function simulateBothScenarios() {
+            addResult('🔄 Simulating both scenarios...', 'info');
+            
+            // Test 1: No add-ons
+            testNoAddOnsScenario();
+            
+            // Test 2: With add-ons
+            testWithAddOnsScenario();
+            
+            addResult('✅ Both test scenarios created!', 'success');
+            addResult('🎯 Now test the actual booking flow:', 'info');
+            addResult('1. Go to http://localhost:5174/bookings', 'info');
+            addResult('2. Test both scenarios (with and without add-ons)', 'info');
+            addResult('3. Check the ticket generation for both cases', 'info');
+        }
+        
+        // Auto-run test on page load
+        window.onload = function() {
+            addResult('🚀 Starting ticket fix test...', 'info');
+            simulateBothScenarios();
+            checkConsoleLogs();
+        };
+    </script>
+</body>
+</html>

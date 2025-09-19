@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalStorage Test - Tripsera</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Tripsera LocalStorage Test</h1>
+    
+    <div id="results"></div>
+    
+    <button onclick="testLocalStorage()">Test LocalStorage</button>
+    <button onclick="addSampleData()">Add Sample Data</button>
+    <button onclick="clearAllData()">Clear All Data</button>
+    <button onclick="testDataFlow()">Test Data Flow</button>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testLocalStorage() {
+            addResult('🔄 Testing localStorage...', 'info');
+            
+            const tables = ['destinations', 'services', 'bookings', 'addons', 'gallery', 'testimonials', 'advertisements', 'offers'];
+            let totalItems = 0;
+            
+            tables.forEach(table => {
+                const data = localStorage.getItem(table);
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    addResult(`✅ ${table}: ${parsed.length} items`, 'success');
+                    totalItems += parsed.length;
+                } else {
+                    addResult(`❌ ${table}: No data`, 'error');
+                }
+            });
+            
+            addResult(`📊 Total items in localStorage: ${totalItems}`, 'info');
+        }
+        
+        function addSampleData() {
+            addResult('🔄 Adding sample data...', 'info');
+            
+            // Sample destinations
+            const sampleDestinations = [
+                {
+                    id: '1',
+                    name: 'Goa Beach Paradise',
+                    description: 'Beautiful beaches and vibrant nightlife in Goa',
+                    price: 15000,
+                    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500',
+                    location: 'Goa, India',
+                    duration: '5 days',
+                    category: 'Beach',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    id: '2',
+                    name: 'Kerala Backwaters',
+                    description: 'Serene backwaters and lush greenery',
+                    price: 12000,
+                    image: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=500',
+                    location: 'Kerala, India',
+                    duration: '4 days',
+                    category: 'Nature',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                }
+            ];
+            
+            // Sample services
+            const sampleServices = [
+                {
+                    id: '1',
+                    name: 'Flight Booking',
+                    description: 'Domestic and international flights',
+                    price: 5000,
+                    category: 'Transportation',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    id: '2',
+                    name: 'Hotel Booking',
+                    description: 'Luxury and budget accommodations',
+                    price: 3000,
+                    category: 'Accommodation',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                }
+            ];
+            
+            // Save to localStorage
+            localStorage.setItem('destinations', JSON.stringify(sampleDestinations));
+            localStorage.setItem('services', JSON.stringify(sampleServices));
+            
+            addResult('✅ Sample data added successfully!', 'success');
+            addResult('🔄 Reloading page...', 'info');
+            setTimeout(() => window.location.reload(), 1000);
+        }
+        
+        function clearAllData() {
+            const tables = ['destinations', 'services', 'bookings', 'addons', 'gallery', 'testimonials', 'advertisements', 'offers'];
+            tables.forEach(table => localStorage.removeItem(table));
+            addResult('🗑️ All data cleared!', 'success');
+            addResult('🔄 Reloading page...', 'info');
+            setTimeout(() => window.location.reload(), 1000);
+        }
+        
+        function testDataFlow() {
+            addResult('🔄 Testing data flow...', 'info');
+            
+            // Test adding a new destination
+            const existingDestinations = JSON.parse(localStorage.getItem('destinations') || '[]');
+            const newDestination = {
+                id: Date.now().toString(),
+                name: 'Test Destination',
+                description: 'This is a test destination',
+                price: 10000,
+                image: 'https://via.placeholder.com/500x300',
+                location: 'Test Location',
+                duration: '3 days',
+                category: 'Test',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+            
+            const updatedDestinations = [...existingDestinations, newDestination];
+            localStorage.setItem('destinations', JSON.stringify(updatedDestinations));
+            
+            addResult('✅ New destination added successfully!', 'success');
+            addResult(`📊 Total destinations: ${updatedDestinations.length}`, 'info');
+            
+            // Test updating a destination
+            const updatedDestination = { ...newDestination, name: 'Updated Test Destination' };
+            const finalDestinations = updatedDestinations.map(dest => 
+                dest.id === newDestination.id ? updatedDestination : dest
+            );
+            localStorage.setItem('destinations', JSON.stringify(finalDestinations));
+            
+            addResult('✅ Destination updated successfully!', 'success');
+            
+            // Test deleting a destination
+            const finalDestinationsAfterDelete = finalDestinations.filter(dest => dest.id !== newDestination.id);
+            localStorage.setItem('destinations', JSON.stringify(finalDestinationsAfterDelete));
+            
+            addResult('✅ Destination deleted successfully!', 'success');
+            addResult(`📊 Final destinations count: ${finalDestinationsAfterDelete.length}`, 'info');
+        }
+        
+        // Auto-run tests on page load
+        window.onload = function() {
+            addResult('🚀 Starting localStorage tests...', 'info');
+            testLocalStorage();
+        };
+    </script>
+</body>
+</html>

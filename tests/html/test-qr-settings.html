@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Settings Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .test-instructions { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .fix-summary { border: 2px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        .qr-examples { border: 2px solid #6c757d; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        .step { margin: 15px 0; padding: 10px; background: #e9ecef; border-radius: 5px; }
+        .code { background: #f8f9fa; padding: 10px; border-radius: 5px; font-family: monospace; margin: 10px 0; }
+        .qr-test { border: 2px solid #17a2b8; padding: 15px; margin: 10px 0; border-radius: 10px; background: #d1ecf1; }
+    </style>
+</head>
+<body>
+    <h1>🔧 QR Code Settings Test & Debug</h1>
+    
+    <div class="fix-summary">
+        <h2>✅ What Was Fixed:</h2>
+        <ul>
+            <li><strong>Added QR Code Loading</strong> - Now loads existing QR code from localStorage on page load</li>
+            <li><strong>Enhanced Save Function</strong> - Added validation to prevent saving empty QR codes</li>
+            <li><strong>Added Clear Function</strong> - New clear button to remove QR code data</li>
+            <li><strong>Improved UI</strong> - Better preview with error handling and information display</li>
+            <li><strong>Added Instructions</strong> - Clear instructions for users on how to use the feature</li>
+            <li><strong>Better Notifications</strong> - Success, warning, and info notifications for all actions</li>
+        </ul>
+    </div>
+    
+    <div class="test-instructions">
+        <h2>📋 Test Instructions:</h2>
+        <div class="step">
+            <h3>Step 1: Go to Admin Panel</h3>
+            <p>Navigate to: <a href="http://localhost:5174/admin" target="_blank">http://localhost:5174/admin</a></p>
+            <p>Login with: <strong>admin</strong> / <strong>admin123</strong></p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: Access QR Settings</h3>
+            <p>Click on the "QR Settings" tab in the admin panel</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 3: Test QR Code Upload</h3>
+            <p>Try uploading a QR code image file or paste an image URL</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 4: Test Save Function</h3>
+            <p>Click "Save QR Code" and verify the success notification appears</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 5: Test Clear Function</h3>
+            <p>Click "Clear" and verify the QR code is removed</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 6: Test Validation</h3>
+            <p>Try saving without any QR code data to see validation warning</p>
+        </div>
+    </div>
+    
+    <div class="qr-examples">
+        <h3>🖼️ QR Code Examples for Testing:</h3>
+        <div class="qr-test">
+            <h4>Sample QR Code URLs:</h4>
+            <div class="code">
+                https://via.placeholder.com/200x200/000000/FFFFFF?text=QR+Code<br>
+                https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Payment+QR+Code<br>
+                https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=Payment+QR+Code
+            </div>
+        </div>
+        
+        <div class="qr-test">
+            <h4>Base64 QR Code Example:</h4>
+            <div class="code">
+                data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==
+            </div>
+        </div>
+    </div>
+    
+    <div id="results"></div>
+    
+    <button onclick="testQrUpload()">Test QR Upload</button>
+    <button onclick="testQrSave()">Test QR Save</button>
+    <button onclick="testQrClear()">Test QR Clear</button>
+    <button onclick="testQrValidation()">Test QR Validation</button>
+    <button onclick="testQrPersistence()">Test QR Persistence</button>
+    <button onclick="showQrExamples()">Show QR Examples</button>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testQrUpload() {
+            addResult('📤 Testing QR Code Upload...', 'info');
+            addResult('📋 Go to Admin Panel → QR Settings tab', 'info');
+            addResult('📁 Try uploading a QR code image file', 'info');
+            addResult('✅ Expected: Image preview appears in the right panel', 'success');
+            addResult('🔗 Try pasting a QR code image URL', 'info');
+            addResult('✅ Expected: Image loads and displays in preview', 'success');
+            addResult('📊 Expected: QR Code Information panel shows details', 'success');
+        }
+        
+        function testQrSave() {
+            addResult('💾 Testing QR Code Save...', 'info');
+            addResult('📋 Upload or paste a QR code first', 'info');
+            addResult('💾 Click "Save QR Code" button', 'info');
+            addResult('✅ Expected: Green success notification "QR Code Updated"', 'success');
+            addResult('🔄 Refresh the page and check if QR code persists', 'info');
+            addResult('✅ Expected: QR code should still be there after refresh', 'success');
+        }
+        
+        function testQrClear() {
+            addResult('🗑️ Testing QR Code Clear...', 'info');
+            addResult('📋 Make sure you have a QR code uploaded first', 'info');
+            addResult('🗑️ Click "Clear" button', 'info');
+            addResult('✅ Expected: Blue info notification "QR Code Cleared"', 'success');
+            addResult('✅ Expected: QR code preview should show "No QR code uploaded"', 'success');
+            addResult('✅ Expected: QR Code Information panel should disappear', 'success');
+        }
+        
+        function testQrValidation() {
+            addResult('⚠️ Testing QR Code Validation...', 'info');
+            addResult('📋 Clear any existing QR code data', 'info');
+            addResult('💾 Try clicking "Save QR Code" without any data', 'info');
+            addResult('⚠️ Expected: Yellow warning notification "No Data"', 'warning');
+            addResult('📝 Expected: Message should say "Please enter a QR code URL or upload an image file"', 'warning');
+        }
+        
+        function testQrPersistence() {
+            addResult('💾 Testing QR Code Persistence...', 'info');
+            addResult('📋 Upload a QR code and save it', 'info');
+            addResult('🔄 Refresh the browser page', 'info');
+            addResult('✅ Expected: QR code should still be there after refresh', 'success');
+            addResult('🔄 Close and reopen the browser', 'info');
+            addResult('✅ Expected: QR code should persist across browser sessions', 'success');
+        }
+        
+        function showQrExamples() {
+            addResult('🖼️ QR Code Examples for Testing:', 'info');
+            addResult('🔗 Sample Image URLs:', 'info');
+            addResult('• https://via.placeholder.com/200x200/000000/FFFFFF?text=QR+Code', 'info');
+            addResult('• https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Payment+QR+Code', 'info');
+            addResult('• https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=Payment+QR+Code', 'info');
+            addResult('📁 Or upload any QR code image file (PNG, JPG, etc.)', 'info');
+            addResult('💡 Tip: Use online QR code generators to create test QR codes', 'info');
+        }
+        
+        // Auto-run test on page load
+        window.onload = function() {
+            addResult('🚀 Starting QR Code Settings test...', 'info');
+            addResult('📋 The QR Code Settings should now work properly!', 'success');
+            addResult('🔧 Fixed issues: Loading, saving, clearing, validation, and persistence', 'info');
+            showQrExamples();
+        };
+    </script>
+</body>
+</html>

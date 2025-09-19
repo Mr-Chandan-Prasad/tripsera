@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Duplication Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .test-instructions { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Booking Duplication Test</h1>
+    
+    <div class="test-instructions">
+        <h2>📋 Test Instructions:</h2>
+        <ol>
+            <li>Open <strong>Booking Page</strong>: <a href="http://localhost:5174/bookings" target="_blank">http://localhost:5174/bookings</a></li>
+            <li>Fill in the booking form and proceed to <strong>Step 3 (Add-ons)</strong></li>
+            <li>Check if "Enhance Your Trip" header appears only <strong>ONCE</strong></li>
+            <li>If it appears twice, the duplication issue still exists</li>
+            <li>If it appears only once, the issue is fixed! ✅</li>
+        </ol>
+    </div>
+    
+    <div id="results"></div>
+    
+    <button onclick="testBookingFlow()">Test Booking Flow</button>
+    <button onclick="checkAddOnsData()">Check Add-ons Data</button>
+    <button onclick="simulateBookingStep()">Simulate Booking Step 3</button>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testBookingFlow() {
+            addResult('🔄 Testing booking flow...', 'info');
+            
+            // Check if add-ons data exists
+            const addons = JSON.parse(localStorage.getItem('addons') || '[]');
+            addResult(`📊 Add-ons available: ${addons.length}`, 'info');
+            
+            if (addons.length > 0) {
+                addResult('✅ Add-ons data found', 'success');
+                addons.forEach((addon, index) => {
+                    addResult(`${index + 1}. ${addon.name} - ₹${addon.price}`, 'info');
+                });
+            } else {
+                addResult('❌ No add-ons found - this might cause issues', 'error');
+            }
+            
+            addResult('🔍 Now test the booking flow manually:', 'info');
+            addResult('1. Go to http://localhost:5174/bookings', 'info');
+            addResult('2. Fill the form and go to Step 3', 'info');
+            addResult('3. Check if "Enhance Your Trip" appears only once', 'info');
+        }
+        
+        function checkAddOnsData() {
+            addResult('🔄 Checking add-ons data...', 'info');
+            
+            const addons = JSON.parse(localStorage.getItem('addons') || '[]');
+            
+            if (addons.length === 0) {
+                addResult('❌ No add-ons data found', 'error');
+                addResult('🔄 Adding sample add-ons...', 'info');
+                
+                const sampleAddons = [
+                    {
+                        id: '1',
+                        name: 'Photography Package',
+                        description: 'Professional photography during your trip',
+                        price: 2000,
+                        category: 'Services',
+                        is_active: true,
+                        max_quantity: 1,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
+                    },
+                    {
+                        id: '2',
+                        name: 'Airport Transfer',
+                        description: 'Pickup and drop from airport',
+                        price: 1500,
+                        category: 'Transportation',
+                        is_active: true,
+                        max_quantity: 1,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
+                    }
+                ];
+                
+                localStorage.setItem('addons', JSON.stringify(sampleAddons));
+                addResult('✅ Sample add-ons added!', 'success');
+            } else {
+                addResult(`✅ Add-ons data found: ${addons.length} items`, 'success');
+            }
+        }
+        
+        function simulateBookingStep() {
+            addResult('🔄 Simulating booking step 3...', 'info');
+            
+            // Check if we can access the booking interface
+            const bookingData = {
+                currentStep: 3,
+                selectedAddOns: [],
+                totalAmount: 0
+            };
+            
+            localStorage.setItem('currentBooking', JSON.stringify(bookingData));
+            addResult('✅ Booking step 3 simulated', 'success');
+            addResult('🔄 Navigate to booking page to test', 'info');
+        }
+        
+        // Auto-run test on page load
+        window.onload = function() {
+            addResult('🚀 Starting booking duplication test...', 'info');
+            checkAddOnsData();
+            testBookingFlow();
+        };
+    </script>
+</body>
+</html>

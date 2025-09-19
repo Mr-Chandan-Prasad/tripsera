@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket No Add-ons Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .test-instructions { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .ticket-preview { border: 2px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <h1>🎫 Ticket No Add-ons Test</h1>
+    
+    <div class="test-instructions">
+        <h2>📋 Test Instructions:</h2>
+        <ol>
+            <li>Open <strong>Booking Page</strong>: <a href="http://localhost:5174/bookings" target="_blank">http://localhost:5174/bookings</a></li>
+            <li>Fill in the booking form and proceed to <strong>Step 3 (Add-ons)</strong></li>
+            <li><strong>DO NOT select any add-ons</strong> - leave them all unselected</li>
+            <li>Proceed to <strong>Step 4 (Summary)</strong> and complete the booking</li>
+            <li>Check if the ticket shows <strong>"No add-ons selected"</strong> message</li>
+            <li>Verify the ticket displays correctly with base package only</li>
+        </ol>
+    </div>
+    
+    <div id="results"></div>
+    
+    <button onclick="testNoAddOnsScenario()">Test No Add-ons Scenario</button>
+    <button onclick="simulateTicketGeneration()">Simulate Ticket Generation</button>
+    <button onclick="checkBookingData()">Check Booking Data</button>
+    
+    <div class="ticket-preview" id="ticketPreview" style="display: none;">
+        <h3>🎫 Ticket Preview (No Add-ons)</h3>
+        <div id="ticketContent"></div>
+    </div>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        const ticketPreview = document.getElementById('ticketPreview');
+        const ticketContent = document.getElementById('ticketContent');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testNoAddOnsScenario() {
+            addResult('🔄 Testing no add-ons scenario...', 'info');
+            
+            // Simulate booking data with no add-ons
+            const bookingData = {
+                id: 'test-123',
+                customer_name: 'Test User',
+                email: 'test@example.com',
+                mobile: '9876543210',
+                destination_id: '1',
+                service_id: '1',
+                booking_date: new Date().toISOString(),
+                seats_selected: 2,
+                base_amount: 10000,
+                addons_total: 0,
+                total_amount: 10000,
+                payment_status: 'paid',
+                transaction_id: 'TXN123456'
+            };
+            
+            const selectedAddOns = []; // Empty array - no add-ons selected
+            
+            addResult('✅ Test data created:', 'success');
+            addResult(`- Base Amount: ₹${bookingData.base_amount}`, 'info');
+            addResult(`- Add-ons Total: ₹${bookingData.addons_total}`, 'info');
+            addResult(`- Total Amount: ₹${bookingData.total_amount}`, 'info');
+            addResult(`- Selected Add-ons: ${selectedAddOns.length}`, 'info');
+            
+            // Store test data
+            localStorage.setItem('testBookingData', JSON.stringify(bookingData));
+            localStorage.setItem('testSelectedAddOns', JSON.stringify(selectedAddOns));
+            
+            addResult('💾 Test data stored in localStorage', 'success');
+        }
+        
+        function simulateTicketGeneration() {
+            addResult('🔄 Simulating ticket generation...', 'info');
+            
+            const bookingData = JSON.parse(localStorage.getItem('testBookingData') || '{}');
+            const selectedAddOns = JSON.parse(localStorage.getItem('testSelectedAddOns') || '[]');
+            
+            if (!bookingData.id) {
+                addResult('❌ No test data found. Run "Test No Add-ons Scenario" first.', 'error');
+                return;
+            }
+            
+            // Simulate the ticket content
+            const ticketHTML = `
+                <div style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 20px; background: white; max-width: 600px;">
+                    <h2 style="color: #1f2937; margin-bottom: 20px;">🎫 Travel Ticket</h2>
+                    
+                    <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3 style="color: #92400e; margin: 0;">Selected Add-ons</h3>
+                        <div style="margin-top: 10px;">
+                            ${selectedAddOns.length > 0 ? 
+                                selectedAddOns.map(item => `
+                                    <div style="background: white; padding: 10px; border-radius: 6px; margin-bottom: 8px;">
+                                        <strong>${item.addon.name}</strong> - ₹${item.totalPrice}
+                                    </div>
+                                `).join('') :
+                                `<div style="background: white; padding: 15px; border-radius: 6px; text-align: center; color: #6b7280;">
+                                    <p style="margin: 0;">No add-ons selected</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #9ca3af;">You can add extra services during booking</p>
+                                </div>`
+                            }
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f3f4f6; padding: 15px; border-radius: 8px;">
+                        <h3 style="color: #374151; margin: 0 0 15px 0;">Payment Summary</h3>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Base Package:</span>
+                            <span>₹${bookingData.base_amount}</span>
+                        </div>
+                        ${selectedAddOns.length > 0 ? `
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Add-ons:</span>
+                                <span>₹${bookingData.addons_total}</span>
+                            </div>
+                        ` : ''}
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; color: #7c3aed; border-top: 1px solid #d1d5db; padding-top: 8px;">
+                            <span>Total Amount:</span>
+                            <span>₹${bookingData.total_amount}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            ticketContent.innerHTML = ticketHTML;
+            ticketPreview.style.display = 'block';
+            
+            addResult('✅ Ticket preview generated!', 'success');
+            addResult('🔍 Check the ticket preview below', 'info');
+        }
+        
+        function checkBookingData() {
+            addResult('🔄 Checking booking data...', 'info');
+            
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const addons = JSON.parse(localStorage.getItem('addons') || '[]');
+            
+            addResult(`📊 Total bookings: ${bookings.length}`, 'info');
+            addResult(`📊 Available add-ons: ${addons.length}`, 'info');
+            
+            if (bookings.length > 0) {
+                const latestBooking = bookings[bookings.length - 1];
+                addResult('📋 Latest booking details:', 'info');
+                addResult(`- Customer: ${latestBooking.customer_name}`, 'info');
+                addResult(`- Base Amount: ₹${latestBooking.base_amount || 0}`, 'info');
+                addResult(`- Add-ons Total: ₹${latestBooking.addons_total || 0}`, 'info');
+                addResult(`- Total Amount: ₹${latestBooking.total_amount || 0}`, 'info');
+            }
+            
+            if (addons.length > 0) {
+                addResult('🎁 Available add-ons:', 'info');
+                addons.forEach((addon, index) => {
+                    addResult(`${index + 1}. ${addon.name} - ₹${addon.price}`, 'info');
+                });
+            }
+        }
+        
+        // Auto-run test on page load
+        window.onload = function() {
+            addResult('🚀 Starting ticket no add-ons test...', 'info');
+            testNoAddOnsScenario();
+            simulateTicketGeneration();
+        };
+    </script>
+</body>
+</html>

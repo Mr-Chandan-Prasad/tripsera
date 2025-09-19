@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment IDs Fix Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .test-instructions { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .fix-summary { border: 2px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        .integration-test { border: 2px solid #17a2b8; padding: 20px; margin: 20px 0; border-radius: 10px; background: #d1ecf1; }
+        .step { margin: 15px 0; padding: 10px; background: #e9ecef; border-radius: 5px; }
+        .code { background: #f8f9fa; padding: 10px; border-radius: 5px; font-family: monospace; margin: 10px 0; }
+        .id-test { border: 2px solid #6c757d; padding: 15px; margin: 10px 0; border-radius: 10px; background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <h1>🆔 Payment IDs Fix Test</h1>
+    
+    <div class="fix-summary">
+        <h2>✅ What Was Fixed:</h2>
+        <ul>
+            <li><strong>Clear ID Labels</strong> - Now shows "Booking:" and "TXN:" labels to distinguish between IDs</li>
+            <li><strong>Updated Header</strong> - Changed from "Payment ID" to "Booking & Transaction ID"</li>
+            <li><strong>Better Visual Hierarchy</strong> - Booking ID in gray, Transaction ID in green</li>
+            <li><strong>Conditional Display</strong> - Transaction ID only shows when available</li>
+            <li><strong>Improved Readability</strong> - Clear distinction between booking and transaction IDs</li>
+        </ul>
+    </div>
+    
+    <div class="integration-test">
+        <h2>🆔 Payment IDs Fix Test Flow:</h2>
+        <div class="step">
+            <h3>Step 1: Create a Booking with Payment</h3>
+            <p>1. Go to <a href="http://localhost:5174/bookings" target="_blank">Bookings Page</a></p>
+            <p>2. Complete a booking and payment process</p>
+            <p>3. Ensure payment is successful (status: paid)</p>
+            <p>4. Note down the Booking ID and Transaction ID from the ticket</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: Check Admin Panel Payments</h3>
+            <p>1. Go to <a href="http://localhost:5174/admin" target="_blank">Admin Panel</a></p>
+            <p>2. Login with: <strong>admin</strong> / <strong>admin123</strong></p>
+            <p>3. Click "Payments" tab</p>
+            <p>4. Look for your booking in the payments list</p>
+            <p>5. Check the "Booking & Transaction ID" column</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 3: Verify ID Display</h3>
+            <p>1. Should see "Booking: BK1703123456..." in gray text</p>
+            <p>2. Should see "TXN: TXN1703123456..." in green text below</p>
+            <p>3. Both IDs should match what you saw in the ticket</p>
+            <p>4. Header should say "Booking & Transaction ID"</p>
+        </div>
+    </div>
+    
+    <div class="test-instructions">
+        <h2>📋 Detailed Test Instructions:</h2>
+        
+        <div class="id-test">
+            <h4>🆔 Before Fix (What Was Wrong):</h4>
+            <ul>
+                <li>❌ Header said "Payment ID" but showed booking ID</li>
+                <li>❌ No clear distinction between booking and transaction IDs</li>
+                <li>❌ Confusing to identify which ID was which</li>
+                <li>❌ Transaction ID not clearly visible</li>
+            </ul>
+        </div>
+        
+        <div class="id-test">
+            <h4>✅ After Fix (What's Fixed):</h4>
+            <ul>
+                <li>✅ Header clearly says "Booking & Transaction ID"</li>
+                <li>✅ Booking ID labeled as "Booking: BK1703123456..."</li>
+                <li>✅ Transaction ID labeled as "TXN: TXN1703123456..."</li>
+                <li>✅ Different colors: gray for booking, green for transaction</li>
+                <li>✅ Transaction ID only shows when available</li>
+                <li>✅ Clear visual hierarchy and readability</li>
+            </ul>
+        </div>
+        
+        <div class="id-test">
+            <h4>🎨 Visual Improvements:</h4>
+            <ul>
+                <li>✅ Clear labels: "Booking:" and "TXN:"</li>
+                <li>✅ Color coding: gray for booking ID, green for transaction ID</li>
+                <li>✅ Proper spacing and typography</li>
+                <li>✅ Conditional display for transaction ID</li>
+                <li>✅ Updated header for clarity</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="id-test">
+        <h3>🔍 Expected Display Format:</h3>
+        <div class="code">
+            <strong>Column Header:</strong> "Booking & Transaction ID"<br><br>
+            
+            <strong>For each payment row:</strong><br>
+            <span style="color: #6b7280;">Booking:</span> <span style="color: #1f2937; font-family: monospace;">BK1703123456...</span><br>
+            <span style="color: #6b7280;">TXN:</span> <span style="color: #059669; font-family: monospace;">TXN1703123456...</span><br><br>
+            
+            <strong>Notes:</strong><br>
+            • Booking ID always shows (gray text)<br>
+            • Transaction ID only shows when payment is completed (green text)<br>
+            • Both IDs are truncated to 8 characters + "..."<br>
+            • Clear visual distinction between the two IDs
+        </div>
+    </div>
+    
+    <div id="results"></div>
+    
+    <button onclick="testPaymentIdsDisplay()">Test Payment IDs Display</button>
+    <button onclick="testAdminPaymentsTab()">Test Admin Payments Tab</button>
+    <button onclick="testIdLabels()">Test ID Labels</button>
+    <button onclick="testVisualHierarchy()">Test Visual Hierarchy</button>
+    <button onclick="testConditionalDisplay()">Test Conditional Display</button>
+    <button onclick="showDebugInfo()">Show Debug Info</button>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testPaymentIdsDisplay() {
+            addResult('🆔 Testing Payment IDs Display...', 'info');
+            addResult('📋 Go to Admin Panel → Payments tab', 'info');
+            addResult('🔍 Look at the "Booking & Transaction ID" column', 'info');
+            addResult('✅ Expected: Header says "Booking & Transaction ID"', 'success');
+            addResult('✅ Expected: Booking ID shows as "Booking: BK1703123456..."', 'success');
+            addResult('✅ Expected: Transaction ID shows as "TXN: TXN1703123456..."', 'success');
+            addResult('✅ Expected: Different colors for each ID type', 'success');
+        }
+        
+        function testAdminPaymentsTab() {
+            addResult('👁️ Testing Admin Payments Tab...', 'info');
+            addResult('📋 Go to Admin Panel → Payments tab', 'info');
+            addResult('📊 Check the payments table structure', 'info');
+            addResult('✅ Expected: Clear column headers', 'success');
+            addResult('✅ Expected: Proper data display for each payment', 'success');
+            addResult('✅ Expected: Both booking and transaction IDs visible', 'success');
+        }
+        
+        function testIdLabels() {
+            addResult('🏷️ Testing ID Labels...', 'info');
+            addResult('📋 Check the ID column in payments table', 'info');
+            addResult('✅ Expected: "Booking:" label before booking ID', 'success');
+            addResult('✅ Expected: "TXN:" label before transaction ID', 'success');
+            addResult('✅ Expected: Clear distinction between ID types', 'success');
+            addResult('✅ Expected: Proper formatting and spacing', 'success');
+        }
+        
+        function testVisualHierarchy() {
+            addResult('🎨 Testing Visual Hierarchy...', 'info');
+            addResult('📋 Check the colors and styling of IDs', 'info');
+            addResult('✅ Expected: Booking ID in gray color', 'success');
+            addResult('✅ Expected: Transaction ID in green color', 'success');
+            addResult('✅ Expected: Proper font family (monospace)', 'success');
+            addResult('✅ Expected: Good contrast and readability', 'success');
+        }
+        
+        function testConditionalDisplay() {
+            addResult('🔄 Testing Conditional Display...', 'info');
+            addResult('📋 Check payments with different statuses', 'info');
+            addResult('✅ Expected: Booking ID always shows', 'success');
+            addResult('✅ Expected: Transaction ID only shows for completed payments', 'success');
+            addResult('✅ Expected: No transaction ID for pending payments', 'info');
+            addResult('✅ Expected: Proper handling of missing data', 'success');
+        }
+        
+        function showDebugInfo() {
+            addResult('🔍 Debug Information:', 'info');
+            addResult('📊 The Payment IDs are now clearly labeled and distinguished', 'info');
+            addResult('🆔 Booking ID: Shows for all payments (gray text)', 'info');
+            addResult('💳 Transaction ID: Shows only for completed payments (green text)', 'info');
+            addResult('🏷️ Clear labels: "Booking:" and "TXN:" prefixes', 'info');
+            addResult('📋 Updated header: "Booking & Transaction ID"', 'info');
+        }
+        
+        // Auto-run test on page load
+        window.onload = function() {
+            addResult('🚀 Starting Payment IDs Fix test...', 'info');
+            addResult('📋 Payment IDs should now be clearly distinguished in admin panel!', 'success');
+            addResult('🔧 Fixed: Labels, colors, header, and conditional display', 'info');
+            showDebugInfo();
+        };
+    </script>
+</body>
+</html>

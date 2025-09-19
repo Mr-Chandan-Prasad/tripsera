@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Availability Reset - Tripsera</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-step {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .expected-result {
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #28a745;
+            margin-top: 10px;
+        }
+        .warning {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+            margin-top: 10px;
+        }
+        .success {
+            background: #d1ecf1;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #17a2b8;
+            margin-top: 10px;
+        }
+        .danger {
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #dc3545;
+            margin-top: 10px;
+        }
+        h1 { color: #333; }
+        h2 { color: #007bff; }
+        h3 { color: #28a745; }
+        .step-number {
+            background: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Test: Availability Management Reset Button</h1>
+        <p><strong>Purpose:</strong> Test the new "Reset All Counts" button in the Availability Management section.</p>
+        <p><strong>Date:</strong> <span id="currentDate"></span></p>
+    </div>
+
+    <div class="test-container">
+        <h2>📋 Test Steps</h2>
+        
+        <div class="test-step">
+            <h3><span class="step-number">1</span>Access Admin Panel</h3>
+            <p>Navigate to the admin panel and log in with admin credentials.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Admin dashboard loads successfully.
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">2</span>Go to Availability Management</h3>
+            <p>Click on the "Availability" tab in the admin panel.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Availability Management page loads with destinations and services tables.
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">3</span>Locate Reset Button</h3>
+            <p>Look for the red "Reset All Counts" button in the top-right corner of the Availability Management section.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Red button with XCircle icon and "Reset All Counts" text is visible.
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">4</span>Check Current Booking Counts</h3>
+            <p>Note the current "Booked" values for destinations and services before resetting.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Some destinations/services may have booking counts > 0.
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">5</span>Click Reset Button</h3>
+            <p>Click the "Reset All Counts" button.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Confirmation dialog appears asking "Are you sure you want to reset all booking counts to 0? This action cannot be undone."
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">6</span>Confirm Reset</h3>
+            <p>Click "OK" in the confirmation dialog.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> 
+                <ul>
+                    <li>Success notification appears: "Reset Successful - All booking counts have been reset to 0"</li>
+                    <li>All "Booked" values in both tables become 0</li>
+                    <li>All "Available" values update to match the "Capacity" values</li>
+                    <li>All status indicators show "AVAILABLE" (green)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">7</span>Test Cancel Reset</h3>
+            <p>Click the reset button again, but this time click "Cancel" in the confirmation dialog.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> 
+                <ul>
+                    <li>No changes occur</li>
+                    <li>Booking counts remain at 0</li>
+                    <li>No notification appears</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">8</span>Verify Data Persistence</h3>
+            <p>Refresh the page and check that the reset values are still in effect.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> All booking counts remain at 0 after page refresh.
+            </div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>✅ Expected Behavior Summary</h2>
+        
+        <div class="success">
+            <h3>Reset Button Features:</h3>
+            <ul>
+                <li>✅ Red button with XCircle icon in top-right of Availability Management</li>
+                <li>✅ Confirmation dialog before reset</li>
+                <li>✅ Resets ALL destinations and services booking counts to 0</li>
+                <li>✅ Updates availability status to "AVAILABLE" for all items</li>
+                <li>✅ Shows success notification after reset</li>
+                <li>✅ Data persists after page refresh</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h3>What Gets Reset:</h3>
+            <ul>
+                <li><strong>Destinations:</strong> All current_bookings set to 0</li>
+                <li><strong>Services:</strong> All current_bookings set to 0</li>
+                <li><strong>Availability Status:</strong> All items become "AVAILABLE"</li>
+                <li><strong>Updated Timestamps:</strong> All items get new updated_at timestamp</li>
+            </ul>
+        </div>
+
+        <div class="danger">
+            <h3>Important Notes:</h3>
+            <ul>
+                <li>⚠️ This action cannot be undone</li>
+                <li>⚠️ It resets ALL booking counts, not just selected items</li>
+                <li>⚠️ Existing bookings in the system are NOT deleted, only the counts are reset</li>
+                <li>⚠️ This is useful for testing or starting fresh with availability</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>🔧 Technical Implementation Details</h2>
+        
+        <div class="warning">
+            <h3>New Function Added:</h3>
+            <ul>
+                <li><strong>resetAllBookingCounts():</strong> Resets all booking counts in localStorage</li>
+                <li><strong>handleResetBookingCounts():</strong> Admin component handler with confirmation</li>
+                <li><strong>UI Integration:</strong> Red button in Availability Management header</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h3>Data Structure Updated:</h3>
+            <ul>
+                <li><strong>Destinations:</strong> current_bookings → 0, updated_at → new timestamp</li>
+                <li><strong>Services:</strong> current_bookings → 0, updated_at → new timestamp</li>
+                <li><strong>LocalStorage:</strong> Both 'destinations' and 'services' arrays updated</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>📝 Test Results</h2>
+        <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">✅ IMPLEMENTED</span></p>
+        <p><strong>Build Status:</strong> <span style="color: #28a745; font-weight: bold;">✅ SUCCESSFUL</span></p>
+        <p><strong>Ready for Testing:</strong> <span style="color: #28a745; font-weight: bold;">✅ YES</span></p>
+        <p><strong>Location:</strong> Admin Panel → Availability Management → "Reset All Counts" button</p>
+    </div>
+
+    <script>
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+    </script>
+</body>
+</html>

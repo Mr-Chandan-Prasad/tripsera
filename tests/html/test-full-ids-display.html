@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full IDs Display Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .improvement { border: 2px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        .before-after { display: flex; gap: 20px; margin: 20px 0; }
+        .before, .after { flex: 1; padding: 15px; border-radius: 8px; }
+        .before { background: #f8d7da; border: 1px solid #f5c6cb; }
+        .after { background: #d4edda; border: 1px solid #c3e6cb; }
+        .id-display { font-family: monospace; font-size: 12px; margin: 5px 0; }
+        .booking-id { background: #f8f9fa; padding: 8px; border-radius: 4px; border: 1px solid #dee2e6; }
+        .transaction-id { background: #d1ecf1; padding: 8px; border-radius: 4px; border: 1px solid #bee5eb; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+    </style>
+</head>
+<body>
+    <h1>🆔 Full IDs Display Test</h1>
+    
+    <div class="improvement">
+        <h2>✅ What Was Improved:</h2>
+        <ul>
+            <li><strong>Full ID Display</strong> - No more truncation, shows complete booking and transaction IDs</li>
+            <li><strong>Better Layout</strong> - Each ID in its own box with clear labels</li>
+            <li><strong>Compact Design</strong> - Smaller text but still readable</li>
+            <li><strong>Color Coding</strong> - Gray for booking ID, green for transaction ID</li>
+            <li><strong>Responsive Table</strong> - Horizontal scroll for better mobile experience</li>
+            <li><strong>Better Spacing</strong> - Proper padding and margins for readability</li>
+        </ul>
+    </div>
+    
+    <div class="test-section">
+        <h2>📊 Before vs After Comparison:</h2>
+        
+        <div class="before-after">
+            <div class="before">
+                <h3>❌ Before (Truncated)</h3>
+                <div class="id-display">
+                    <div>Booking: BK1703123456...</div>
+                    <div>TXN: TXN1703123456...</div>
+                </div>
+                <p><strong>Problems:</strong></p>
+                <ul>
+                    <li>IDs cut off after 8 characters</li>
+                    <li>Hard to identify specific bookings</li>
+                    <li>No clear visual separation</li>
+                    <li>Difficult to copy full IDs</li>
+                </ul>
+            </div>
+            
+            <div class="after">
+                <h3>✅ After (Full Display)</h3>
+                <div class="booking-id">
+                    <div style="font-size: 10px; color: #6c757d; margin-bottom: 4px;">Booking ID</div>
+                    <div class="id-display">BK1703123456ABCDEF</div>
+                </div>
+                <div class="transaction-id">
+                    <div style="font-size: 10px; color: #6c757d; margin-bottom: 4px;">Transaction ID</div>
+                    <div class="id-display">TXN1703123456ABCDEF</div>
+                </div>
+                <p><strong>Improvements:</strong></p>
+                <ul>
+                    <li>Complete IDs visible</li>
+                    <li>Clear visual separation</li>
+                    <li>Easy to copy and identify</li>
+                    <li>Better organized layout</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🧪 Test Instructions:</h2>
+        <ol>
+            <li>Go to <a href="http://localhost:5174/admin" target="_blank">Admin Panel</a></li>
+            <li>Login with: <strong>admin</strong> / <strong>admin123</strong></li>
+            <li>Click "Payments" tab</li>
+            <li>Check the "Booking & Transaction ID" column</li>
+            <li>Verify that full IDs are now visible</li>
+            <li>Test on different screen sizes (mobile/desktop)</li>
+        </ol>
+    </div>
+    
+    <div class="test-section">
+        <h2>📱 Responsive Design Features:</h2>
+        <ul>
+            <li><strong>Horizontal Scroll</strong> - Table scrolls horizontally on small screens</li>
+            <li><strong>Minimum Width</strong> - Column has minimum width to show full IDs</li>
+            <li><strong>Break All</strong> - Long IDs break to new lines if needed</li>
+            <li><strong>Compact Text</strong> - Smaller font size but still readable</li>
+            <li><strong>Proper Spacing</strong> - Good padding and margins for touch devices</li>
+        </ul>
+    </div>
+    
+    <div class="test-section">
+        <h2>🎨 Visual Improvements:</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+            <div>
+                <h4>Booking ID Box:</h4>
+                <div class="booking-id">
+                    <div style="font-size: 10px; color: #6c757d; margin-bottom: 4px;">Booking ID</div>
+                    <div class="id-display">BK1703123456ABCDEF</div>
+                </div>
+            </div>
+            <div>
+                <h4>Transaction ID Box:</h4>
+                <div class="transaction-id">
+                    <div style="font-size: 10px; color: #6c757d; margin-bottom: 4px;">Transaction ID</div>
+                    <div class="id-display">TXN1703123456ABCDEF</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="results"></div>
+    
+    <button onclick="testFullIdsDisplay()">Test Full IDs Display</button>
+    <button onclick="testResponsiveDesign()">Test Responsive Design</button>
+    <button onclick="testIdCopying()">Test ID Copying</button>
+    <button onclick="showImprovements()">Show Improvements</button>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testFullIdsDisplay() {
+            addResult('🆔 Testing Full IDs Display...', 'info');
+            addResult('📋 Go to Admin Panel → Payments tab', 'info');
+            addResult('🔍 Check the "Booking & Transaction ID" column', 'info');
+            addResult('✅ Expected: Full booking IDs visible (no truncation)', 'success');
+            addResult('✅ Expected: Full transaction IDs visible (no truncation)', 'success');
+            addResult('✅ Expected: Each ID in its own colored box', 'success');
+            addResult('✅ Expected: Clear labels above each ID', 'success');
+        }
+        
+        function testResponsiveDesign() {
+            addResult('📱 Testing Responsive Design...', 'info');
+            addResult('📋 Resize your browser window to test responsiveness', 'info');
+            addResult('✅ Expected: Table scrolls horizontally on small screens', 'success');
+            addResult('✅ Expected: IDs break to new lines if too long', 'success');
+            addResult('✅ Expected: Minimum column width maintained', 'success');
+            addResult('✅ Expected: Good spacing on all screen sizes', 'success');
+        }
+        
+        function testIdCopying() {
+            addResult('📋 Testing ID Copying...', 'info');
+            addResult('📋 Try to select and copy the full IDs', 'info');
+            addResult('✅ Expected: Easy to select complete IDs', 'success');
+            addResult('✅ Expected: No truncation when copying', 'success');
+            addResult('✅ Expected: Clear visual separation between IDs', 'success');
+        }
+        
+        function showImprovements() {
+            addResult('🎨 Display Improvements:', 'info');
+            addResult('📦 Each ID in its own colored box', 'info');
+            addResult('🏷️ Clear labels: "Booking ID" and "Transaction ID"', 'info');
+            addResult('📏 Full IDs visible (no truncation)', 'info');
+            addResult('🎨 Color coding: Gray for booking, Green for transaction', 'info');
+            addResult('📱 Responsive design with horizontal scroll', 'info');
+            addResult('💫 Better spacing and typography', 'info');
+        }
+        
+        // Auto-run test on page load
+        window.onload = function() {
+            addResult('🚀 Full IDs Display Test loaded', 'info');
+            addResult('📋 IDs should now be fully visible in admin panel!', 'success');
+            showImprovements();
+        };
+    </script>
+</body>
+</html>

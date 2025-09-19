@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin-Home Coordination Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .coordination-test { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🔄 Admin-Home Coordination Test</h1>
+    
+    <div class="coordination-test">
+        <h2>📋 Test Instructions:</h2>
+        <ol>
+            <li>Open <strong>Admin Panel</strong> in another tab: <a href="http://localhost:5174/admin" target="_blank">http://localhost:5174/admin</a></li>
+            <li>Open <strong>Home Page</strong> in another tab: <a href="http://localhost:5174/" target="_blank">http://localhost:5174/</a></li>
+            <li>In Admin Panel, add a new destination</li>
+            <li>Check if it appears immediately on Home Page</li>
+            <li>Use the buttons below to test coordination</li>
+        </ol>
+    </div>
+    
+    <div id="results"></div>
+    
+    <button onclick="testCoordination()">Test Coordination</button>
+    <button onclick="addTestDestination()">Add Test Destination</button>
+    <button onclick="checkDataSync()">Check Data Sync</button>
+    <button onclick="clearTestData()">Clear Test Data</button>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testCoordination() {
+            addResult('🔄 Testing Admin-Home coordination...', 'info');
+            
+            // Check if localStorage events are working
+            const testEvent = new CustomEvent('localStorageUpdate', {
+                detail: { table: 'destinations', action: 'test', data: { id: 'test' } }
+            });
+            
+            window.dispatchEvent(testEvent);
+            addResult('✅ Test event dispatched', 'success');
+            
+            // Check current data
+            const destinations = JSON.parse(localStorage.getItem('destinations') || '[]');
+            addResult(`📊 Current destinations: ${destinations.length}`, 'info');
+            
+            if (destinations.length > 0) {
+                addResult('✅ Destinations data found', 'success');
+                destinations.forEach((dest, index) => {
+                    addResult(`${index + 1}. ${dest.name} - ₹${dest.price}`, 'info');
+                });
+            } else {
+                addResult('❌ No destinations found', 'error');
+            }
+        }
+        
+        function addTestDestination() {
+            addResult('🔄 Adding test destination...', 'info');
+            
+            const existingDestinations = JSON.parse(localStorage.getItem('destinations') || '[]');
+            const testDestination = {
+                id: Date.now().toString(),
+                name: 'Test Coordination Destination',
+                description: 'This is a test destination to verify admin-home coordination',
+                price: 9999,
+                image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500',
+                location: 'Test Location',
+                duration: '2 days',
+                category: 'Test',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+            
+            const updatedDestinations = [...existingDestinations, testDestination];
+            localStorage.setItem('destinations', JSON.stringify(updatedDestinations));
+            
+            // Dispatch update event
+            window.dispatchEvent(new CustomEvent('localStorageUpdate', {
+                detail: { table: 'destinations', action: 'insert', data: testDestination }
+            }));
+            
+            addResult('✅ Test destination added and event dispatched', 'success');
+            addResult('🔄 Check Home Page - destination should appear immediately!', 'info');
+        }
+        
+        function checkDataSync() {
+            addResult('🔄 Checking data synchronization...', 'info');
+            
+            const tables = ['destinations', 'services', 'advertisements', 'offers', 'gallery', 'testimonials'];
+            let totalItems = 0;
+            
+            tables.forEach(table => {
+                const data = localStorage.getItem(table);
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    addResult(`✅ ${table}: ${parsed.length} items`, 'success');
+                    totalItems += parsed.length;
+                } else {
+                    addResult(`❌ ${table}: No data`, 'error');
+                }
+            });
+            
+            addResult(`📊 Total items across all tables: ${totalItems}`, 'info');
+            
+            if (totalItems > 0) {
+                addResult('✅ Data synchronization looks good!', 'success');
+            } else {
+                addResult('❌ No data found - run "Add Sample Data" first', 'error');
+            }
+        }
+        
+        function clearTestData() {
+            addResult('🔄 Clearing test data...', 'info');
+            
+            // Remove only test destinations
+            const destinations = JSON.parse(localStorage.getItem('destinations') || '[]');
+            const filteredDestinations = destinations.filter(dest => 
+                !dest.name.includes('Test') && !dest.category.includes('Test')
+            );
+            
+            localStorage.setItem('destinations', JSON.stringify(filteredDestinations));
+            
+            // Dispatch update event
+            window.dispatchEvent(new CustomEvent('localStorageUpdate', {
+                detail: { table: 'destinations', action: 'delete', data: { id: 'test' } }
+            }));
+            
+            addResult('✅ Test data cleared', 'success');
+            addResult(`📊 Remaining destinations: ${filteredDestinations.length}`, 'info');
+        }
+        
+        // Listen for localStorage update events
+        window.addEventListener('localStorageUpdate', (event) => {
+            const { table, action, data } = event.detail;
+            addResult(`🔄 Received update: ${action} on ${table}`, 'info');
+        });
+        
+        // Auto-run coordination test on page load
+        window.onload = function() {
+            addResult('🚀 Starting coordination test...', 'info');
+            testCoordination();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Data Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-section { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .data-display { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .booking-item { border: 1px solid #dee2e6; padding: 10px; margin: 5px 0; border-radius: 5px; }
+        .has-transaction { background: #d4edda; }
+        .no-transaction { background: #f8d7da; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Payment Data Debug Test</h1>
+    
+    <div class="debug-section">
+        <h2>📊 Current Bookings Data</h2>
+        <button onclick="checkBookingsData()">Check Bookings Data</button>
+        <button onclick="checkPaymentsData()">Check Payments Data</button>
+        <button onclick="createTestBooking()">Create Test Booking</button>
+        <button onclick="clearAllData()">Clear All Data</button>
+        <div id="bookingsData" class="data-display"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>🔧 Debug Actions</h2>
+        <button onclick="simulatePaymentSuccess()">Simulate Payment Success</button>
+        <button onclick="checkTransactionIds()">Check Transaction IDs</button>
+        <button onclick="fixMissingTransactionIds()">Fix Missing Transaction IDs</button>
+        <div id="debugResults"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>📋 Test Instructions</h2>
+        <ol>
+            <li>Click "Check Bookings Data" to see current bookings</li>
+            <li>Look for bookings with/without transaction_id</li>
+            <li>Click "Create Test Booking" to add a test booking</li>
+            <li>Click "Simulate Payment Success" to add transaction ID</li>
+            <li>Check the admin panel payments tab</li>
+        </ol>
+    </div>
+    
+    <script>
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            document.getElementById('debugResults').appendChild(div);
+        }
+        
+        function checkBookingsData() {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const container = document.getElementById('bookingsData');
+            
+            if (bookings.length === 0) {
+                container.innerHTML = '<p>No bookings found in localStorage</p>';
+                return;
+            }
+            
+            let html = `<h3>Found ${bookings.length} bookings:</h3>`;
+            
+            bookings.forEach((booking, index) => {
+                const hasTransaction = booking.transaction_id && booking.transaction_id.trim() !== '';
+                const status = booking.payment_status || 'pending';
+                
+                html += `
+                    <div class="booking-item ${hasTransaction ? 'has-transaction' : 'no-transaction'}">
+                        <h4>Booking ${index + 1}: ${booking.customer_name || 'Unknown'}</h4>
+                        <p><strong>ID:</strong> ${booking.id || 'N/A'}</p>
+                        <p><strong>Status:</strong> ${status}</p>
+                        <p><strong>Transaction ID:</strong> ${booking.transaction_id || 'NOT SET'}</p>
+                        <p><strong>Payment Method:</strong> ${booking.payment_method || 'N/A'}</p>
+                        <p><strong>Amount:</strong> ₹${booking.amount || 0}</p>
+                        <p><strong>Created:</strong> ${booking.created_at || 'N/A'}</p>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            
+            const withTransaction = bookings.filter(b => b.transaction_id && b.transaction_id.trim() !== '').length;
+            const withoutTransaction = bookings.length - withTransaction;
+            
+            addResult(`📊 Data Summary: ${withTransaction} bookings with transaction ID, ${withoutTransaction} without`, 
+                     withTransaction > 0 ? 'success' : 'warning');
+        }
+        
+        function checkPaymentsData() {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const paidBookings = bookings.filter(b => b.payment_status === 'paid');
+            
+            addResult(`💰 Paid Bookings: ${paidBookings.length}`, 'info');
+            
+            paidBookings.forEach(booking => {
+                const hasTransaction = booking.transaction_id && booking.transaction_id.trim() !== '';
+                addResult(`📋 ${booking.customer_name}: ${hasTransaction ? '✅ Has Transaction ID' : '❌ Missing Transaction ID'}`, 
+                         hasTransaction ? 'success' : 'error');
+            });
+        }
+        
+        function createTestBooking() {
+            const testBooking = {
+                id: `BK${Date.now()}${Math.random().toString(36).substr(2, 4).toUpperCase()}`,
+                customer_name: 'Test Customer',
+                email: 'test@example.com',
+                mobile: '9876543210',
+                address: 'Test Address',
+                destination_id: 'dest1',
+                service_id: 'serv1',
+                booking_date: new Date().toISOString(),
+                details: 'Test booking',
+                seats_selected: 2,
+                total_amount: 5000,
+                addons_total: 0,
+                base_amount: 5000,
+                payment_status: 'pending',
+                payment_method: 'razorpay',
+                transaction_id: '',
+                customer_image_url: '',
+                payment_proof_url: '',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+            
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            bookings.push(testBooking);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            
+            addResult(`✅ Created test booking: ${testBooking.id}`, 'success');
+            checkBookingsData();
+        }
+        
+        function simulatePaymentSuccess() {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const pendingBookings = bookings.filter(b => b.payment_status === 'pending');
+            
+            if (pendingBookings.length === 0) {
+                addResult('❌ No pending bookings found', 'error');
+                return;
+            }
+            
+            const booking = pendingBookings[0];
+            const transactionId = `TXN${Date.now()}${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+            
+            booking.payment_status = 'paid';
+            booking.transaction_id = transactionId;
+            booking.updated_at = new Date().toISOString();
+            
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            
+            addResult(`✅ Updated booking ${booking.id} with transaction ID: ${transactionId}`, 'success');
+            checkBookingsData();
+        }
+        
+        function checkTransactionIds() {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const paidBookings = bookings.filter(b => b.payment_status === 'paid');
+            
+            addResult(`🔍 Checking ${paidBookings.length} paid bookings for transaction IDs...`, 'info');
+            
+            paidBookings.forEach(booking => {
+                if (booking.transaction_id && booking.transaction_id.trim() !== '') {
+                    addResult(`✅ ${booking.customer_name}: ${booking.transaction_id}`, 'success');
+                } else {
+                    addResult(`❌ ${booking.customer_name}: Missing transaction ID`, 'error');
+                }
+            });
+        }
+        
+        function fixMissingTransactionIds() {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            let fixed = 0;
+            
+            bookings.forEach(booking => {
+                if (booking.payment_status === 'paid' && (!booking.transaction_id || booking.transaction_id.trim() === '')) {
+                    booking.transaction_id = `TXN${Date.now()}${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+                    booking.updated_at = new Date().toISOString();
+                    fixed++;
+                }
+            });
+            
+            if (fixed > 0) {
+                localStorage.setItem('bookings', JSON.stringify(bookings));
+                addResult(`🔧 Fixed ${fixed} bookings with missing transaction IDs`, 'success');
+                checkBookingsData();
+            } else {
+                addResult('ℹ️ No bookings needed fixing', 'info');
+            }
+        }
+        
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all bookings data?')) {
+                localStorage.removeItem('bookings');
+                addResult('🗑️ All bookings data cleared', 'warning');
+                checkBookingsData();
+            }
+        }
+        
+        // Auto-run on page load
+        window.onload = function() {
+            addResult('🚀 Payment Data Debug Test loaded', 'info');
+            checkBookingsData();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chandan Prasad Travels - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: transparent;
+            color: #333;
+            margin: 0;
+        }
+
+        /* Navbar and Footer */
+        .nav-gradient {
+            background: transparent;
+        }
+
+        .nav-link {
+            padding: 0.5rem;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .nav-link:hover {
+            color: #F97316;
+            text-shadow: 1px 10px 30px rgba(249, 115, 22, 0.8);
+            transform: scale(1.1);
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInBottom {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .animate-slide-in-bottom {
+            animation: slideInBottom 1s ease-out forwards;
+        }
+
+        .animate-slide-in-left {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        .animate-slide-in-right {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .animate-bounce-in {
+            animation: bounceIn 0.5s ease-out;
+        }
+
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-300 {
+            animation-delay: 0.3s;
+        }
+
+        /* UI/UX Enhancements */
+        header {
+            animation: slideIn 1s ease-in-out;
+            box-shadow: none;
+        }
+
+        #mobile-menu {
+            background: transparent;
+        }
+
+        .hero-section {
+            position: relative;
+        }
+
+        #hero-button {
+            background: linear-gradient(90deg, #F97316, #FBBF24);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+        }
+
+        #hero-button:hover {
+            background: linear-gradient(90deg, #FBBF24, #F97316);
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.5);
+        }
+
+        /* Footer Styles */
+        footer {
+            background: linear-gradient(135deg, #1E3A8A, #A78BFA);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            width: 100%;
+            position: relative;
+            bottom: 0;
+        }
+
+        footer a {
+            color: #F97316;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #FBBF24;
+        }
+
+        /* Featured Destinations Styles */
+        .destination-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .destination-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .destination-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        .destination-card button {
+            background: linear-gradient(90deg, #F97316, #FBBF24);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .destination-card button:hover {
+            background: linear-gradient(90deg, #FBBF24, #F97316);
+            transform: scale(1.05);
+        }
+
+        /* Section Styles */
+        .section-bg {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 1rem;
+        }
+
+        .card-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        .testimonials-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .testimonial-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            max-width: 300px;
+            text-align: left;
+        }
+
+        .testimonial-item p {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .testimonial-item h4 {
+            font-size: 14px;
+            color: #555;
+            font-weight: normal;
+        }
+
+        /* Enhanced Modal Styles */
+        #booking-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #booking-modal .modal-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-10px);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        #booking-modal .close-modal {
+            font-size: 2rem;
+            color: #888;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        #booking-modal .close-modal:hover {
+            color: #F97316;
+        }
+
+        /* Improved Booking Form Styles */
+        #booking-form {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        #booking-form label {
+            display: flex;
+            align-items: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 0.75rem;
+        }
+
+        #booking-form input,
+        #booking-form textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.75rem;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        #booking-form input:focus,
+        #booking-form textarea:focus {
+            border-color: #F97316;
+            box-shadow: 0 0 8px rgba(249, 115, 22, 0.3);
+            outline: none;
+        }
+
+        #booking-form input:valid,
+        #booking-form textarea:valid {
+            border-color: #48bb78;
+        }
+
+        #booking-form input:invalid:not(:placeholder-shown),
+        #booking-form textarea:invalid:not(:placeholder-shown) {
+            border-color: #f56565;
+        }
+
+        #booking-form input[readonly],
+        #booking-form textarea[readonly] {
+            background: #edf2f7;
+            color: #718096;
+            cursor: not-allowed;
+            font-weight: 500;
+        }
+
+        #booking-form .form-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        #booking-form button {
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        #booking-form #cancel-booking {
+            background: #a0aec0;
+            color: white;
+        }
+
+        #booking-form #cancel-booking:hover {
+            background: #718096;
+            transform: scale(1.05);
+        }
+
+        #booking-form button[type="submit"] {
+            background: linear-gradient(90deg, #F97316, #FBBF24);
+            color: white;
+        }
+
+        #booking-form button[type="submit"]:hover {
+            background: linear-gradient(90deg, #FBBF24, #F97316);
+            transform: scale(1.05);
+        }
+
+        /* Gallery Slideshow Styles */
+        #gallery-slideshow {
+            display: flex;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gallery-slide {
+            min-width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .gallery-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.75rem;
+        }
+
+        .gallery-slide .caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <!-- Navbar -->
+    <header class="nav-gradient fixed w-full top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-white flex items-center space-x-2">
+                <i class="fas fa-plane text-orange-500"></i>
+                <span>TripSera</span>
+            </a>
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="nav-link">Start Your Journey</a>
+                <a href="destinations.html" class="nav-link">Where to Next?</a>
+                <a href="services.html" class="nav-link">Travel Your Way</a>
+                <a href="gallery.html" class="nav-link">Moments & Memories</a>
+                <a href="bookings.html" class="nav-link">Bookings</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="Admin.tsx" class="nav-link">Admin</a> <!-- Added from working code -->
+            </nav>
+            <button id="mobile-menu-btn" class="md:hidden text-white">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        <nav id="mobile-menu" class="hidden md:hidden bg-blue-800 text-white p-4">
+            <a href="index.html" class="block py-2 nav-link">Home</a>
+            <a href="destinations.html" class="block py-2 nav-link">Where to Next?</a>
+            <a href="services.html" class="block py-2 nav-link">Services</a>
+            <a href="gallery.html" class="block py-2 nav-link">Gallery</a>
+            <a href="bookings.html" class="block py-2 nav-link">Bookings</a>
+            <a href="contact.html" class="block py-2 nav-link">Contact</a>
+            <a href="Admin.tsx" class="block py-2 nav-link">Admin</a> <!-- Added from working code -->
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative flex justify-center items-center h-screen min-h-screen bg-cover bg-center hero-section">
+        <video class="absolute inset-0 w-full h-full object-cover z-0" autoplay loop muted playsinline id="hero-video">
+            <source src="https://cdn.pixabay.com/video/2017/06/05/9584-220312371_large.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
+        <div class="relative text-center p-10 max-w-4xl mx-auto z-10">
+            <h1
+                class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500 leading-snug">
+                <span id="hero-title" class="border-r-4 border-yellow-400 pr-2"></span>
+            </h1>
+            <h2 id="hero-subtitle" class="text-3xl font-semibold text-white mt-6 opacity-0 animate-fade-in"></h2>
+            <p id="hero-text"
+                class="mt-5 text-xl font-medium text-gray-300 text-lg opacity-0 animate-fade-in delay-200"></p>
+            <button id="hero-button"
+                class="inline-flex items-center justify-center text-white font-medium transition-all duration-500 mt-8"
+                onclick="openBookingModal()">Book Now</button>
+        </div>
+    </section>
+
+    <!-- Advertisements Section -->
+    <section id="advertisements" class="container mx-auto py-16 px-4 section-bg">
+        <h2 class="text-4xl font-bold text-black text-center mb-12 animate-fade-in">Advertisements</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8" id="ads-container"></div>
+    </section>
+
+    <!-- New Destinations Section -->
+    <section id="new-destinations" class="container mx-auto py-16 px-4 section-bg">
+        <h2 class="text-4xl font-bold text-black text-center mb-12 animate-fade-in">New Destinations</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8" id="new-destinations-container"></div>
+    </section>
+
+    <!-- Featured Destinations Section -->
+    <section id="featured-destinations" class="container mx-auto py-16 px-4">
+        <h2 class="text-4xl font-bold text-black text-center mb-12 animate-fade-in">Featured Destinations</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8" id="destination-container"></div>
+    </section>
+
+    <!-- Best Packages/Offers Section -->
+    <section id="offers" class="container mx-auto py-16 px-4 section-bg">
+        <h2 class="text-4xl font-bold text-black text-center mb-12 animate-fade-in">Best Packages & Offers</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8" id="offers-container"></div>
+    </section>
+
+    <!-- Video and Map Section -->
+    <section id="video-map" class="container mx-auto py-16 px-4">
+        <div class="flex flex-col md:flex-row justify-between items-start gap-8">
+            <div class="w-full md:w-1/2 text-center animate-slide-in-left">
+                <h2 id="video-title" class="text-4xl font-bold mb-8 text-black">Travel Video</h2>
+                <video autoplay muted loop id="bgVideo">
+                    <source src="videos/video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="w-full md:w-1/2 text-center animate-slide-in-right">
+                <h3 id="map-title" class="text-4xl font-bold mb-4 text-black">Find Us Here</h3>
+                <iframe id="map-iframe" class="w-full h-[450px] rounded-lg shadow-lg"
+                    src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d4900.789663210272!2d76.49217071156957!3d15.509051154126839!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTXCsDMwJzMyLjYiTiA3NsKwMjknNDEuMSJF!5e1!3m2!1sen!2sin!4v1741113847602!5m2!1sen!2sin"
+                    style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="container mx-auto py-16 px-4 section-bg">
+        <h2 class="text-4xl font-bold text-black text-center mb-12 animate-fade-in">Gallery</h2>
+        <div class="relative w-full max-w-4xl mx-auto overflow-hidden rounded-lg shadow-lg">
+            <div id="gallery-slideshow" class="flex transition-transform duration-700 ease-in-out"></div>
+            <button id="prev-slide"
+                class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-300">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button id="next-slide"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-300">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials-section">
+        <h2>What Our Customers Say</h2>
+        <div class="testimonials-container"></div>
+    </section>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal">
+        <div class="modal-content animate-bounce-in">
+            <span class="close-modal" onclick="closeBookingModal()">×</span>
+            <h2 class="text-3xl font-bold mb-6 text-gray-800 text-center">Book Your Trip</h2>
+            <form id="booking-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="booking-customer"><i class="fas fa-user mr-2 text-orange-500"></i> Full Name</label>
+                        <input type="text" id="booking-customer" required placeholder="e.g., John Doe" class="w-full">
+                    </div>
+                    <div class="form-group">
+                        <label for="booking-email"><i class="fas fa-envelope mr-2 text-orange-500"></i> Email</label>
+                        <input type="email" id="booking-email" required placeholder="e.g., john.doe@example.com"
+                            class="w-full">
+                    </div>
+                    <div class="form-group">
+                        <label for="booking-mobile"><i class="fas fa-phone mr-2 text-orange-500"></i> Mobile
+                            Number</label>
+                        <input type="tel" id="booking-mobile" required placeholder="e.g., +91 1234567890"
+                            pattern="[0-9]{10,}" class="w-full">
+                    </div>
+                    <div class="form-group">
+                        <label for="booking-destination"><i class="fas fa-map-marker-alt mr-2 text-orange-500"></i>
+                            Destination</label>
+                        <input type="text" id="booking-destination" required placeholder="Enter destination"
+                            class="w-full">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="booking-details"><i class="fas fa-info-circle mr-2 text-orange-500"></i> Additional
+                            Details</label>
+                        <textarea id="booking-details" rows="3" placeholder="Any special requests or details"
+                            class="w-full"></textarea>
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" id="cancel-booking" onclick="closeBookingModal()">Cancel</button>
+                    <button type="submit">Submit Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-gray-300 text-center p-6 mt-10 animate-slide-in-bottom">
+        <div class="container mx-auto">
+            <h3 class="text-lg font-semibold">TripSera</h3>
+            <p class="mt-2">© 2025 TripSera. All rights reserved.</p>
+            <div id="footer-links" class="flex justify-center space-x-6 mt-4"></div>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="#" class="hover:text-white transition duration-300"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="hover:text-white transition duration-300"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/mr_chandan_prasad_indian?igsh=MXU1MWVxazQ4cXcwcQ=="
+                    class="hover:text-white transition duration-300"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/mr-chandan-prasad1947"
+                    class="hover:text-white transition duration-300"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById("mobile-menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+        menuBtn.addEventListener("click", () => mobileMenu.classList.toggle("hidden"));
+
+        // Fetch Data from Local Storage
+        function fetchLocalData(key, defaultValue = []) {
+            return JSON.parse(localStorage.getItem(key)) || defaultValue;
+        }
+
+        // Load Home Content
+        function loadHomeContent() {
+            const homeContent = {
+                title: "ಎಲ್ಲಾದರೂ ಇರು ಎಂತಾದರೂ ಇರು ಎಂದೆಂದಿಗೂ ನೀ ಕನ್ನಡವಾಗಿರು",
+                subtitle: "Let us guide you through a world of wonder <br> your dream escape starts here.",
+                text: "Find the best travel deals and explore amazing destinations.",
+                buttonText: "Book Now",
+                heroVideo: "https://cdn.pixabay.com/video/2017/06/05/9584-220312371_large.mp4",
+                videoTitle: "Travel Video",
+                travelVideo: "https://cdn.pixabay.com/video/2024/08/30/228897-998948224_tiny.mp4",
+                mapTitle: "Find Us Here",
+                mapUrl: "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d4900.789663210272!2d76.49217071156957!3d15.509051154126839!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTXCsDMwJzMyLjYiTiA3NsKwMjknNDEuMSJF!5e1!3m2!1sen!2sin!4v1741113847602!5m2!1sen!2sin"
+            };
+            let i = 0;
+            const titleElement = document.getElementById("hero-title");
+            function typeWriter() {
+                if (i < homeContent.title.length) {
+                    titleElement.innerHTML += homeContent.title.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 120);
+                } else {
+                    titleElement.classList.remove("border-r-4");
+                }
+            }
+            titleElement.innerHTML = "";
+            setTimeout(typeWriter, 500);
+            document.getElementById("hero-subtitle").innerHTML = homeContent.subtitle;
+            document.getElementById("hero-text").innerHTML = homeContent.text;
+            document.getElementById("hero-button").innerHTML = homeContent.buttonText;
+            document.getElementById("hero-video").querySelector("source").src = homeContent.heroVideo;
+            document.getElementById("hero-video").load();
+            document.getElementById("video-title").innerHTML = homeContent.videoTitle;
+            document.getElementById("travel-video-source").src = homeContent.travelVideo;
+            document.getElementById("travel-video").load();
+            document.getElementById("map-title").innerHTML = homeContent.mapTitle;
+            document.getElementById("map-iframe").src = homeContent.mapUrl;
+        }
+
+        // Load Footer Settings
+        function loadFooter() {
+            const settings = fetchLocalData('siteSettings', {
+                companyName: 'TripSera',
+                contactNumber: '+91 8296724981',
+                contactEmail: 'Tripsera@gmail.com', // Updated from working code
+                companyAddress: 'Kesarhatti, Karnataka, India',
+            });
+            const footerLinks = document.getElementById('footer-links');
+            footerLinks.innerHTML = `
+                <a href="tel:${settings.contactNumber}">${settings.contactNumber}</a>
+                <a href="mailto:${settings.contactEmail}">${settings.contactEmail}</a>
+                <span>${settings.companyAddress}</span>
+            `;
+        }
+
+        // Load Featured Destinations
+        function loadFeaturedDestinations() {
+            const destinations = fetchLocalData('destinations');
+            const container = document.getElementById('destination-container');
+            container.innerHTML = '';
+            if (!destinations.length) {
+                container.innerHTML = '<p class="text-center text-gray-600">No featured destinations available.</p>';
+                return;
+            }
+            destinations.forEach((dest, index) => {
+                const animationClass = index % 3 === 0 ? 'animate-slide-in-left' : index % 3 === 1 ? 'animate-slide-in-bottom' : 'animate-slide-in-right';
+                const delayClass = `delay-${(index % 3 + 1) * 200}`;
+                container.innerHTML += `
+                    <div class="destination-card ${animationClass} ${delayClass}">
+                        <img src="${dest.image || 'https://via.placeholder.com/300x200?text=' + dest.name}" alt="${dest.name}" onerror="this.src='https://via.placeholder.com/300x200';">
+                        <h3 class="text-xl mt-4">${dest.name}</h3>
+                        <p class="mt-2">${dest.desc || 'No description available'}</p>
+                        <p class="price mt-2 text-teal-600 font-semibold">₹${(dest.price || 0).toLocaleString()}</p> <!-- Updated styling -->
+                        <button class="mt-4" onclick="openBookingModal('${dest.name}')">Book Now</button>
+                    </div>`;
+            });
+        }
+
+        // Load Advertisements
+        function loadAdvertisements() {
+            const ads = fetchLocalData('advertisements');
+            const container = document.getElementById('ads-container');
+            container.innerHTML = '';
+            if (!ads.length) {
+                container.innerHTML = '<p class="text-center text-gray-600">No advertisements available.</p>';
+                return;
+            }
+            ads.forEach((ad, index) => {
+                const animationClass = index % 3 === 0 ? 'animate-slide-in-left' : index % 3 === 1 ? 'animate-slide-in-bottom' : 'animate-slide-in-right';
+                const delayClass = `delay-${(index % 3 + 1) * 200}`;
+                container.innerHTML += `
+                    <div class="card-item ${animationClass} ${delayClass}">
+                        <img src="${ad.image}" alt="${ad.title}" onerror="this.src='https://via.placeholder.com/300';">
+                        <h3 class="text-xl mt-4">${ad.title}</h3>
+                        <p class="mt-2">${ad.desc}</p>
+                    </div>`;
+            });
+        }
+
+        // Load New Destinations
+        function loadNewDestinations() {
+            const destinations = fetchLocalData('newDestinations'); // Updated to use 'newDestinations' key
+            const container = document.getElementById('new-destinations-container');
+            container.innerHTML = '';
+            if (!destinations.length) {
+                container.innerHTML = '<p class="text-center text-gray-600">No new destinations available.</p>';
+                return;
+            }
+            destinations.forEach((dest, index) => {
+                const animationClass = index % 3 === 0 ? 'animate-slide-in-left' : index % 3 === 1 ? 'animate-slide-in-bottom' : 'animate-slide-in-right';
+                const delayClass = `delay-${(index % 3 + 1) * 200}`;
+                container.innerHTML += `
+                    <div class="card-item ${animationClass} ${delayClass}">
+                        <img src="${dest.image || 'https://via.placeholder.com/300x250?text=' + dest.name}" alt="${dest.name}" onerror="this.src='https://via.placeholder.com/300x250';">
+                        <h3 class="text-xl mt-4">${dest.name}</h3>
+                        <p class="mt-2">${dest.desc || 'Explore this amazing destination!'}</p>
+                        <p class="price mt-2 text-teal-600 font-semibold">₹${(dest.price || 0).toLocaleString()}</p> <!-- Updated styling -->
+                        <button class="mt-4" onclick="openBookingModal('${dest.name}')">Book Now</button>
+                    </div>`;
+            });
+        }
+
+        // Load Offers
+        function loadOffers() {
+            const offers = fetchLocalData('offers');
+            const container = document.getElementById('offers-container');
+            container.innerHTML = '';
+            if (!offers.length) {
+                container.innerHTML = '<p class="text-center text-gray-600">No offers available.</p>';
+                return;
+            }
+            offers.forEach((offer, index) => {
+                const animationClass = index % 3 === 0 ? 'animate-slide-in-left' : index % 3 === 1 ? 'animate-slide-in-bottom' : 'animate-slide-in-right';
+                const delayClass = `delay-${(index % 3 + 1) * 200}`;
+                container.innerHTML += `
+                    <div class="card-item ${animationClass} ${delayClass}">
+                        <img src="${offer.image}" alt="${offer.title}" onerror="this.src='https://via.placeholder.com/300';">
+                        <h3 class="text-xl mt-4">${offer.title}</h3>
+                        <p class="mt-2">${offer.desc}</p>
+                        <p class="price mt-2 text-teal-600 font-semibold">₹${(offer.price || 0).toLocaleString()}</p> <!-- Updated styling -->
+                        <button class="mt-4" onclick="openBookingModal('${offer.title}')">Book Now</button>
+                    </div>`;
+            });
+        }
+
+        // Load Gallery
+        function loadGallery() {
+            const gallery = fetchLocalData('gallery');
+            const slideshow = document.getElementById('gallery-slideshow');
+            slideshow.innerHTML = '';
+            if (!gallery.length) {
+                slideshow.innerHTML = '<p class="text-center text-gray-600 w-full py-20">No gallery images available.</p>';
+                document.getElementById('prev-slide').style.display = 'none';
+                document.getElementById('next-slide').style.display = 'none';
+                return;
+            }
+            gallery.forEach((item, index) => {
+                slideshow.innerHTML += `
+                    <div class="gallery-slide" style="transform: translateX(${index === 0 ? 0 : 100}%)">
+                        <img src="${item.image}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/600x400';">
+                        <div class="caption">${item.title}</div>
+                    </div>`;
+            });
+            startSlideshow(gallery.length);
+        }
+
+        // Slideshow Logic
+        let currentSlide = 0;
+        function startSlideshow(totalSlides) {
+            const slides = document.querySelectorAll('.gallery-slide');
+            const prevBtn = document.getElementById('prev-slide');
+            const nextBtn = document.getElementById('next-slide');
+
+            function showSlide(index) {
+                currentSlide = (index + totalSlides) % totalSlides;
+                slides.forEach((slide, i) => {
+                    slide.style.transform = `translateX(${(i - currentSlide) * 100}%)`;
+                });
+            }
+
+            prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
+            nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+            setInterval(() => showSlide(currentSlide + 1), 5000); // Auto-slide every 5 seconds
+        }
+
+        // Load Testimonials
+        function loadTestimonials() {
+            const testimonials = fetchLocalData('testimonials');
+            const container = document.getElementById('testimonials-container');
+            container.innerHTML = '';
+            if (!testimonials.length) {
+                container.innerHTML = '<p class="text-center text-gray-600">No testimonials available.</p>';
+                return;
+            }
+            testimonials.forEach((item, index) => {
+                const animationClass = index % 2 === 0 ? 'animate-slide-in-left' : 'animate-slide-in-right';
+                const delayClass = `delay-${(index % 2 + 1) * 200}`;
+                container.innerHTML += `
+                    <div class="card-item ${animationClass} ${delayClass}">
+                        <p class="mt-2 text-gray-600 italic">"${item.text}"</p> <!-- Updated styling -->
+                        <p class="author mt-4 text-right text-teal-600 font-semibold">- ${item.author}</p> <!-- Updated styling -->
+                    </div>`;
+            });
+        }
+
+        ocument.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.testimonials-container');
+            const testimonials = JSON.parse(localStorage.getItem('testimonials') || '[]');
+
+            if (testimonials.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-600">No testimonials yet.</p>';
+                return;
+            }
+
+            testimonials.forEach((item) => {
+                const div = document.createElement('div');
+                div.className = 'testimonial-item';
+                div.innerHTML = `
+        <p>${item.text}</p>
+        <h4>- ${item.author || 'Anonymous'}</h4>
+      `;
+                container.appendChild(div);
+            });
+        });
+
+        // Booking Modal Logic
+        function openBookingModal(destination = '') {
+            document.getElementById('booking-modal').style.display = 'flex';
+            document.getElementById('booking-destination').value = destination;
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').style.display = 'none';
+            document.getElementById('booking-form').reset();
+        }
+
+        const bookingForm = document.getElementById('booking-form');
+        bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const bookingData = {
+                _id: Date.now().toString(),
+                customer: document.getElementById('booking-customer').value,
+                email: document.getElementById('booking-email').value,
+                mobile: document.getElementById('booking-mobile').value,
+                destination: document.getElementById('booking-destination').value,
+                details: document.getElementById('booking-details').value,
+                paymentStatus: 'Pending',
+                date: new Date().toISOString().split('T')[0],
+                amount: 0, // Default amount, update in admin
+            };
+            const bookings = fetchLocalData('bookings');
+            bookings.push(bookingData);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            alert('Booking submitted successfully! We’ll contact you soon.');
+            closeBookingModal();
+        });
+
+        // Initialize Page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadHomeContent();
+            loadFooter();
+            loadFeaturedDestinations();
+            loadAdvertisements();
+            loadNewDestinations();
+            loadOffers();
+            loadGallery();
+            loadTestimonials();
+        });
+    </script>
+</body>
+
+</html>

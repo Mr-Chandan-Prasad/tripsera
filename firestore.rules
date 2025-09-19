@@ -1,0 +1,133 @@
+// Firestore Security Rules for Tripsera
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isCustomer() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'customer';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isValidUser() {
+      return isAuthenticated() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Bookings collection
+    match /bookings/{bookingId} {
+      allow read: if isAdmin() || (isCustomer() && resource.data.customer_id == request.auth.uid);
+      allow create: if isCustomer();
+      allow update: if isAdmin() || (isCustomer() && resource.data.customer_id == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+    
+    // Destinations collection
+    match /destinations/{destinationId} {
+      allow read: if true; // Public read access
+      allow write: if isAdmin();
+    }
+    
+    // Services collection
+    match /services/{serviceId} {
+      allow read: if true; // Public read access
+      allow write: if isAdmin();
+    }
+    
+    // Add-ons collection
+    match /addons/{addonId} {
+      allow read: if true; // Public read access
+      allow write: if isAdmin();
+    }
+    
+    // Gallery collection
+    match /gallery/{galleryId} {
+      allow read: if true; // Public read access
+      allow write: if isAdmin();
+    }
+    
+    // Testimonials collection
+    match /testimonials/{testimonialId} {
+      allow read: if true; // Public read access
+      allow create: if isCustomer();
+      allow update: if isAdmin() || (isCustomer() && resource.data.user_id == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+    
+    // Advertisements collection
+    match /advertisements/{adId} {
+      allow read: if true; // Public read access
+      allow write: if isAdmin();
+    }
+    
+    // Offers collection
+    match /offers/{offerId} {
+      allow read: if true; // Public read access
+      allow write: if isAdmin();
+    }
+    
+    // Inquiries collection
+    match /inquiries/{inquiryId} {
+      allow read: if isAdmin();
+      allow create: if true; // Anyone can create inquiries
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Payments collection
+    match /payments/{paymentId} {
+      allow read: if isAdmin() || (isCustomer() && resource.data.customer_id == request.auth.uid);
+      allow create: if isCustomer();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Admin settings collection
+    match /admin_settings/{settingId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Availability collection
+    match /availability/{availabilityId} {
+      allow read: if true; // Public read access for booking
+      allow write: if isAdmin();
+    }
+    
+    // Notifications collection
+    match /notifications/{notificationId} {
+      allow read: if isAdmin() || (isCustomer() && resource.data.user_id == request.auth.uid);
+      allow create: if isAdmin();
+      allow update: if isAdmin() || (isCustomer() && resource.data.user_id == request.auth.uid);
+      allow delete: if isAdmin() || (isCustomer() && resource.data.user_id == request.auth.uid);
+    }
+    
+    // Migrations collection (admin only)
+    match /migrations/{migrationId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Default deny rule
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

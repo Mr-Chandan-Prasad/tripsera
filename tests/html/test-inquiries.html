@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inquiries Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .test-instructions { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .fix-summary { border: 2px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        .inquiry-form { border: 2px solid #6c757d; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        input, textarea { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px; }
+        .inquiry-list { border: 2px solid #17a2b8; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        .inquiry-item { background: white; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>📧 Inquiries Test</h1>
+    
+    <div class="fix-summary">
+        <h2>✅ What Was Fixed:</h2>
+        <ul>
+            <li><strong>Added inquiries to sample data initialization</strong> in useLocalStorage.ts</li>
+            <li><strong>Added site_settings to sample data initialization</strong> for contact information</li>
+            <li><strong>Added sample inquiries data</strong> with proper structure</li>
+            <li><strong>Added debugging logs</strong> to track form submission</li>
+            <li><strong>Enhanced error handling</strong> in contact form</li>
+        </ul>
+    </div>
+    
+    <div class="test-instructions">
+        <h2>📋 Test Instructions:</h2>
+        <ol>
+            <li>Open <strong>Contact Page</strong>: <a href="http://localhost:5174/contact" target="_blank">http://localhost:5174/contact</a></li>
+            <li>Fill in the contact form with valid data</li>
+            <li>Submit the form and check for success message</li>
+            <li>Open <strong>Admin Panel</strong>: <a href="http://localhost:5174/admin" target="_blank">http://localhost:5174/admin</a></li>
+            <li>Go to <strong>Inquiries</strong> tab to see the submitted inquiry</li>
+            <li>Check browser console for debug logs</li>
+        </ol>
+    </div>
+    
+    <div id="results"></div>
+    
+    <button onclick="testInquiriesData()">Test Inquiries Data</button>
+    <button onclick="testContactForm()">Test Contact Form</button>
+    <button onclick="checkAdminPanel()">Check Admin Panel</button>
+    <button onclick="clearInquiries()">Clear Inquiries</button>
+    
+    <div class="inquiry-form">
+        <h3>📝 Test Inquiry Form</h3>
+        <form id="testInquiryForm">
+            <input type="text" id="testName" placeholder="Full Name" required>
+            <input type="email" id="testEmail" placeholder="Email Address" required>
+            <input type="tel" id="testPhone" placeholder="Phone Number">
+            <textarea id="testMessage" placeholder="Message" rows="4" required></textarea>
+            <button type="submit">Submit Test Inquiry</button>
+        </form>
+    </div>
+    
+    <div class="inquiry-list">
+        <h3>📋 Current Inquiries</h3>
+        <div id="inquiriesList"></div>
+    </div>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        const inquiriesList = document.getElementById('inquiriesList');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testInquiriesData() {
+            addResult('🔄 Testing inquiries data...', 'info');
+            
+            // Check if inquiries exist in localStorage
+            const inquiries = JSON.parse(localStorage.getItem('inquiries') || '[]');
+            const siteSettings = JSON.parse(localStorage.getItem('site_settings') || '[]');
+            
+            addResult(`📊 Inquiries found: ${inquiries.length}`, 'info');
+            addResult(`📊 Site settings found: ${siteSettings.length}`, 'info');
+            
+            if (inquiries.length > 0) {
+                addResult('✅ Sample inquiries data exists', 'success');
+                inquiries.forEach((inquiry, index) => {
+                    addResult(`${index + 1}. ${inquiry.name} - ${inquiry.email}`, 'info');
+                });
+            } else {
+                addResult('❌ No inquiries data found', 'error');
+                addResult('🔄 Initializing sample data...', 'info');
+                initializeSampleData();
+            }
+            
+            if (siteSettings.length > 0) {
+                addResult('✅ Site settings data exists', 'success');
+                const settings = siteSettings[0];
+                addResult(`- Company: ${settings.company_name}`, 'info');
+                addResult(`- Email: ${settings.contact_email}`, 'info');
+                addResult(`- Phone: ${settings.contact_number}`, 'info');
+            } else {
+                addResult('❌ No site settings data found', 'error');
+            }
+            
+            displayInquiries();
+        }
+        
+        function testContactForm() {
+            addResult('🔄 Testing contact form functionality...', 'info');
+            
+            // Simulate form submission
+            const testInquiry = {
+                name: 'Test User',
+                email: 'test@example.com',
+                phone: '+91 9876543210',
+                message: 'This is a test inquiry to verify the contact form is working properly.'
+            };
+            
+            try {
+                const inquiries = JSON.parse(localStorage.getItem('inquiries') || '[]');
+                const newInquiry = {
+                    ...testInquiry,
+                    id: Date.now().toString(),
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                };
+                
+                inquiries.push(newInquiry);
+                localStorage.setItem('inquiries', JSON.stringify(inquiries));
+                
+                addResult('✅ Test inquiry submitted successfully', 'success');
+                addResult(`- Name: ${newInquiry.name}`, 'info');
+                addResult(`- Email: ${newInquiry.email}`, 'info');
+                addResult(`- Message: ${newInquiry.message}`, 'info');
+                
+                displayInquiries();
+            } catch (error) {
+                addResult('❌ Failed to submit test inquiry', 'error');
+                addResult(`Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function checkAdminPanel() {
+            addResult('🔄 Checking admin panel access...', 'info');
+            addResult('📋 Open admin panel: http://localhost:5174/admin', 'info');
+            addResult('📋 Go to "Inquiries" tab to see submitted inquiries', 'info');
+            addResult('📋 Check if inquiries are displayed correctly', 'info');
+        }
+        
+        function clearInquiries() {
+            addResult('🔄 Clearing all inquiries...', 'info');
+            localStorage.removeItem('inquiries');
+            addResult('✅ All inquiries cleared', 'success');
+            displayInquiries();
+        }
+        
+        function displayInquiries() {
+            const inquiries = JSON.parse(localStorage.getItem('inquiries') || '[]');
+            inquiriesList.innerHTML = '';
+            
+            if (inquiries.length === 0) {
+                inquiriesList.innerHTML = '<p>No inquiries found.</p>';
+                return;
+            }
+            
+            inquiries.forEach((inquiry, index) => {
+                const div = document.createElement('div');
+                div.className = 'inquiry-item';
+                div.innerHTML = `
+                    <h4>${inquiry.name}</h4>
+                    <p><strong>Email:</strong> ${inquiry.email}</p>
+                    <p><strong>Phone:</strong> ${inquiry.phone || 'Not provided'}</p>
+                    <p><strong>Message:</strong> ${inquiry.message}</p>
+                    <p><strong>Date:</strong> ${new Date(inquiry.created_at).toLocaleString()}</p>
+                `;
+                inquiriesList.appendChild(div);
+            });
+        }
+        
+        function initializeSampleData() {
+            const sampleInquiries = [
+                {
+                    id: '1',
+                    name: 'John Doe',
+                    email: 'john.doe@example.com',
+                    phone: '+91 9876543210',
+                    message: 'I am interested in booking a trip to Goa. Can you provide more details about the packages available?',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    id: '2',
+                    name: 'Jane Smith',
+                    email: 'jane.smith@example.com',
+                    phone: '+91 9876543211',
+                    message: 'What are the best destinations for a family vacation with kids? Looking for something safe and fun.',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                }
+            ];
+            
+            localStorage.setItem('inquiries', JSON.stringify(sampleInquiries));
+            addResult('✅ Sample inquiries data initialized', 'success');
+        }
+        
+        // Test form submission
+        document.getElementById('testInquiryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('testName').value,
+                email: document.getElementById('testEmail').value,
+                phone: document.getElementById('testPhone').value,
+                message: document.getElementById('testMessage').value
+            };
+            
+            try {
+                const inquiries = JSON.parse(localStorage.getItem('inquiries') || '[]');
+                const newInquiry = {
+                    ...formData,
+                    id: Date.now().toString(),
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                };
+                
+                inquiries.push(newInquiry);
+                localStorage.setItem('inquiries', JSON.stringify(inquiries));
+                
+                addResult('✅ Test inquiry submitted successfully', 'success');
+                document.getElementById('testInquiryForm').reset();
+                displayInquiries();
+            } catch (error) {
+                addResult('❌ Failed to submit test inquiry', 'error');
+            }
+        });
+        
+        // Auto-run test on page load
+        window.onload = function() {
+            addResult('🚀 Starting inquiries test...', 'info');
+            testInquiriesData();
+            displayInquiries();
+        };
+    </script>
+</body>
+</html>

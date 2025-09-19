@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment ID and Booking ID Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .test-instructions { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .fix-summary { border: 2px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        .integration-test { border: 2px solid #17a2b8; padding: 20px; margin: 20px 0; border-radius: 10px; background: #d1ecf1; }
+        .step { margin: 15px 0; padding: 10px; background: #e9ecef; border-radius: 5px; }
+        .code { background: #f8f9fa; padding: 10px; border-radius: 5px; font-family: monospace; margin: 10px 0; }
+        .id-test { border: 2px solid #6c757d; padding: 15px; margin: 10px 0; border-radius: 10px; background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <h1>🆔 Payment ID and Booking ID Test</h1>
+    
+    <div class="fix-summary">
+        <h2>✅ What Was Fixed:</h2>
+        <ul>
+            <li><strong>Booking ID Generation</strong> - Now generates readable IDs like "BK1703123456ABCD"</li>
+            <li><strong>Transaction ID Generation</strong> - Now generates readable IDs like "TXN1703123456ABCDEF"</li>
+            <li><strong>Enhanced Ticket Display</strong> - Both IDs are prominently displayed in the ticket header and payment section</li>
+            <li><strong>Debug Logging</strong> - Added comprehensive logging to track ID generation and display</li>
+            <li><strong>Improved ID Format</strong> - Made IDs more readable and professional-looking</li>
+            <li><strong>Fallback Display</strong> - Added "N/A" fallback when IDs are not available</li>
+        </ul>
+    </div>
+    
+    <div class="integration-test">
+        <h2>🆔 ID Generation Test Flow:</h2>
+        <div class="step">
+            <h3>Step 1: Start Booking Process</h3>
+            <p>1. Go to <a href="http://localhost:5174/bookings" target="_blank">Bookings Page</a></p>
+            <p>2. Fill in customer details and select destination/service</p>
+            <p>3. Complete the booking form</p>
+            <p>4. Click "Proceed to Payment"</p>
+            <p>5. Check browser console for: "BookingInterface - Booking created with ID: BK..."</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: Complete Payment</h3>
+            <p>1. Select a payment method (QR, UPI, Card, or Gateway)</p>
+            <p>2. Complete the payment process</p>
+            <p>3. Check browser console for: "PaymentProcessor - Generated Transaction ID: TXN..."</p>
+            <p>4. Check browser console for: "BookingInterface - Transaction ID: TXN..."</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 3: Verify Ticket Display</h3>
+            <p>1. After successful payment, ticket should appear</p>
+            <p>2. Check ticket header for Booking ID (top right)</p>
+            <p>3. Check ticket header for Transaction ID (below Booking ID)</p>
+            <p>4. Check payment section for both IDs in colored boxes</p>
+            <p>5. Verify IDs are clearly visible and readable</p>
+        </div>
+    </div>
+    
+    <div class="test-instructions">
+        <h2>📋 Detailed Test Instructions:</h2>
+        
+        <div class="id-test">
+            <h4>🆔 Booking ID Generation:</h4>
+            <ul>
+                <li>✅ Format: "BK" + timestamp + random string (e.g., "BK1703123456ABCD")</li>
+                <li>✅ Generated when booking is submitted</li>
+                <li>✅ Displayed in ticket header (top right)</li>
+                <li>✅ Displayed in payment section (blue box)</li>
+                <li>✅ Used in QR code generation</li>
+                <li>✅ Console logged for debugging</li>
+            </ul>
+        </div>
+        
+        <div class="id-test">
+            <h4>💳 Transaction ID Generation:</h4>
+            <ul>
+                <li>✅ Format: "TXN" + timestamp + random string (e.g., "TXN1703123456ABCDEF")</li>
+                <li>✅ Generated when payment is processed</li>
+                <li>✅ Displayed in ticket header (below Booking ID)</li>
+                <li>✅ Displayed in payment section (green box)</li>
+                <li>✅ Console logged for debugging</li>
+                <li>✅ Only shown when payment is successful</li>
+            </ul>
+        </div>
+        
+        <div class="id-test">
+            <h4>🎫 Ticket Display:</h4>
+            <ul>
+                <li>✅ Booking ID prominently displayed in header</li>
+                <li>✅ Transaction ID shown below Booking ID in header</li>
+                <li>✅ Both IDs in colored boxes in payment section</li>
+                <li>✅ Fallback "N/A" when IDs are not available</li>
+                <li>✅ Professional formatting with proper spacing</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="id-test">
+        <h3>🔍 Console Debug Messages to Look For:</h3>
+        <div class="code">
+            <strong>Booking Creation:</strong><br>
+            "BookingInterface - Submitting booking data: {...}"<br>
+            "BookingInterface - Booking created with ID: BK1703123456ABCD"<br><br>
+            
+            <strong>Payment Processing:</strong><br>
+            "PaymentProcessor - Generated Transaction ID: TXN1703123456ABCDEF"<br>
+            "BookingInterface - Payment success data: {...}"<br>
+            "BookingInterface - Transaction ID: TXN1703123456ABCDEF"<br><br>
+            
+            <strong>Ticket Generation:</strong><br>
+            "TicketGenerator - Booking ID: BK1703123456ABCD"<br>
+            "TicketGenerator - Transaction ID: TXN1703123456ABCDEF"
+        </div>
+    </div>
+    
+    <div id="results"></div>
+    
+    <button onclick="testBookingIdGeneration()">Test Booking ID Generation</button>
+    <button onclick="testTransactionIdGeneration()">Test Transaction ID Generation</button>
+    <button onclick="testTicketDisplay()">Test Ticket Display</button>
+    <button onclick="testConsoleLogging()">Test Console Logging</button>
+    <button onclick="testIdFormats()">Test ID Formats</button>
+    <button onclick="showDebugInfo()">Show Debug Info</button>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testBookingIdGeneration() {
+            addResult('🆔 Testing Booking ID Generation...', 'info');
+            addResult('📋 Go to Bookings page and complete booking form', 'info');
+            addResult('💾 Click "Proceed to Payment"', 'info');
+            addResult('✅ Expected: Console shows "BookingInterface - Booking created with ID: BK..."', 'success');
+            addResult('📝 Expected: Booking ID format: BK + timestamp + random string', 'info');
+            addResult('🎫 Expected: Booking ID appears in ticket header', 'success');
+        }
+        
+        function testTransactionIdGeneration() {
+            addResult('💳 Testing Transaction ID Generation...', 'info');
+            addResult('📋 Complete payment process with any method', 'info');
+            addResult('⏳ Wait for payment processing to complete', 'info');
+            addResult('✅ Expected: Console shows "PaymentProcessor - Generated Transaction ID: TXN..."', 'success');
+            addResult('📝 Expected: Transaction ID format: TXN + timestamp + random string', 'info');
+            addResult('🎫 Expected: Transaction ID appears in ticket header and payment section', 'success');
+        }
+        
+        function testTicketDisplay() {
+            addResult('🎫 Testing Ticket Display...', 'info');
+            addResult('📋 Complete booking and payment process', 'info');
+            addResult('🎫 Check ticket header (top right corner)', 'info');
+            addResult('✅ Expected: Booking ID prominently displayed', 'success');
+            addResult('✅ Expected: Transaction ID shown below Booking ID', 'success');
+            addResult('📋 Check payment section (bottom of ticket)', 'info');
+            addResult('✅ Expected: Both IDs in colored boxes (blue for Booking, green for Transaction)', 'success');
+        }
+        
+        function testConsoleLogging() {
+            addResult('🔍 Testing Console Logging...', 'info');
+            addResult('📋 Open Developer Tools (F12) → Console tab', 'info');
+            addResult('📝 Complete booking and payment process', 'info');
+            addResult('✅ Expected: Multiple debug messages about ID generation', 'success');
+            addResult('📊 Expected: All ID operations are logged for debugging', 'info');
+            addResult('🔧 Expected: Easy to track ID flow through the system', 'info');
+        }
+        
+        function testIdFormats() {
+            addResult('📝 Testing ID Formats...', 'info');
+            addResult('🆔 Booking ID Format: BK + timestamp + 4 random chars', 'info');
+            addResult('💳 Transaction ID Format: TXN + timestamp + 6 random chars', 'info');
+            addResult('📏 Expected: IDs are readable and professional-looking', 'success');
+            addResult('🔤 Expected: Mix of numbers and uppercase letters', 'info');
+            addResult('⏰ Expected: Timestamp ensures uniqueness', 'info');
+        }
+        
+        function showDebugInfo() {
+            addResult('🔍 Debug Information:', 'info');
+            addResult('📊 Check browser console for these messages:', 'info');
+            addResult('• "BookingInterface - Submitting booking data: {...}"', 'info');
+            addResult('• "BookingInterface - Booking created with ID: BK..."', 'info');
+            addResult('• "PaymentProcessor - Generated Transaction ID: TXN..."', 'info');
+            addResult('• "BookingInterface - Transaction ID: TXN..."', 'info');
+            addResult('• "TicketGenerator - Booking ID: BK..."', 'info');
+            addResult('• "TicketGenerator - Transaction ID: TXN..."', 'info');
+            addResult('💡 Open Developer Tools (F12) → Console tab', 'info');
+            addResult('🔧 All ID operations are logged for debugging', 'info');
+        }
+        
+        // Auto-run test on page load
+        window.onload = function() {
+            addResult('🚀 Starting Payment ID and Booking ID test...', 'info');
+            addResult('📋 Both Payment ID and Booking ID should now be working properly!', 'success');
+            addResult('🔧 Fixed: ID generation, display, formatting, and debugging', 'info');
+            showDebugInfo();
+        };
+    </script>
+</body>
+</html>

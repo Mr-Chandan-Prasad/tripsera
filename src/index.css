@@ -1,0 +1,716 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Noto+Sans+Kannada:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-blue-50 via-white to-purple-50 font-inter;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .font-inter {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  
+  .font-poppins {
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+  }
+  
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .card {
+    @apply bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-2xl hover:scale-105;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-gray-800 font-semibold py-3 px-6 rounded-xl border border-gray-200 transition-all duration-300 hover:bg-gray-50 hover:scale-105;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-orange-500 to-yellow-500 bg-clip-text text-transparent;
+  }
+  
+  .bg-gradient-primary {
+    @apply bg-gradient-to-r from-orange-500 to-yellow-500;
+  }
+  
+  .bg-gradient-secondary {
+    @apply bg-gradient-to-br from-blue-50 to-purple-50;
+  }
+  
+  .section-padding {
+    @apply py-16 lg:py-24;
+  }
+  
+  .heading-primary {
+    @apply text-4xl lg:text-5xl font-bold text-gray-900 font-poppins;
+  }
+  
+  .heading-secondary {
+    @apply text-3xl lg:text-4xl font-bold text-gray-800 font-poppins;
+  }
+  
+  .text-body {
+    @apply text-lg text-gray-600 leading-relaxed;
+  }
+  
+  .image-responsive {
+    @apply w-full h-auto object-cover transition-transform duration-300;
+  }
+  
+  .image-hover {
+    @apply hover:scale-110;
+  }
+  
+  .admin-card {
+    @apply bg-white rounded-xl shadow-md border border-gray-200 p-6 transition-all duration-300 hover:shadow-lg;
+  }
+  
+  .admin-table {
+    @apply w-full bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden;
+  }
+  
+  .admin-table th {
+    @apply bg-gray-50 px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider;
+  }
+  
+  .admin-table td {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
+  }
+  
+  .form-input {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300;
+  }
+  
+  .form-label {
+    @apply block text-sm font-semibold text-gray-700 mb-2;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  .animate-bounce-in {
+    animation: bounceIn 0.8s ease-out;
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500;
+}
+
+/* Loading spinner */
+.spinner {
+  @apply animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500;
+}
+
+/* Responsive image containers */
+.image-container {
+  @apply relative overflow-hidden rounded-lg;
+}
+
+.image-container img {
+  @apply w-full h-full object-cover transition-transform duration-500;
+}
+
+.image-container:hover img {
+  @apply scale-110;
+}
+
+/* Admin specific styles */
+.admin-layout {
+  @apply min-h-screen bg-gray-50;
+}
+
+.admin-sidebar {
+  @apply w-64 bg-white shadow-lg border-r border-gray-200;
+}
+
+.admin-content {
+  @apply flex-1 p-6;
+}
+
+.admin-header {
+  @apply bg-white shadow-sm border-b border-gray-200 px-6 py-4;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+  
+  .heading-primary {
+    @apply text-3xl;
+  }
+  
+  .heading-secondary {
+    @apply text-2xl;
+  }
+  
+  .section-padding {
+    @apply py-12;
+  }
+}
+
+/* Responsive text sizing */
+@media (max-width: 640px) {
+  .heading-primary {
+    @apply text-2xl;
+  }
+  
+  .heading-secondary {
+    @apply text-xl;
+  }
+  
+  .section-padding {
+    @apply py-8;
+  }
+}
+
+/* Ensure proper viewport fitting */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Kannada font support */
+.kannada-text {
+  font-family: 'Noto Sans Kannada', 'Poppins', sans-serif;
+  font-weight: 700;
+  line-height: 1.8;
+  letter-spacing: 0.5px;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+/* Kannada text animations */
+.kannada-text:hover {
+  transform: scale(1.05);
+  text-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  color: #f59e0b;
+}
+
+/* Fade in up animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 1s ease-out;
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 2s ease-in-out infinite;
+}
+
+/* Glow animation */
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(255, 193, 7, 0.8);
+  }
+  50% {
+    text-shadow: 0 0 25px rgba(255, 193, 7, 1), 0 0 35px rgba(255, 193, 7, 0.8);
+  }
+}
+
+.animate-glow {
+  animation: glow 1.5s ease-in-out infinite;
+}
+
+/* Hero section animations */
+@keyframes heroGlow {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(255, 193, 7, 0.8), 0 0 40px rgba(255, 193, 7, 0.6);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(255, 193, 7, 1), 0 0 60px rgba(255, 193, 7, 0.8), 0 0 80px rgba(255, 193, 7, 0.6);
+  }
+}
+
+.animate-hero-glow {
+  animation: heroGlow 2s ease-in-out infinite;
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float-gentle {
+  animation: floatGentle 4s ease-in-out infinite;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 1.2s ease-out 0.5s both;
+}
+
+@keyframes bounceGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-bounce-gentle {
+  animation: bounceGentle 2s ease-in-out infinite;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 1s ease-out 0.8s both;
+}
+
+/* Advanced card animations */
+@keyframes cardHover {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(1deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+.animate-card-hover:hover {
+  animation: cardHover 0.6s ease-in-out;
+}
+
+/* Staggered entrance animations */
+@keyframes staggerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-stagger-fade-in {
+  animation: staggerFadeIn 0.8s ease-out both;
+}
+
+/* Image zoom animation */
+@keyframes imageZoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+.animate-image-zoom:hover img {
+  animation: imageZoom 0.3s ease-out forwards;
+}
+
+/* Button ripple effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes gradient-x {
+  0%, 100% {
+    background-size: 200% 200%;
+    background-position: left center;
+  }
+  50% {
+    background-size: 200% 200%;
+    background-position: right center;
+  }
+}
+
+@keyframes fly-plane {
+  0% {
+    transform: translateX(-20px) translateY(0px) rotate(-10deg);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translateX(10px) translateY(-5px) rotate(5deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(20px) translateY(0px) rotate(0deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translateX(10px) translateY(5px) rotate(-5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-20px) translateY(0px) rotate(-10deg);
+    opacity: 0.7;
+  }
+}
+
+@keyframes drive-car {
+  0% {
+    transform: translateX(-15px) translateY(2px) rotate(-2deg);
+    opacity: 0.8;
+  }
+  25% {
+    transform: translateX(8px) translateY(0px) rotate(1deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(15px) translateY(-1px) rotate(0deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translateX(8px) translateY(1px) rotate(-1deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-15px) translateY(2px) rotate(-2deg);
+    opacity: 0.8;
+  }
+}
+
+@keyframes ride-bus {
+  0% {
+    transform: translateX(-18px) translateY(1px) rotate(-1deg);
+    opacity: 0.9;
+  }
+  25% {
+    transform: translateX(6px) translateY(-2px) rotate(0.5deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(18px) translateY(0px) rotate(0deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translateX(6px) translateY(2px) rotate(-0.5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-18px) translateY(1px) rotate(-1deg);
+    opacity: 0.9;
+  }
+}
+
+@keyframes pedal-bike {
+  0% {
+    transform: translateX(-12px) translateY(0px) rotate(-5deg);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translateX(6px) translateY(-3px) rotate(3deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(12px) translateY(0px) rotate(0deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translateX(6px) translateY(3px) rotate(-3deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-12px) translateY(0px) rotate(-5deg);
+    opacity: 0.7;
+  }
+}
+
+.animate-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-gradient-x {
+  animation: gradient-x 3s ease infinite;
+}
+
+.animate-fly-plane {
+  animation: fly-plane 4s ease-in-out infinite;
+}
+
+.animate-drive-car {
+  animation: drive-car 3.5s ease-in-out infinite;
+}
+
+.animate-ride-bus {
+  animation: ride-bus 4.5s ease-in-out infinite;
+}
+
+.animate-pedal-bike {
+  animation: pedal-bike 3s ease-in-out infinite;
+}
+
+.animate-ripple::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.animate-ripple:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Header fixes */
+header {
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: linear-gradient(to right, #1e3a8a, #7c3aed) !important;
+}
+
+/* Remove any potential white lines */
+* {
+  box-sizing: border-box;
+}
+
+/* Ensure no unwanted borders */
+.container, .max-w-7xl {
+  border: none !important;
+  outline: none !important;
+}
+
+/* Fix any potential white space issues */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f8fafc;
+}
+
+/* Ensure header covers full width */
+header.fixed {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 50 !important;
+}
+
+/* Better mobile button sizing */
+@media (max-width: 640px) {
+  .btn-primary, .btn-secondary {
+    @apply text-sm px-4 py-2;
+  }
+}
+
+/* Welcome Message Animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.8s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Proof Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .test-instructions { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .fix-summary { border: 2px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        .integration-test { border: 2px solid #17a2b8; padding: 20px; margin: 20px 0; border-radius: 10px; background: #d1ecf1; }
+        .step { margin: 15px 0; padding: 10px; background: #e9ecef; border-radius: 5px; }
+        .code { background: #f8f9fa; padding: 10px; border-radius: 5px; font-family: monospace; margin: 10px 0; }
+        .proof-test { border: 2px solid #6c757d; padding: 15px; margin: 10px 0; border-radius: 10px; background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <h1>📸 Payment Proof Test</h1>
+    
+    <div class="fix-summary">
+        <h2>✅ What Was Fixed:</h2>
+        <ul>
+            <li><strong>Enhanced Payment Proof Display</strong> - Added visual indicator (✓ Proof) when payment proof exists</li>
+            <li><strong>Improved Admin UI</strong> - Better visual feedback for payment proof status</li>
+            <li><strong>Added Debug Logging</strong> - Console logs to track payment proof upload and display</li>
+            <li><strong>Better Error Handling</strong> - More robust payment proof handling</li>
+            <li><strong>Visual Indicators</strong> - Clear indication when payment proof is available</li>
+        </ul>
+    </div>
+    
+    <div class="integration-test">
+        <h2>📸 Payment Proof Test Flow:</h2>
+        <div class="step">
+            <h3>Step 1: Complete Booking with Payment Proof</h3>
+            <p>1. Go to <a href="http://localhost:5174/bookings" target="_blank">Bookings Page</a></p>
+            <p>2. Fill in customer details and select destination/service</p>
+            <p>3. Complete the booking form</p>
+            <p>4. Click "Proceed to Payment"</p>
+            <p>5. Select any payment method</p>
+            <p>6. <strong>Upload a payment proof image</strong> (screenshot, receipt, etc.)</p>
+            <p>7. Complete the payment process</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: Check Admin Panel</h3>
+            <p>1. Go to <a href="http://localhost:5174/admin" target="_blank">Admin Panel</a></p>
+            <p>2. Login with: <strong>admin</strong> / <strong>admin123</strong></p>
+            <p>3. Click "Bookings" tab</p>
+            <p>4. Look for the booking you just created</p>
+            <p>5. Check the "Payment Proof" column</p>
+            <p>6. Should see: <strong>👁️ ✓ Proof</strong> (eye icon + checkmark)</p>
+            <p>7. Click the eye icon to view the payment proof</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 3: Verify Console Logs</h3>
+            <p>1. Open Developer Tools (F12) → Console tab</p>
+            <p>2. Look for these debug messages:</p>
+            <p>• "ImageUploader - Image uploaded successfully: Yes"</p>
+            <p>• "PaymentProcessor - Payment proof updated: Yes"</p>
+            <p>• "Admin - Bookings with payment proof: [...]"</p>
+            <p>• "Admin - Total bookings: X"</p>
+        </div>
+    </div>
+    
+    <div class="test-instructions">
+        <h2>📋 Detailed Test Instructions:</h2>
+        
+        <div class="proof-test">
+            <h4>📸 Payment Proof Upload:</h4>
+            <ul>
+                <li>✅ Upload any image file (JPG, PNG, WEBP, GIF)</li>
+                <li>✅ File size limit: 20MB (auto-compressed if larger)</li>
+                <li>✅ Drag and drop or click to upload</li>
+                <li>✅ Preview shows uploaded image</li>
+                <li>✅ Console logs upload success</li>
+                <li>✅ Can change or remove uploaded image</li>
+            </ul>
+        </div>
+        
+        <div class="proof-test">
+            <h4>👁️ Admin Panel Display:</h4>
+            <ul>
+                <li>✅ Payment Proof column shows eye icon + "✓ Proof"</li>
+                <li>✅ Click eye icon opens payment proof in modal</li>
+                <li>✅ Modal shows full-size payment proof image</li>
+                <li>✅ Can close modal with X button</li>
+                <li>✅ "No proof" shown when no payment proof uploaded</li>
+                <li>✅ Console logs show bookings with payment proof</li>
+            </ul>
+        </div>
+        
+        <div class="proof-test">
+            <h4>🔍 Debug Information:</h4>
+            <ul>
+                <li>✅ Console logs track payment proof upload</li>
+                <li>✅ Console logs track payment proof display</li>
+                <li>✅ Easy to identify bookings with/without proof</li>
+                <li>✅ Visual indicators in admin panel</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="proof-test">
+        <h3>🔍 Console Debug Messages to Look For:</h3>
+        <div class="code">
+            <strong>Payment Proof Upload:</strong><br>
+            "ImageUploader - Image uploaded successfully: Yes"<br>
+            "PaymentProcessor - Payment proof updated: Yes"<br><br>
+            
+            <strong>Payment Processing:</strong><br>
+            "PaymentProcessor - Payment success data: {...}"<br>
+            "BookingInterface - Payment success data: {...}"<br><br>
+            
+            <strong>Admin Panel Display:</strong><br>
+            "Admin - Bookings with payment proof: [...]"<br>
+            "Admin - Total bookings: X"
+        </div>
+    </div>
+    
+    <div class="proof-test">
+        <h3>📸 Test Image Suggestions:</h3>
+        <div class="code">
+            <strong>Sample Payment Proof Images:</strong><br>
+            • Screenshot of payment confirmation<br>
+            • Photo of payment receipt<br>
+            • Bank transfer confirmation<br>
+            • UPI payment screenshot<br>
+            • Any image file (JPG, PNG, WEBP, GIF)<br><br>
+            
+            <strong>File Requirements:</strong><br>
+            • Maximum size: 20MB<br>
+            • Supported formats: JPG, PNG, WEBP, GIF<br>
+            • Auto-compression for large files<br>
+            • Base64 encoding for storage
+        </div>
+    </div>
+    
+    <div id="results"></div>
+    
+    <button onclick="testPaymentProofUpload()">Test Payment Proof Upload</button>
+    <button onclick="testAdminDisplay()">Test Admin Display</button>
+    <button onclick="testConsoleLogging()">Test Console Logging</button>
+    <button onclick="testImageModal()">Test Image Modal</button>
+    <button onclick="testFileFormats()">Test File Formats</button>
+    <button onclick="showDebugInfo()">Show Debug Info</button>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testPaymentProofUpload() {
+            addResult('📸 Testing Payment Proof Upload...', 'info');
+            addResult('📋 Go to Bookings page and complete booking', 'info');
+            addResult('💳 On payment page, scroll down to "Upload Payment Proof"', 'info');
+            addResult('📁 Upload any image file (JPG, PNG, WEBP, GIF)', 'info');
+            addResult('✅ Expected: Image preview appears', 'success');
+            addResult('✅ Expected: Console shows "ImageUploader - Image uploaded successfully: Yes"', 'success');
+            addResult('✅ Expected: Console shows "PaymentProcessor - Payment proof updated: Yes"', 'success');
+        }
+        
+        function testAdminDisplay() {
+            addResult('👁️ Testing Admin Display...', 'info');
+            addResult('📋 Go to Admin Panel → Bookings tab', 'info');
+            addResult('🔍 Look for your booking in the table', 'info');
+            addResult('✅ Expected: Payment Proof column shows eye icon + "✓ Proof"', 'success');
+            addResult('👁️ Click the eye icon', 'info');
+            addResult('✅ Expected: Payment proof opens in modal', 'success');
+            addResult('✅ Expected: Full-size image is displayed', 'success');
+        }
+        
+        function testConsoleLogging() {
+            addResult('🔍 Testing Console Logging...', 'info');
+            addResult('📋 Open Developer Tools (F12) → Console tab', 'info');
+            addResult('📝 Complete booking with payment proof', 'info');
+            addResult('✅ Expected: Multiple debug messages about payment proof', 'success');
+            addResult('📊 Expected: "Admin - Bookings with payment proof: [...]"', 'info');
+            addResult('🔧 Expected: Easy to track payment proof flow', 'info');
+        }
+        
+        function testImageModal() {
+            addResult('🖼️ Testing Image Modal...', 'info');
+            addResult('📋 Go to Admin Panel → Bookings tab', 'info');
+            addResult('👁️ Click eye icon next to booking with payment proof', 'info');
+            addResult('✅ Expected: Modal opens with payment proof image', 'success');
+            addResult('✅ Expected: Image is properly sized and visible', 'success');
+            addResult('❌ Click X button to close modal', 'info');
+            addResult('✅ Expected: Modal closes properly', 'success');
+        }
+        
+        function testFileFormats() {
+            addResult('📁 Testing File Formats...', 'info');
+            addResult('📸 Try uploading different image formats:', 'info');
+            addResult('• JPG/JPEG files', 'info');
+            addResult('• PNG files', 'info');
+            addResult('• WEBP files', 'info');
+            addResult('• GIF files', 'info');
+            addResult('✅ Expected: All supported formats work', 'success');
+            addResult('⚠️ Try uploading non-image files', 'info');
+            addResult('✅ Expected: Error message for unsupported formats', 'warning');
+        }
+        
+        function showDebugInfo() {
+            addResult('🔍 Debug Information:', 'info');
+            addResult('📊 Check browser console for these messages:', 'info');
+            addResult('• "ImageUploader - Image uploaded successfully: Yes"', 'info');
+            addResult('• "PaymentProcessor - Payment proof updated: Yes"', 'info');
+            addResult('• "Admin - Bookings with payment proof: [...]"', 'info');
+            addResult('• "Admin - Total bookings: X"', 'info');
+            addResult('💡 Open Developer Tools (F12) → Console tab', 'info');
+            addResult('🔧 All payment proof operations are logged for debugging', 'info');
+        }
+        
+        // Auto-run test on page load
+        window.onload = function() {
+            addResult('🚀 Starting Payment Proof test...', 'info');
+            addResult('📋 Payment Proof should now be working properly in admin panel!', 'success');
+            addResult('🔧 Fixed: Display, upload, modal, and debugging', 'info');
+            showDebugInfo();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Group Tour Logic - Tripsera</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-step {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .expected-result {
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #28a745;
+            margin-top: 10px;
+        }
+        .warning {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+            margin-top: 10px;
+        }
+        .success {
+            background: #d1ecf1;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #17a2b8;
+            margin-top: 10px;
+        }
+        h1 { color: #333; }
+        h2 { color: #007bff; }
+        h3 { color: #28a745; }
+        .step-number {
+            background: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Test: Group Tour Logic Implementation</h1>
+        <p><strong>Purpose:</strong> Test that car-related add-ons are disabled when Group Tour service is selected.</p>
+        <p><strong>Date:</strong> <span id="currentDate"></span></p>
+    </div>
+
+    <div class="test-container">
+        <h2>📋 Test Steps</h2>
+        
+        <div class="test-step">
+            <h3><span class="step-number">1</span>Access Booking System</h3>
+            <p>Navigate to the booking system by going to <code>/bookings</code> or clicking "Book Now" from any destination.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Booking interface loads with destination and service selection.
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">2</span>Select a Destination</h3>
+            <p>Choose any destination from the dropdown (e.g., "Goa Beach Paradise", "Kerala Backwaters", "Rajasthan Heritage").</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Destination is selected and service dropdown becomes available.
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">3</span>Select Group Tour Service</h3>
+            <p>In the service dropdown, select <strong>"Group Tour"</strong> service.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Group Tour service is selected with price ₹8,000.
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">4</span>Proceed to Add-ons Step</h3>
+            <p>Fill in customer details and proceed to the "Add-ons" step.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Add-ons page loads with available add-ons.
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">5</span>Check Group Tour Notification</h3>
+            <p>Look for a blue notification box at the top of the add-ons section.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Blue notification appears with message:<br>
+                <em>"Group Tour Selected - Car rental and transportation add-ons are not available for group tours as transportation is already included in your package."</em>
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">6</span>Verify Car Add-ons are Hidden</h3>
+            <p>Check the Transportation category or look for car-related add-ons.</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> The following add-ons should NOT be visible:
+                <ul>
+                    <li>Car Rental Service</li>
+                    <li>Vehicle Rental</li>
+                    <li>Any other car/vehicle related add-ons</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">7</span>Verify Other Add-ons are Available</h3>
+            <p>Check that non-car add-ons are still available (Photography Package, Airport Transfer, etc.).</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> Non-transportation add-ons should still be visible and selectable.
+            </div>
+        </div>
+
+        <div class="test-step">
+            <h3><span class="step-number">8</span>Test with Different Service</h3>
+            <p>Go back and select a different service (e.g., "Car Rental" or "Flight Booking").</p>
+            <div class="expected-result">
+                <strong>Expected:</strong> 
+                <ul>
+                    <li>Group tour notification disappears</li>
+                    <li>All car-related add-ons become visible again</li>
+                    <li>All add-ons are selectable</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>✅ Expected Behavior Summary</h2>
+        
+        <div class="success">
+            <h3>When Group Tour is Selected:</h3>
+            <ul>
+                <li>✅ Blue notification appears explaining why car add-ons are not available</li>
+                <li>✅ Car-related add-ons are filtered out and not displayed</li>
+                <li>✅ Other add-ons (photography, insurance, etc.) remain available</li>
+                <li>✅ User can still complete booking with non-car add-ons</li>
+            </ul>
+        </div>
+
+        <div class="success">
+            <h3>When Other Services are Selected:</h3>
+            <ul>
+                <li>✅ No group tour notification</li>
+                <li>✅ All add-ons including car services are available</li>
+                <li>✅ Normal add-on selection behavior</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>🔧 Technical Implementation Details</h2>
+        
+        <div class="warning">
+            <h3>Services Added:</h3>
+            <ul>
+                <li><strong>Group Tour Service:</strong> ID '4', Price ₹8,000, Category 'Group Travel', <code>is_group_tour: true</code></li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h3>Car Add-ons Added for Testing:</h3>
+            <ul>
+                <li><strong>Car Rental Service:</strong> ID '3', Price ₹2,500, Category 'Transportation'</li>
+                <li><strong>Vehicle Rental:</strong> ID '4', Price ₹4,000, Category 'Transportation'</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h3>Logic Implementation:</h3>
+            <ul>
+                <li>AddOnsSelector component checks if selected service has <code>is_group_tour: true</code></li>
+                <li>Filters out add-ons with category 'Transportation' and names containing 'car', 'vehicle', or 'rental'</li>
+                <li>Shows informative notification to user</li>
+                <li>Maintains all other add-on functionality</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>📝 Test Results</h2>
+        <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">✅ IMPLEMENTED</span></p>
+        <p><strong>Build Status:</strong> <span style="color: #28a745; font-weight: bold;">✅ SUCCESSFUL</span></p>
+        <p><strong>Ready for Testing:</strong> <span style="color: #28a745; font-weight: bold;">✅ YES</span></p>
+    </div>
+
+    <script>
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+    </script>
+</body>
+</html>

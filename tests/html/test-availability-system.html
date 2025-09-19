@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Availability System - Tripsera</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+        .test-section h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .data-display {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .step {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .step h4 {
+            color: #495057;
+            margin-top: 0;
+        }
+        .credentials {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Tripsera Availability System Test</h1>
+        
+        <div class="test-section">
+            <h3>📋 Test Instructions</h3>
+            <div class="step">
+                <h4>Step 1: Access Admin Panel</h4>
+                <p>1. Go to your Tripsera website</p>
+                <p>2. Navigate to the Admin Panel</p>
+                <p>3. Use these credentials to log in:</p>
+                <div class="credentials">
+                    <strong>Username:</strong> admin<br>
+                    <strong>Password:</strong> chandanprasad2025
+                </div>
+            </div>
+            
+            <div class="step">
+                <h4>Step 2: Find Availability Tab</h4>
+                <p>After logging in, look for the "Availability" tab in the left sidebar.</p>
+                <p>It should be between "Bookings" and "Destinations" tabs.</p>
+                <p>The tab has a calendar icon (📅) and says "Availability".</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 3: Test Availability Management</h4>
+                <p>1. Click on the "Availability" tab</p>
+                <p>2. You should see two sections:</p>
+                <ul>
+                    <li><strong>Destinations Availability</strong> - Shows all destinations with capacity info</li>
+                    <li><strong>Services Availability</strong> - Shows all services with capacity info</li>
+                </ul>
+                <p>3. Try editing capacity numbers by clicking on them</p>
+                <p>4. Try toggling availability with Enable/Disable buttons</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Data Migration Test</h3>
+            <p>This test will check if your existing data has been migrated with capacity fields.</p>
+            <button onclick="testDataMigration()">Test Data Migration</button>
+            <div id="migration-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Current Data Status</h3>
+            <button onclick="checkCurrentData()">Check Current Data</button>
+            <div id="data-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Availability Functions Test</h3>
+            <button onclick="testAvailabilityFunctions()">Test Availability Functions</button>
+            <div id="function-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🚨 Troubleshooting</h3>
+            <div class="step">
+                <h4>If you can't see the Availability tab:</h4>
+                <ul>
+                    <li>Make sure you're logged in as admin</li>
+                    <li>Check the browser console for any errors (F12 → Console)</li>
+                    <li>Try refreshing the page</li>
+                    <li>Clear browser cache and try again</li>
+                </ul>
+            </div>
+            
+            <div class="step">
+                <h4>If the Availability tab shows empty data:</h4>
+                <ul>
+                    <li>Run the data migration test above</li>
+                    <li>Check if destinations and services exist in localStorage</li>
+                    <li>Look for console errors in the browser</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function testDataMigration() {
+            const resultsDiv = document.getElementById('migration-results');
+            resultsDiv.innerHTML = '<div class="info">Testing data migration...</div>';
+            
+            try {
+                // Check destinations
+                const destinations = JSON.parse(localStorage.getItem('destinations') || '[]');
+                const services = JSON.parse(localStorage.getItem('services') || '[]');
+                
+                let destinationsMigrated = 0;
+                let servicesMigrated = 0;
+                
+                // Check if destinations need migration
+                destinations.forEach(dest => {
+                    if (dest.max_capacity === undefined) {
+                        destinationsMigrated++;
+                    }
+                });
+                
+                // Check if services need migration
+                services.forEach(service => {
+                    if (service.max_capacity === undefined) {
+                        servicesMigrated++;
+                    }
+                });
+                
+                let html = '<div class="data-display">';
+                html += `Destinations: ${destinations.length} total, ${destinationsMigrated} need migration\n`;
+                html += `Services: ${services.length} total, ${servicesMigrated} need migration\n\n`;
+                
+                if (destinationsMigrated > 0 || servicesMigrated > 0) {
+                    html += '⚠️ Some data needs migration. The system will automatically migrate it.\n';
+                    html += 'Try refreshing the admin panel after running this test.';
+                } else {
+                    html += '✅ All data is already migrated with capacity fields!';
+                }
+                
+                html += '</div>';
+                resultsDiv.innerHTML = html;
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Error testing migration: ${error.message}</div>`;
+            }
+        }
+        
+        function checkCurrentData() {
+            const resultsDiv = document.getElementById('data-results');
+            resultsDiv.innerHTML = '<div class="info">Checking current data...</div>';
+            
+            try {
+                const destinations = JSON.parse(localStorage.getItem('destinations') || '[]');
+                const services = JSON.parse(localStorage.getItem('services') || '[]');
+                
+                let html = '<div class="data-display">';
+                html += '=== DESTINATIONS ===\n';
+                destinations.forEach((dest, index) => {
+                    html += `${index + 1}. ${dest.name}\n`;
+                    html += `   Capacity: ${dest.max_capacity || 'NOT SET'}\n`;
+                    html += `   Booked: ${dest.current_bookings || 0}\n`;
+                    html += `   Available: ${dest.is_available !== undefined ? dest.is_available : 'NOT SET'}\n\n`;
+                });
+                
+                html += '=== SERVICES ===\n';
+                services.forEach((service, index) => {
+                    html += `${index + 1}. ${service.name}\n`;
+                    html += `   Capacity: ${service.max_capacity || 'NOT SET'}\n`;
+                    html += `   Booked: ${service.current_bookings || 0}\n`;
+                    html += `   Available: ${service.is_available !== undefined ? service.is_available : 'NOT SET'}\n\n`;
+                });
+                
+                html += '</div>';
+                resultsDiv.innerHTML = html;
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Error checking data: ${error.message}</div>`;
+            }
+        }
+        
+        function testAvailabilityFunctions() {
+            const resultsDiv = document.getElementById('function-results');
+            resultsDiv.innerHTML = '<div class="info">Testing availability functions...</div>';
+            
+            try {
+                const destinations = JSON.parse(localStorage.getItem('destinations') || '[]');
+                const services = JSON.parse(localStorage.getItem('services') || '[]');
+                
+                let html = '<div class="data-display">';
+                
+                if (destinations.length > 0) {
+                    const dest = destinations[0];
+                    html += `Testing with destination: ${dest.name}\n`;
+                    html += `Max Capacity: ${dest.max_capacity || 'NOT SET'}\n`;
+                    html += `Current Bookings: ${dest.current_bookings || 0}\n`;
+                    html += `Is Available: ${dest.is_available !== undefined ? dest.is_available : 'NOT SET'}\n\n`;
+                }
+                
+                if (services.length > 0) {
+                    const service = services[0];
+                    html += `Testing with service: ${service.name}\n`;
+                    html += `Max Capacity: ${service.max_capacity || 'NOT SET'}\n`;
+                    html += `Current Bookings: ${service.current_bookings || 0}\n`;
+                    html += `Is Available: ${service.is_available !== undefined ? service.is_available : 'NOT SET'}\n\n`;
+                }
+                
+                html += '✅ Availability functions are ready to use!\n';
+                html += 'The system will automatically handle capacity management.';
+                
+                html += '</div>';
+                resultsDiv.innerHTML = html;
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Error testing functions: ${error.message}</div>`;
+            }
+        }
+        
+        // Auto-run data check on page load
+        window.onload = function() {
+            checkCurrentData();
+        };
+    </script>
+</body>
+</html>

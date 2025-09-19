@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Notifications Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .test-instructions { border: 2px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .fix-summary { border: 2px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        .notification-demo { border: 2px solid #6c757d; padding: 20px; margin: 20px 0; border-radius: 10px; background: #f8f9fa; }
+        .notification-types { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .notification-type { padding: 15px; border-radius: 8px; text-align: center; }
+        .success-type { background: #d4edda; border: 1px solid #c3e6cb; }
+        .error-type { background: #f8d7da; border: 1px solid #f5c6cb; }
+        .warning-type { background: #fff3cd; border: 1px solid #ffeaa7; }
+        .info-type { background: #d1ecf1; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>🔔 Modern Notifications Test</h1>
+    
+    <div class="fix-summary">
+        <h2>✅ What Was Implemented:</h2>
+        <ul>
+            <li><strong>Modern Notification System</strong> - Replaced all alert() messages with beautiful notifications</li>
+            <li><strong>4 Notification Types</strong> - Success, Error, Warning, and Info with distinct colors and icons</li>
+            <li><strong>Auto-dismiss</strong> - Notifications automatically disappear after specified duration</li>
+            <li><strong>Manual Close</strong> - Users can close notifications manually with X button</li>
+            <li><strong>Smooth Animations</strong> - Slide-in and fade-out animations for better UX</li>
+            <li><strong>Context Provider</strong> - Global notification system available throughout the app</li>
+            <li><strong>Customizable Duration</strong> - Different durations for different types of messages</li>
+        </ul>
+    </div>
+    
+    <div class="test-instructions">
+        <h2>📋 Test Instructions:</h2>
+        <ol>
+            <li><strong>Contact Form</strong>: Go to <a href="http://localhost:5174/contact" target="_blank">Contact Page</a> and submit the form</li>
+            <li><strong>Booking System</strong>: Go to <a href="http://localhost:5174/bookings" target="_blank">Bookings Page</a> and test the booking flow</li>
+            <li><strong>Admin Panel</strong>: Go to <a href="http://localhost:5174/admin" target="_blank">Admin Panel</a> and test CRUD operations</li>
+            <li><strong>My Bookings</strong>: Go to <a href="http://localhost:5174/my-bookings" target="_blank">My Bookings</a> and test authentication</li>
+            <li><strong>Add-ons Management</strong>: Test add-ons creation, editing, and deletion</li>
+            <li><strong>Payment Processing</strong>: Test payment success/failure scenarios</li>
+        </ol>
+    </div>
+    
+    <div class="notification-demo">
+        <h3>🎨 Notification Types</h3>
+        <div class="notification-types">
+            <div class="notification-type success-type">
+                <h4>✅ Success</h4>
+                <p>Green notifications for successful operations</p>
+                <p><strong>Examples:</strong> Form submitted, item saved, payment successful</p>
+            </div>
+            <div class="notification-type error-type">
+                <h4>❌ Error</h4>
+                <p>Red notifications for errors and failures</p>
+                <p><strong>Examples:</strong> Form validation failed, payment failed, save error</p>
+            </div>
+            <div class="notification-type warning-type">
+                <h4>⚠️ Warning</h4>
+                <p>Yellow notifications for warnings and cautions</p>
+                <p><strong>Examples:</strong> No data found, validation warnings</p>
+            </div>
+            <div class="notification-type info-type">
+                <h4>ℹ️ Info</h4>
+                <p>Blue notifications for informational messages</p>
+                <p><strong>Examples:</strong> System updates, helpful tips</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="results"></div>
+    
+    <button onclick="testContactForm()">Test Contact Form</button>
+    <button onclick="testBookingFlow()">Test Booking Flow</button>
+    <button onclick="testAdminOperations()">Test Admin Operations</button>
+    <button onclick="testMyBookings()">Test My Bookings</button>
+    <button onclick="showAllNotificationTypes()">Show All Notification Types</button>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function testContactForm() {
+            addResult('🔄 Testing Contact Form Notifications...', 'info');
+            addResult('📋 Go to Contact Page: http://localhost:5174/contact', 'info');
+            addResult('📝 Fill out the form and submit', 'info');
+            addResult('✅ Expected: Green success notification with "Inquiry Submitted!"', 'success');
+            addResult('❌ Expected: Red error notification if submission fails', 'error');
+        }
+        
+        function testBookingFlow() {
+            addResult('🔄 Testing Booking Flow Notifications...', 'info');
+            addResult('📋 Go to Bookings Page: http://localhost:5174/bookings', 'info');
+            addResult('📝 Complete the booking process', 'info');
+            addResult('✅ Expected: Success notifications for each step', 'success');
+            addResult('❌ Expected: Error notifications for validation failures', 'error');
+            addResult('⚠️ Expected: Warning notifications for payment issues', 'warning');
+        }
+        
+        function testAdminOperations() {
+            addResult('🔄 Testing Admin Panel Notifications...', 'info');
+            addResult('📋 Go to Admin Panel: http://localhost:5174/admin', 'info');
+            addResult('🔧 Test CRUD operations (Create, Read, Update, Delete)', 'info');
+            addResult('✅ Expected: "Item Saved" success notifications', 'success');
+            addResult('✅ Expected: "Item Deleted" success notifications', 'success');
+            addResult('❌ Expected: Error notifications for failed operations', 'error');
+            addResult('⚠️ Expected: Warning notifications for no data scenarios', 'warning');
+        }
+        
+        function testMyBookings() {
+            addResult('🔄 Testing My Bookings Notifications...', 'info');
+            addResult('📋 Go to My Bookings: http://localhost:5174/my-bookings', 'info');
+            addResult('🔐 Test authentication with email/mobile', 'info');
+            addResult('✅ Expected: "Authentication Successful" with booking count', 'success');
+            addResult('⚠️ Expected: "No Bookings Found" warning', 'warning');
+            addResult('❌ Expected: "Authentication Failed" error', 'error');
+        }
+        
+        function showAllNotificationTypes() {
+            addResult('🎨 Notification Types Available:', 'info');
+            addResult('✅ Success: Green with checkmark icon - for successful operations', 'success');
+            addResult('❌ Error: Red with X icon - for errors and failures', 'error');
+            addResult('⚠️ Warning: Yellow with warning icon - for warnings and cautions', 'warning');
+            addResult('ℹ️ Info: Blue with info icon - for informational messages', 'info');
+            addResult('⏱️ Auto-dismiss: Notifications disappear after 3-5 seconds', 'info');
+            addResult('❌ Manual close: Users can close notifications with X button', 'info');
+            addResult('🎭 Smooth animations: Slide-in and fade-out effects', 'info');
+        }
+        
+        // Auto-run test on page load
+        window.onload = function() {
+            addResult('🚀 Starting modern notifications test...', 'info');
+            showAllNotificationTypes();
+            addResult('📋 Test all the scenarios above to see the new notification system in action!', 'info');
+        };
+    </script>
+</body>
+</html>
