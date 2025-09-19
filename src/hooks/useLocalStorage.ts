@@ -1943,8 +1943,28 @@ export function createSampleBookingsForUser(userEmail: string) {
   try {
     const existingBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
     
+    // Migrate old bookings to new format (service_id -> service_ids)
+    const migratedBookings = existingBookings.map((booking: any) => {
+      if (booking.service_id && !booking.service_ids) {
+        return {
+          ...booking,
+          service_ids: [booking.service_id],
+          service_id: undefined // Remove old field
+        };
+      }
+      return booking;
+    });
+    
+    // Save migrated bookings if any changes were made
+    if (migratedBookings.length !== existingBookings.length || 
+        migratedBookings.some((booking: any, index: number) => 
+          booking.service_ids !== existingBookings[index]?.service_ids)) {
+      localStorage.setItem('bookings', JSON.stringify(migratedBookings));
+      console.log('Migrated bookings to new service_ids format');
+    }
+    
     // Check if user already has bookings
-    const userBookings = existingBookings.filter((booking: any) => 
+    const userBookings = migratedBookings.filter((booking: any) => 
       booking.email && booking.email.toLowerCase() === userEmail.toLowerCase()
     );
     
@@ -1961,7 +1981,7 @@ export function createSampleBookingsForUser(userEmail: string) {
         email: userEmail,
         mobile: '9876543210',
         destination_id: '1',
-        service_id: '1',
+        service_ids: ['1'],
         seats_selected: 2,
         booking_date: '2024-03-15',
         total_amount: 30000,
@@ -1987,7 +2007,7 @@ export function createSampleBookingsForUser(userEmail: string) {
         email: userEmail,
         mobile: '9876543210',
         destination_id: '2',
-        service_id: '2',
+        service_ids: ['2'],
         seats_selected: 1,
         booking_date: '2024-03-20',
         total_amount: 12000,

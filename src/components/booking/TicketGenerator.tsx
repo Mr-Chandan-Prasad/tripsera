@@ -240,9 +240,22 @@ const TicketGenerator: React.FC<TicketGeneratorProps> = ({
                       <span className="text-gray-600 font-medium">Travelers</span>
                       <span className="text-lg font-bold text-gray-800">{bookingData.seats_selected} {bookingData.seats_selected === 1 ? 'Person' : 'People'}</span>
                     </div>
-                    <div className="flex justify-between items-center py-2 border-b border-blue-100">
-                      <span className="text-gray-600 font-medium">Service</span>
-                      <span className="text-lg font-bold text-gray-800">{serviceName}</span>
+                    <div className="py-2 border-b border-blue-100">
+                      <span className="text-gray-600 font-medium block mb-1">Service{serviceName.includes(',') ? 's' : ''}</span>
+                      <div className="text-lg font-bold text-gray-800">
+                        {serviceName.includes(',') ? (
+                          <div className="space-y-1">
+                            {serviceName.split(', ').map((service, index) => (
+                              <div key={index} className="flex items-center">
+                                <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                                <span>{service.trim()}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span>{serviceName}</span>
+                        )}
+                      </div>
                     </div>
                     {bookingData.pickup_location && (
                       <div className="flex justify-between items-center py-2 border-b border-blue-100">

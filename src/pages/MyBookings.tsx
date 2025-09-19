@@ -280,7 +280,7 @@ const MyBookings: React.FC = () => {
                       <h3 className="text-xl font-bold text-gray-800 mb-1">
                         {getDestinationName(booking.destination_id)}
                       </h3>
-                      <p className="text-gray-600">{getServiceName(booking.service_id)}</p>
+                      <p className="text-gray-600">{getServiceName(booking.service_ids || booking.service_id)}</p>
                     </div>
                     <div className="flex items-center space-x-2">
                       {getStatusIcon(booking.payment_status)}
@@ -396,7 +396,7 @@ const MyBookings: React.FC = () => {
         <TicketGenerator
           bookingData={selectedBooking}
           destinationName={getDestinationName(selectedBooking.destination_id)}
-          serviceName={getServiceName(selectedBooking.service_id)}
+          serviceName={getServiceName(selectedBooking.service_ids || selectedBooking.service_id)}
           onClose={() => {
             setShowTicket(false);
             setSelectedBooking(null);
@@ -425,7 +425,7 @@ const MyBookings: React.FC = () => {
                 <h4 className="font-semibold text-gray-800 mb-2">Booking Details:</h4>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm"><strong>Destination:</strong> {getDestinationName(bookingToCancel.destination_id)}</p>
-                  <p className="text-sm"><strong>Service:</strong> {getServiceName(bookingToCancel.service_id)}</p>
+                  <p className="text-sm"><strong>Service:</strong> {getServiceName(bookingToCancel.service_ids || bookingToCancel.service_id)}</p>
                   <p className="text-sm"><strong>Date:</strong> {new Date(bookingToCancel.booking_date).toLocaleDateString()}</p>
                   <p className="text-sm"><strong>Amount:</strong> ₹{(bookingToCancel.amount || bookingToCancel.total_amount || 0).toLocaleString()}</p>
                 </div>
