@@ -111,11 +111,11 @@ cd backend && npm install
 ```bash
 # Create MySQL database
 mysql -u root -p
-CREATE DATABASE tripsera_db;
-USE tripsera_db;
+CREATE DATABASE tripsera_data;
+USE tripsera_data;
 
 # Run setup script
-mysql -u root -p tripsera_db < database/mysql_setup.sql
+mysql -u root -p tripsera_data < database/mysql_setup.sql
 ```
 
 ### **3. Start Servers**
@@ -144,7 +144,7 @@ MYSQL_HOST=localhost
 MYSQL_PORT=3306
 MYSQL_USER=root
 MYSQL_PASSWORD=your_password
-MYSQL_DATABASE=tripsera_db
+MYSQL_DATABASE=tripsera_data
 PORT=3001
 ```
 

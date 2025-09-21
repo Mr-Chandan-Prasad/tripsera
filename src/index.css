@@ -4,6 +4,74 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mobile-first responsive improvements */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 transition-colors duration-300;
+  }
+}
+
+@layer components {
+  /* Mobile-optimized containers */
+  .container-mobile {
+    @apply px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto;
+  }
+  
+  /* Touch-friendly buttons */
+  .btn-mobile {
+    @apply min-h-[44px] min-w-[44px] px-4 py-2 text-base font-medium rounded-lg transition-all duration-200;
+  }
+  
+  /* Mobile-optimized cards */
+  .card-mobile {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6;
+  }
+  
+  /* Responsive text */
+  .text-responsive {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+  
+  .heading-responsive {
+    @apply text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold;
+  }
+  
+  /* Mobile navigation */
+  .nav-mobile {
+    @apply fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50;
+  }
+  
+  /* Safe area for mobile devices */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Touch-friendly spacing */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+}
+
 @layer base {
   * {
     @apply border-gray-200;

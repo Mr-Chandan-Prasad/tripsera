@@ -6,7 +6,7 @@ export const MYSQL_CONFIG = {
   port: parseInt(import.meta.env.VITE_MYSQL_PORT || '3306'),
   user: import.meta.env.VITE_MYSQL_USER || 'root',
   password: import.meta.env.VITE_MYSQL_PASSWORD || '',
-  database: import.meta.env.VITE_MYSQL_DATABASE || 'tripsera_db',
+  database: import.meta.env.VITE_MYSQL_DATABASE || 'tripsera_data',
   connectionLimit: 10,
   acquireTimeout: 60000,
   timeout: 60000,

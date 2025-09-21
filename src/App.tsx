@@ -3,7 +3,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import NotificationContainer from './components/common/NotificationContainer';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import { NotificationProvider } from './contexts/NotificationContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { WishlistProvider } from './contexts/WishlistContext';
 import { AuthProvider } from './hooks/useFirebaseAuth';
 import { useNotification } from './hooks/useNotification';
 import { runPerformanceTests } from './utils/performanceTest';
@@ -34,42 +37,48 @@ function App() {
   }, []);
 
   return (
-    <AuthProvider>
-      <NotificationProvider>
-        <Router>
-          <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-            <Suspense fallback={
-              <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                  <LoadingSpinner size="lg" />
-                  <p className="mt-4 text-gray-600 font-inter">Loading your travel experience...</p>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <WishlistProvider>
+          <AuthProvider>
+            <NotificationProvider>
+              <Router>
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+                  <Suspense fallback={
+                    <div className="min-h-screen flex items-center justify-center">
+                      <div className="text-center">
+                        <LoadingSpinner size="lg" />
+                        <p className="mt-4 text-gray-600 font-inter">Loading your travel experience...</p>
+                      </div>
+                    </div>
+                  }>
+                    <Routes>
+                      <Route path="/" element={<Layout />}>
+                        <Route index element={<Home />} />
+                        <Route path="destinations" element={<Destinations />} />
+                        <Route path="services" element={<Services />} />
+                        <Route path="gallery" element={<Gallery />} />
+                        <Route path="my-bookings" element={<MyBookings />} />
+                        <Route path="bookings" element={<Bookings />} />
+                        <Route path="contact" element={<Contact />} />
+                        <Route path="admin" element={<Admin />} />
+                        <Route path="*" element={<Home />} />
+                      </Route>
+                    </Routes>
+                  </Suspense>
+                  
+                  {/* Global Notification Container */}
+                  <NotificationContainer
+                    notifications={notifications}
+                    onRemoveNotification={removeNotification}
+                  />
                 </div>
-              </div>
-            }>
-              <Routes>
-                <Route path="/" element={<Layout />}>
-                  <Route index element={<Home />} />
-                  <Route path="destinations" element={<Destinations />} />
-                  <Route path="services" element={<Services />} />
-                  <Route path="gallery" element={<Gallery />} />
-                  <Route path="my-bookings" element={<MyBookings />} />
-                  <Route path="bookings" element={<Bookings />} />
-                  <Route path="contact" element={<Contact />} />
-                  <Route path="admin" element={<Admin />} />
-                  <Route path="*" element={<Home />} />
-                </Route>
-              </Routes>
-            </Suspense>
-            
-            {/* Global Notification Container */}
-            <NotificationContainer
-              notifications={notifications}
-              onRemoveNotification={removeNotification}
-            />
-          </div>
-        </Router>
-      </NotificationProvider>
-    </AuthProvider>
+              </Router>
+            </NotificationProvider>
+          </AuthProvider>
+        </WishlistProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

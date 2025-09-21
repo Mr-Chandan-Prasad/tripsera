@@ -12,8 +12,8 @@
 2. **Login**: `mysql -u root -p` (enter your password)
 3. **Run this SQL**:
 ```sql
-CREATE DATABASE tripsera_db;
-USE tripsera_db;
+CREATE DATABASE tripsera_data;
+USE tripsera_data;
 ```
 
 ### Step 3: Set Up Tables
@@ -49,7 +49,7 @@ MYSQL_HOST=localhost
 MYSQL_PORT=3306
 MYSQL_USER=root
 MYSQL_PASSWORD=your_mysql_password
-MYSQL_DATABASE=tripsera_db
+MYSQL_DATABASE=tripsera_data
 PORT=3001
 ```
 
@@ -57,7 +57,7 @@ PORT=3001
 - **Host**: localhost
 - **Port**: 3306
 - **User**: root
-- **Database**: tripsera_db
+- **Database**: tripsera_data
 - **API Port**: 3001
 
 ---

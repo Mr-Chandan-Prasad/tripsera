@@ -8,7 +8,7 @@ module.exports = {
     port: process.env.MYSQL_PORT || 3306,
     user: process.env.MYSQL_USER || 'root',
     password: process.env.MYSQL_PASSWORD || 'root',
-    database: process.env.MYSQL_DATABASE || 'tripsera_db',
+    database: process.env.MYSQL_DATABASE || 'tripsera_data',
     connectionLimit: 10,
     waitForConnections: true,
     queueLimit: 0

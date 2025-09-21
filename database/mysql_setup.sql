@@ -1,8 +1,8 @@
 -- MySQL setup script for Tripsera
 -- Complete database setup with all required tables
 
-CREATE DATABASE IF NOT EXISTS tripsera_db;
-USE tripsera_db;
+CREATE DATABASE IF NOT EXISTS tripsera_data;
+USE tripsera_data;
 
 -- Create tables for the application
 CREATE TABLE IF NOT EXISTS destinations (

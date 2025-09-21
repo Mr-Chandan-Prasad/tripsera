@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Users, MapPin, CreditCard, Upload, Download, Eye, Check, X, Gift, Home, Image } from 'lucide-react';
-import { useLocalStorageQuery, useLocalStorageMutation, initializeSampleData, checkAvailability, updateBookingCount, removeBookingCount, getAvailabilityStatus, getServicesForDestination, getGroupTourPredefinedDates, getDestinationGroupTourDates } from '../../hooks/useLocalStorage';
-import { formatPrice, hasPriceRange, getPriceForCalculation } from '../../utils/priceUtils';
+import { Calendar, Users, MapPin, CreditCard, Check } from 'lucide-react';
+import { useLocalStorageQuery, useLocalStorageMutation, initializeSampleData, checkAvailability, updateBookingCount, getAvailabilityStatus, getServicesForDestination, getDestinationGroupTourDates } from '../../hooks/useLocalStorage';
+import { formatPrice, getPriceForCalculation } from '../../utils/priceUtils';
 import { useNotificationContext } from '../../contexts/NotificationContext';
 import PaymentProcessor from './PaymentProcessor';
 import TicketGenerator from './TicketGenerator';
@@ -11,6 +11,7 @@ import ImageUploader from '../common/ImageUploader';
 import LoadingSpinner from '../common/LoadingSpinner';
 import WelcomeMessage from '../common/WelcomeMessage';
 import TypingAnimation from '../common/TypingAnimation';
+import AsyncErrorBoundary from '../common/AsyncErrorBoundary';
 import { updateCustomerData, markCustomerAsBooked } from '../../utils/customerTracking';
 import { useAuth } from '../../hooks/useFirebaseAuth';
 
@@ -91,7 +92,7 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
   const [showTicket, setShowTicket] = useState(false);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
-  const { showSuccess, showError, showWarning } = useNotificationContext();
+  const { showError, showWarning } = useNotificationContext();
 
   // Initialize sample data
   useEffect(() => {
@@ -122,15 +123,15 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
   // Set pre-selected values
   useEffect(() => {
     if (preSelectedDestination) {
-      const destination = destinations.find(d => d.name === preSelectedDestination);
+      const destination = destinations.find((d: any) => d.name === preSelectedDestination);
       if (destination) {
-        setBookingData(prev => ({ ...prev, destination_id: destination.id }));
+        setBookingData(prev => ({ ...prev, destination_id: (destination as any).id }));
       }
     }
     if (preSelectedService) {
-      const service = allServices.find(s => s.name === preSelectedService);
+      const service = allServices.find((s: any) => s.name === preSelectedService);
       if (service) {
-        setBookingData(prev => ({ ...prev, service_ids: [service.id] }));
+        setBookingData(prev => ({ ...prev, service_ids: [(service as any).id] }));
       }
     }
   }, [preSelectedDestination, preSelectedService, destinations, allServices]);
@@ -143,7 +144,7 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
       const incompatibleServices = bookingData.service_ids.filter(serviceId => !availableServiceIds.includes(serviceId));
       
       if (incompatibleServices.length > 0) {
-        const incompatibleServiceNames = incompatibleServices.map(id => allServices.find(s => s.id === id)?.name).filter(Boolean);
+        const incompatibleServiceNames = incompatibleServices.map(id => (allServices.find((s: any) => s.id === id) as any)?.name).filter(Boolean);
         setBookingData(prev => ({ 
           ...prev, 
           service_ids: prev.service_ids.filter(id => availableServiceIds.includes(id))
@@ -155,16 +156,52 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
 
   // Calculate total amount
   useEffect(() => {
-    const destination = destinations.find(d => d.id === bookingData.destination_id);
-    const selectedServices = services.filter(s => bookingData.service_ids.includes(s.id));
+    const destination = destinations.find((d: any) => d.id === bookingData.destination_id);
+    const selectedServices = services.filter((s: any) => bookingData.service_ids.includes(s.id));
     
-    // Ensure prices are numbers, not strings
-    const destPrice = getPriceForCalculation(destination) || 0;
-    const servicesTotal = selectedServices.reduce((sum, service) => sum + (getPriceForCalculation(service) || 0), 0);
+    // Ensure prices are numbers, not strings - with better debugging
+    const destPrice = Number(getPriceForCalculation(destination as any)) || 0;
+    const servicesTotal = selectedServices.reduce((sum, service) => {
+      const servicePrice = Number(getPriceForCalculation(service as any)) || 0;
+      return sum + servicePrice;
+    }, 0);
     
-    const baseTotal = (destPrice + servicesTotal) * bookingData.seats_selected;
-    const addonsTotal = selectedAddOns.reduce((sum, item) => sum + (parseFloat(item.totalPrice) || 0), 0);
+    // Safety check: ensure prices are reasonable (not in billions!)
+    const safeDestPrice = Math.min(destPrice, 1000000); // Max 1 million
+    const safeServicesTotal = Math.min(servicesTotal, 1000000); // Max 1 million
+    
+    const baseTotal = (safeDestPrice + safeServicesTotal) * bookingData.seats_selected;
+    const addonsTotal = selectedAddOns.reduce((sum, item) => {
+      const addonPrice = Number(item.totalPrice) || 0;
+      return sum + Math.min(addonPrice, 100000); // Max 100k per addon
+    }, 0);
     const grandTotal = baseTotal + addonsTotal;
+    
+    // Debug logging only in development mode
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔍 Price calculation debug:', {
+        destination: (destination as any)?.name,
+        destinationRaw: destination,
+        destPrice,
+        selectedServices: selectedServices.map((s: any) => ({ name: s.name, price: s.price, calculated: getPriceForCalculation(s) })),
+        servicesTotal,
+        baseTotal,
+        addonsTotal,
+        grandTotal,
+        seats: bookingData.seats_selected,
+        selectedAddOns: selectedAddOns.map(item => ({ name: item.addon.name, totalPrice: item.totalPrice }))
+      });
+      
+      // Warning if prices seem too high
+      if (destPrice > 100000 || servicesTotal > 100000 || grandTotal > 1000000) {
+        console.warn('⚠️ HIGH PRICE DETECTED!', {
+          destPrice,
+          servicesTotal,
+          grandTotal,
+          destination: (destination as any)?.name
+        });
+      }
+    }
     
     setBookingData(prev => ({ 
       ...prev, 
@@ -174,8 +211,32 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
     }));
   }, [bookingData.destination_id, bookingData.service_ids, bookingData.seats_selected, selectedAddOns, destinations, services]);
 
-  const handleAddOnsChange = (addons: SelectedAddOn[], totalPrice: number) => {
+  const handleAddOnsChange = (addons: SelectedAddOn[]) => {
     setSelectedAddOns(addons);
+  };
+
+  // Fallback calculation function
+  const calculateTotalAmount = () => {
+    const destination = destinations.find((d: any) => d.id === bookingData.destination_id);
+    const selectedServices = services.filter((s: any) => bookingData.service_ids.includes(s.id));
+    
+    const destPrice = Number(getPriceForCalculation(destination as any)) || 0;
+    const servicesTotal = selectedServices.reduce((sum, service) => {
+      const servicePrice = Number(getPriceForCalculation(service as any)) || 0;
+      return sum + servicePrice;
+    }, 0);
+    
+    // Safety check: ensure prices are reasonable (not in billions!)
+    const safeDestPrice = Math.min(destPrice, 1000000); // Max 1 million
+    const safeServicesTotal = Math.min(servicesTotal, 1000000); // Max 1 million
+    
+    const baseTotal = (safeDestPrice + safeServicesTotal) * bookingData.seats_selected;
+    const addonsTotal = selectedAddOns.reduce((sum, item) => {
+      const addonPrice = Number(item.totalPrice) || 0;
+      return sum + Math.min(addonPrice, 100000); // Max 100k per addon
+    }, 0);
+    
+    return baseTotal + addonsTotal;
   };
 
   const handleBookingComplete = () => {
@@ -381,11 +442,11 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
   };
 
   const getDestinationName = (id: string) => {
-    return destinations.find(d => d.id === id)?.name || 'Unknown';
+    return (destinations.find((d: any) => d.id === id) as any)?.name || 'Unknown';
   };
 
   const getServiceName = (id: string) => {
-    return services.find(s => s.id === id)?.name || 'Unknown';
+    return (services.find((s: any) => s.id === id) as any)?.name || 'Unknown';
   };
 
   const renderStepIndicator = () => (
@@ -552,7 +613,7 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           >
             <option value="">Select Destination</option>
-            {destinations.map((dest) => {
+            {destinations.map((dest: any) => {
               const availability = getAvailabilityStatus(dest.id, 'destinations');
               const statusText = availability.status === 'available' ? `${availability.remainingCapacity} seats` :
                                 availability.status === 'limited' ? `Only ${availability.remainingCapacity} left!` :
@@ -923,12 +984,12 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
           <div className="space-y-2">
             {/* Destination Price */}
             {(() => {
-              const destination = destinations.find(d => d.id === bookingData.destination_id);
+              const destination = destinations.find((d: any) => d.id === bookingData.destination_id);
               if (destination) {
                 return (
                   <div className="flex justify-between items-center">
-                    <span>Destination ({destination.name}):</span>
-                    <span className="text-gray-600">₹{getPriceForCalculation(destination).toLocaleString()}</span>
+                    <span>Destination ({(destination as any).name}):</span>
+                    <span className="text-gray-600">₹{getPriceForCalculation(destination as any).toLocaleString()}</span>
                   </div>
                 );
               }
@@ -937,12 +998,12 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
             
             {/* Services Prices */}
             {bookingData.service_ids.map(serviceId => {
-              const service = services.find(s => s.id === serviceId);
+              const service = services.find((s: any) => s.id === serviceId);
               if (service) {
                 return (
                   <div key={serviceId} className="flex justify-between items-center">
-                    <span>Service ({service.name}):</span>
-                    <span className="text-gray-600">₹{getPriceForCalculation(service).toLocaleString()}</span>
+                    <span>Service ({(service as any).name}):</span>
+                    <span className="text-gray-600">₹{getPriceForCalculation(service as any).toLocaleString()}</span>
                   </div>
                 );
               }
@@ -970,10 +1031,24 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
                 ))}
               </>
             )}
+            {/* Debug info - remove in production */}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="bg-gray-100 p-3 rounded text-xs">
+                <div>Base Amount: ₹{bookingData.base_amount?.toLocaleString() || '0'}</div>
+                <div>Add-ons Total: ₹{bookingData.addons_total?.toLocaleString() || '0'}</div>
+                <div>Seats: {bookingData.seats_selected}</div>
+              </div>
+            )}
+            
             <div className="border-t pt-2">
               <div className="flex justify-between items-center text-lg font-semibold">
                 <span>Total Amount:</span>
-                <span className="text-teal-600">₹{bookingData.total_amount.toLocaleString()}</span>
+                <span className="text-teal-600">
+                  ₹{(bookingData.total_amount || calculateTotalAmount() || 0).toLocaleString()}
+                  {bookingData.total_amount === 0 && calculateTotalAmount() === 0 && (
+                    <span className="text-xs text-red-500 ml-2">(Select destination & services)</span>
+                  )}
+                </span>
               </div>
             </div>
           </div>
@@ -1005,11 +1080,12 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      <div className="container mx-auto px-6 py-12">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4 animate-fade-in-up">
+    <AsyncErrorBoundary>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="container mx-auto px-6 py-12">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold text-gray-800 mb-4 animate-fade-in-up">
               <TypingAnimation text="Secure Booking System" speed={100} />
             </h1>
             <p className="text-xl text-gray-600">Complete your travel booking in 3 easy steps</p>
@@ -1048,7 +1124,7 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
                     className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50 flex items-center space-x-2"
                   >
                     {loading ? <LoadingSpinner size="sm" /> : <CreditCard className="w-5 h-5" />}
-                    <span>Proceed to Payment</span>
+                    <span>Proceed to Payment - ₹{(bookingData.total_amount || calculateTotalAmount() || 0).toLocaleString()}</span>
                   </button>
                 )}
               </div>
@@ -1072,7 +1148,8 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
         customerName={bookingData.customer_name || 'Traveler'}
         isNewCustomer={true}
       />
-    </div>
+      </div>
+    </AsyncErrorBoundary>
   );
 };
 

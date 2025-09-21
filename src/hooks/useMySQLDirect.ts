@@ -8,7 +8,7 @@ const connectionConfig = {
   host: 'localhost',
   user: 'root',
   password: 'root',
-  database: 'tripsera'
+  database: 'tripsera_data'
 };
 
 export function useMySQLDirect(table: string) {

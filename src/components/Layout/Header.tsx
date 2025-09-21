@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Plane, Menu, X, User, LogOut, Car, Bus, Bike } from 'lucide-react';
+import { Plane, Menu, X, User, LogOut, Car, Bus, Bike, Moon, Sun } from 'lucide-react';
 import { useAuth } from '../../hooks/useFirebaseAuth';
+import { useTheme } from '../../contexts/ThemeContext';
 import AuthModal from '../auth/AuthModal';
 
 const Header: React.FC = () => {
@@ -10,6 +11,7 @@ const Header: React.FC = () => {
   const [currentVehicle, setCurrentVehicle] = useState(0);
   const location = useLocation();
   const { user, logout, isAdmin } = useAuth();
+  const { isDarkMode, toggleDarkMode } = useTheme();
 
   const vehicles = [
     { icon: Plane, name: 'Plane', color: 'text-orange-400', animation: 'animate-fly-plane' },
@@ -102,6 +104,19 @@ const Header: React.FC = () => {
           ))}
           {/* Authentication Section */}
           <div className="flex items-center space-x-2 ml-3 min-h-[40px]">
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              className="text-white hover:text-orange-400 transition-colors p-2 rounded-lg hover:bg-white/10"
+              title="Toggle dark mode"
+            >
+              {isDarkMode ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </button>
+            
             {user ? (
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2">
@@ -140,10 +155,11 @@ const Header: React.FC = () => {
           </div>
         </nav>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button - Always visible on mobile */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden text-white focus:outline-none"
+          className="md:hidden text-white focus:outline-none p-3 rounded-lg hover:bg-white/10 transition-colors duration-200 touch-target bg-white/5 border border-white/20"
+          aria-label="Toggle mobile menu"
         >
           {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -151,29 +167,58 @@ const Header: React.FC = () => {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden mt-4 pb-4 border-t border-purple-700">
-          <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
-            <div className="flex flex-col space-y-4 pt-4">
+        <>
+          {/* Backdrop */}
+          <div 
+            className="md:hidden fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsMenuOpen(false)}
+          />
+          {/* Mobile Menu */}
+          <div className="md:hidden absolute top-full left-0 right-0 bg-gradient-to-r from-blue-900 to-purple-800 shadow-lg border-t border-purple-700 z-50 animate-in slide-in-from-top-2 duration-300">
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <div className="flex flex-col space-y-3">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`text-lg font-semibold transition-colors duration-300 ${
-                    isActive(item.href) ? 'text-orange-400' : 'text-white hover:text-orange-400'
+                  className={`text-lg font-semibold transition-colors duration-300 py-3 px-4 rounded-lg touch-target ${
+                    isActive(item.href) 
+                      ? 'text-orange-400 bg-orange-400/10' 
+                      : 'text-white hover:text-orange-400 hover:bg-white/5 active:bg-white/10'
                   }`}
                 >
                   {item.name}
                 </Link>
               ))}
               
+              {/* Mobile Dark Mode Toggle */}
+              <div className="pt-3 border-t border-purple-600">
+                <button
+                  onClick={toggleDarkMode}
+                  className="w-full flex items-center justify-center space-x-3 text-white px-4 py-3 rounded-lg hover:bg-white/10 transition-colors duration-300 font-semibold"
+                >
+                  {isDarkMode ? (
+                    <>
+                      <Sun className="w-5 h-5" />
+                      <span>Light Mode</span>
+                    </>
+                  ) : (
+                    <>
+                      <Moon className="w-5 h-5" />
+                      <span>Dark Mode</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              
               {/* Mobile Authentication */}
-              <div className="pt-4 border-t border-purple-600">
+              <div className="pt-3 border-t border-purple-600">
                 {user ? (
                   <div className="space-y-3">
-                    <div className="flex items-center space-x-3 text-white">
-                      <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 text-orange-600" />
+                    <div className="flex items-center space-x-3 text-white p-3 bg-white/5 rounded-lg">
+                      <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                        <User className="w-5 h-5 text-orange-600" />
                       </div>
                       <div>
                         <p className="font-medium">{user.displayName}</p>
@@ -187,7 +232,7 @@ const Header: React.FC = () => {
                         handleLogout();
                         setIsMenuOpen(false);
                       }}
-                      className="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-300 text-center flex items-center justify-center space-x-2"
+                      className="w-full bg-red-500 text-white px-4 py-3 rounded-lg hover:bg-red-600 transition-colors duration-300 text-center flex items-center justify-center space-x-2 font-semibold"
                     >
                       <LogOut className="w-4 h-4" />
                       <span>Sign Out</span>
@@ -196,7 +241,7 @@ const Header: React.FC = () => {
                       <Link
                         to="/admin"
                         onClick={() => setIsMenuOpen(false)}
-                        className="w-full bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors duration-300 text-center"
+                        className="w-full bg-orange-500 text-white px-4 py-3 rounded-lg hover:bg-orange-600 transition-colors duration-300 text-center font-semibold"
                       >
                         Admin Panel
                       </Link>
@@ -208,7 +253,7 @@ const Header: React.FC = () => {
                       setShowAuthModal(true);
                       setIsMenuOpen(false);
                     }}
-                    className="w-full bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors duration-300 text-center flex items-center justify-center space-x-2"
+                    className="w-full bg-orange-500 text-white px-4 py-3 rounded-lg hover:bg-orange-600 transition-colors duration-300 text-center flex items-center justify-center space-x-2 font-semibold"
                   >
                     <User className="w-4 h-4" />
                     <span>Sign In</span>
@@ -217,7 +262,8 @@ const Header: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
+          </div>
+        </>
       )}
       
       {/* Auth Modal */}

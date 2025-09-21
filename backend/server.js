@@ -225,9 +225,10 @@ app.use((err, req, res, next) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 MySQL API Server running on port ${PORT}`);
+  console.log(`🚀 MySQL API Server running on http://localhost:${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
   console.log(`🔗 Test connection: http://localhost:${PORT}/api/test-connection`);
+  console.log(`🗄️ Database: ${dbConfig.database}@${dbConfig.host}:${dbConfig.port}`);
   
   // Test database connection on startup
   pool.getConnection((err, connection) => {
@@ -239,13 +240,6 @@ app.listen(PORT, () => {
       connection.release();
     }
   });
-});
-
-// Start the server
-app.listen(PORT, () => {
-  console.log(`🚀 MySQL API Server running on http://localhost:${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
-  console.log(`🗄️ Database: ${dbConfig.database}@${dbConfig.host}:${dbConfig.port}`);
 });
 
 module.exports = app;
