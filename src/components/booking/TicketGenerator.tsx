@@ -45,6 +45,14 @@ const TicketGenerator: React.FC<TicketGeneratorProps> = ({
   const [qrCodeUrl, setQrCodeUrl] = React.useState<string>('');
   const { showError } = useNotificationContext();
 
+  // Debug logging
+  console.log('🎫 TicketGenerator Debug:', {
+    bookingData,
+    destinationName,
+    serviceName,
+    bookingDate: bookingData?.booking_date
+  });
+
   // Ensure selectedAddOns is always an array
   const safeSelectedAddOns = Array.isArray(selectedAddOns) ? selectedAddOns : [];
 
@@ -229,32 +237,70 @@ const TicketGenerator: React.FC<TicketGeneratorProps> = ({
                     </div>
                     <div className="flex justify-between items-center py-2 border-b border-blue-100">
                       <span className="text-gray-600 font-medium">Travel Date</span>
-                      <span className="text-lg font-bold text-gray-800">{new Date(bookingData.booking_date).toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                      })}</span>
+                      <span className="text-lg font-bold text-gray-800">
+                        {(() => {
+                          try {
+                            // Handle different date formats
+                            let dateStr = bookingData.booking_date;
+                            
+                            // If it contains a pipe (|), it's a group tour date with time
+                            if (dateStr && dateStr.includes('|')) {
+                              dateStr = dateStr.split('|')[0]; // Get just the date part
+                            }
+                            
+                            // Parse and format the date
+                            const date = new Date(dateStr);
+                            
+                            // Check if date is valid
+                            if (isNaN(date.getTime())) {
+                              return 'Date not set';
+                            }
+                            
+                            return date.toLocaleDateString('en-US', { 
+                              weekday: 'long', 
+                              year: 'numeric', 
+                              month: 'long', 
+                              day: 'numeric' 
+                            });
+                          } catch (error) {
+                            console.error('Date parsing error:', error);
+                            return 'Invalid Date';
+                          }
+                        })()}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center py-2 border-b border-blue-100">
                       <span className="text-gray-600 font-medium">Travelers</span>
                       <span className="text-lg font-bold text-gray-800">{bookingData.seats_selected} {bookingData.seats_selected === 1 ? 'Person' : 'People'}</span>
                     </div>
                     <div className="py-2 border-b border-blue-100">
-                      <span className="text-gray-600 font-medium block mb-1">Service{serviceName.includes(',') ? 's' : ''}</span>
+                      <span className="text-gray-600 font-medium block mb-1">
+                        Service{serviceName && serviceName.includes(',') ? 's' : ''}
+                      </span>
                       <div className="text-lg font-bold text-gray-800">
-                        {serviceName.includes(',') ? (
-                          <div className="space-y-1">
-                            {serviceName.split(', ').map((service, index) => (
-                              <div key={index} className="flex items-center">
-                                <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-                                <span>{service.trim()}</span>
+                        {(() => {
+                          // Handle undefined or empty serviceName
+                          if (!serviceName || serviceName === 'Unknown Service' || serviceName === 'No Services') {
+                            return <span className="text-red-500">Service not specified</span>;
+                          }
+                          
+                          // Handle multiple services
+                          if (serviceName.includes(',')) {
+                            return (
+                              <div className="space-y-1">
+                                {serviceName.split(', ').map((service, index) => (
+                                  <div key={index} className="flex items-center">
+                                    <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                                    <span>{service.trim()}</span>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <span>{serviceName}</span>
-                        )}
+                            );
+                          }
+                          
+                          // Single service
+                          return <span>{serviceName}</span>;
+                        })()}
                       </div>
                     </div>
                     {bookingData.pickup_location && (

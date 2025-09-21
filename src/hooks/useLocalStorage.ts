@@ -1133,6 +1133,112 @@ export function addNewDestinationsAndServices() {
   }
 }
 
+// Add new gallery images to existing localStorage data with COMPLETELY DIFFERENT URLs
+export function addNewGalleryImages() {
+  try {
+    const existingGallery = JSON.parse(localStorage.getItem('gallery') || '[]');
+    
+    // New gallery images with COMPLETELY UNIQUE URLs (different from existing ones)
+    const newGalleryImages = [
+      {
+        id: '13',
+        title: 'Kashmir Valley Snow',
+        image_url: 'https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?w=800',
+        description: 'Snow-covered valleys and mountains in Kashmir',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      },
+      {
+        id: '14',
+        title: 'Shimla Hill Station',
+        image_url: 'https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=800',
+        description: 'Beautiful hill station views in Himachal Pradesh',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      },
+      {
+        id: '15',
+        title: 'Andaman Beach Resort',
+        image_url: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
+        description: 'Luxury beach resorts in Andaman Islands',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      },
+      {
+        id: '16',
+        title: 'Leh Palace Ladakh',
+        image_url: 'https://images.unsplash.com/photo-1618083707368-b3df1b830c13?w=800',
+        description: 'Historic Leh Palace against mountain backdrop',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      },
+      {
+        id: '17',
+        title: 'Meenakshi Temple',
+        image_url: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800',
+        description: 'Colorful temple towers in Tamil Nadu',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      },
+      {
+        id: '18',
+        title: 'Goa Beach Shacks',
+        image_url: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800',
+        description: 'Traditional beach shacks and palm trees',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      },
+      {
+        id: '19',
+        title: 'Kerala Coconut Palms',
+        image_url: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800',
+        description: 'Swaying coconut palms along Kerala coast',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      },
+      {
+        id: '20',
+        title: 'Jaisalmer Fort',
+        image_url: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800',
+        description: 'Golden sandstone fort in Rajasthan desert',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      },
+      {
+        id: '21',
+        title: 'Everest Base Camp',
+        image_url: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800',
+        description: 'Trekking adventure in the Himalayas',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      },
+      {
+        id: '22',
+        title: 'Goa Parasailing',
+        image_url: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800',
+        description: 'Thrilling water sports activities in Goa',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+    ];
+    
+    // Add new gallery images if they don't exist
+    newGalleryImages.forEach(newImage => {
+      const exists = existingGallery.some((image: any) => image.id === newImage.id);
+      if (!exists) {
+        existingGallery.push(newImage);
+      }
+    });
+    
+    // Save updated data
+    localStorage.setItem('gallery', JSON.stringify(existingGallery));
+    
+    console.log('✅ Added new gallery images to localStorage');
+  } catch (error) {
+    console.error('❌ Error adding new gallery images:', error);
+  }
+}
+
 // Initialize sample data if localStorage is empty
 export function initializeSampleData() {
   // First migrate existing data
@@ -1143,6 +1249,10 @@ export function initializeSampleData() {
   
   // Add new destinations and services to existing data
   addNewDestinationsAndServices();
+  
+  // Add new gallery images to existing data
+  addNewGalleryImages();
+  
   
   const tables = ['destinations', 'services', 'bookings', 'addons', 'gallery', 'testimonials', 'advertisements', 'offers', 'inquiries', 'site_settings'];
   
@@ -1581,6 +1691,25 @@ export function initializeSampleData() {
               max_capacity: 15,
               current_bookings: 0,
               is_available: true,
+              is_group_tour: true,
+              predefined_dates: [
+                {
+                  id: '1',
+                  date: '2024-03-10',
+                  time: '08:00',
+                  description: 'Morning Adventure Tour',
+                  available_slots: 15,
+                  booked_slots: 0
+                },
+                {
+                  id: '2',
+                  date: '2024-03-15',
+                  time: '14:00',
+                  description: 'Afternoon Adventure Tour',
+                  available_slots: 15,
+                  booked_slots: 0
+                }
+              ],
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString()
             },
@@ -1598,6 +1727,25 @@ export function initializeSampleData() {
               max_capacity: 12,
               current_bookings: 0,
               is_available: true,
+              is_group_tour: true,
+              predefined_dates: [
+                {
+                  id: '1',
+                  date: '2024-03-12',
+                  time: '09:00',
+                  description: 'Morning Water Sports',
+                  available_slots: 12,
+                  booked_slots: 0
+                },
+                {
+                  id: '2',
+                  date: '2024-03-18',
+                  time: '15:00',
+                  description: 'Afternoon Water Sports',
+                  available_slots: 12,
+                  booked_slots: 0
+                }
+              ],
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString()
             },
@@ -1811,6 +1959,102 @@ export function initializeSampleData() {
               title: 'Kerala Elephant',
               image_url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800',
               description: 'Gentle elephants in their natural habitat',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            },
+            {
+              id: '13',
+              title: 'Kashmir Valley',
+              image_url: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=800',
+              description: 'Stunning valley views with snow-capped mountains',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            },
+            {
+              id: '14',
+              title: 'Himachal Pradesh',
+              image_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
+              description: 'Mountain landscapes and pine forests',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            },
+            {
+              id: '15',
+              title: 'Andaman Islands',
+              image_url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800',
+              description: 'Crystal clear waters and pristine beaches',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            },
+            {
+              id: '16',
+              title: 'Ladakh Monasteries',
+              image_url: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800',
+              description: 'Ancient Buddhist monasteries in the mountains',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            },
+            {
+              id: '17',
+              title: 'Tamil Nadu Temples',
+              image_url: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800',
+              description: 'Magnificent Dravidian temple architecture',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            },
+            {
+              id: '18',
+              title: 'Goa Nightlife',
+              image_url: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=800',
+              description: 'Vibrant nightlife and beach parties',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            },
+            {
+              id: '19',
+              title: 'Kerala Spice Plantations',
+              image_url: 'https://images.unsplash.com/photo-1464822759844-d150baecf5b1?w=800',
+              description: 'Aromatic spice gardens and plantations',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            },
+            {
+              id: '20',
+              title: 'Rajasthan Camel Safari',
+              image_url: 'https://images.unsplash.com/photo-1515408320274-ad2e7223e0ba?w=800',
+              description: 'Desert safari experience on camelback',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            },
+            {
+              id: '21',
+              title: 'Himalayan Trekking',
+              image_url: 'https://images.unsplash.com/photo-1605538883669-825200433431?w=800',
+              description: 'Adventure trekking in the Himalayas',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            },
+            {
+              id: '22',
+              title: 'Goa Water Sports',
+              image_url: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=800',
+              description: 'Exciting water sports and activities',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            },
+            {
+              id: '23',
+              title: 'Kerala Kathakali',
+              image_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
+              description: 'Traditional Kathakali dance performance',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            },
+            {
+              id: '24',
+              title: 'Rajasthan Folk Music',
+              image_url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800',
+              description: 'Traditional Rajasthani folk music and dance',
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString()
             }

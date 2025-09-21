@@ -12,6 +12,7 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import WelcomeMessage from '../common/WelcomeMessage';
 import TypingAnimation from '../common/TypingAnimation';
 import { updateCustomerData, markCustomerAsBooked } from '../../utils/customerTracking';
+import { useAuth } from '../../hooks/useFirebaseAuth';
 
 interface AddOn {
   id: string;
@@ -64,6 +65,7 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
   preSelectedService
 }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [bookingData, setBookingData] = useState<BookingData>({
     customer_name: '',
@@ -96,6 +98,17 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
     initializeSampleData();
   }, []);
 
+  // Auto-fill user information when logged in
+  useEffect(() => {
+    if (user?.email) {
+      setBookingData(prev => ({
+        ...prev,
+        email: user.email || '',
+        customer_name: user.displayName || prev.customer_name
+      }));
+    }
+  }, [user]);
+
   const { data: destinations } = useLocalStorageQuery('destinations', '*');
   const { data: allServices } = useLocalStorageQuery('services', '*');
   const { insert, update, loading } = useLocalStorageMutation();
@@ -104,6 +117,7 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
   const services = bookingData.destination_id 
     ? getServicesForDestination(bookingData.destination_id)
     : allServices;
+    
 
   // Set pre-selected values
   useEffect(() => {
@@ -144,34 +158,13 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
     const destination = destinations.find(d => d.id === bookingData.destination_id);
     const selectedServices = services.filter(s => bookingData.service_ids.includes(s.id));
     
-    console.log('BookingInterface - Price calculation debug:', {
-      destination: destination?.name,
-      selectedServices: selectedServices.map(s => s.name),
-      destinationPrice: destination?.price,
-      servicePrices: selectedServices.map(s => s.price),
-      destinationPriceRange: destination?.price_range,
-      servicePriceRanges: selectedServices.map(s => s.price_range)
-    });
-    
     // Ensure prices are numbers, not strings
     const destPrice = getPriceForCalculation(destination) || 0;
     const servicesTotal = selectedServices.reduce((sum, service) => sum + (getPriceForCalculation(service) || 0), 0);
     
-    console.log('BookingInterface - Calculated prices:', {
-      destPrice,
-      servicesTotal,
-      seatsSelected: bookingData.seats_selected
-    });
-    
     const baseTotal = (destPrice + servicesTotal) * bookingData.seats_selected;
     const addonsTotal = selectedAddOns.reduce((sum, item) => sum + (parseFloat(item.totalPrice) || 0), 0);
     const grandTotal = baseTotal + addonsTotal;
-    
-    console.log('BookingInterface - Totals:', {
-      baseTotal,
-      addonsTotal,
-      grandTotal
-    });
     
     setBookingData(prev => ({ 
       ...prev, 
@@ -272,28 +265,31 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
   };
 
   const handleBookingSubmit = async () => {
-    console.log('BookingInterface - Starting booking submission...');
-    console.log('BookingInterface - Current booking data:', bookingData);
-    
     if (!validateStep(2)) {
-      console.log('BookingInterface - Validation failed');
       return;
     }
 
     try {
-      console.log('BookingInterface - Submitting booking data:', bookingData);
+      console.log('=== BOOKING SUBMISSION DEBUG ===');
+      console.log('Booking data being submitted:', bookingData);
+      console.log('User email:', user?.email);
+      console.log('Booking email:', bookingData.email);
+      
       const result = await insert('bookings', bookingData);
-      console.log('BookingInterface - Booking created with ID:', result.id);
+      console.log('Booking created with result:', result);
       setBookingData(prev => ({ ...prev, id: result.id }));
       
+      // Verify the booking was saved
+      const savedBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+      console.log('All bookings after save:', savedBookings);
+      console.log('Latest booking:', savedBookings[savedBookings.length - 1]);
+      
       // Update booking counts for destination and services
-      console.log('BookingInterface - Updating booking counts...');
       updateBookingCount(bookingData.destination_id, 'destinations', bookingData.seats_selected);
       bookingData.service_ids.forEach(serviceId => {
         updateBookingCount(serviceId, 'services', bookingData.seats_selected);
       });
       
-      console.log('BookingInterface - Showing payment interface...');
       setShowPayment(true);
     } catch (error) {
       console.error('Booking submission error:', error);
@@ -307,8 +303,10 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
 
   const handlePaymentSuccess = async (paymentData: any) => {
     try {
-      console.log('BookingInterface - Payment success data:', paymentData);
-      console.log('BookingInterface - Current booking data:', bookingData);
+      console.log('=== PAYMENT SUCCESS DEBUG ===');
+      console.log('Payment data:', paymentData);
+      console.log('Booking ID:', bookingData.id);
+      console.log('Booking email:', bookingData.email);
       
       // Only proceed if payment is actually validated
       if (!paymentData.paymentValidated) {
@@ -320,10 +318,7 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
         return;
       }
       
-      console.log('BookingInterface - Updating booking with ID:', bookingData.id);
-      console.log('BookingInterface - Transaction ID:', paymentData.transactionId);
-      
-      await update('bookings', bookingData.id!, {
+      const updateData = {
         payment_status: 'paid',
         payment_method: paymentData.method,
         transaction_id: paymentData.transactionId,
@@ -335,10 +330,18 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
         mobile: bookingData.mobile,
         address: bookingData.address,
         destination_id: bookingData.destination_id,
-        service_id: bookingData.service_id,
+        service_ids: bookingData.service_ids,
         booking_date: bookingData.booking_date,
         details: bookingData.details
-      });
+      };
+      
+      console.log('Updating booking with data:', updateData);
+      await update('bookings', bookingData.id!, updateData);
+      
+      // Verify the update worked
+      const updatedBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+      const updatedBooking = updatedBookings.find((b: any) => b.id === bookingData.id);
+      console.log('Updated booking:', updatedBooking);
       
       setBookingData(prev => ({ 
         ...prev, 
@@ -367,9 +370,6 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
           setShowWelcomeMessage(true);
         }, 3000);
       }
-      
-      // Send confirmation email (mock)
-      console.log('Sending confirmation email to:', bookingData.email);
     } catch (error) {
       console.error('Payment update error:', error);
       showError(
@@ -500,7 +500,7 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
       <AddOnsSelector
         onAddOnsChange={handleAddOnsChange}
         selectedDestination={getDestinationName(bookingData.destination_id)}
-        selectedService={bookingData.service_id}
+        selectedService={bookingData.service_ids[0] || ''}
       />
       
       {selectedAddOns.length > 0 && (
@@ -688,16 +688,20 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
             })()}
           </label>
           
+          
           {(() => {
             const selectedService = services.find(s => s.id === bookingData.service_ids[0]);
             
+            
             if (selectedService?.is_group_tour) {
-              // Show predefined dates for Group Tours from destination
-              const predefinedDates = getDestinationGroupTourDates(bookingData.destination_id);
+              // Show predefined dates for Group Tours - check service first, then destination
+              let predefinedDates = selectedService.predefined_dates || [];
               
-              console.log('🔍 Debug - Selected service:', selectedService);
-              console.log('🔍 Debug - Destination ID:', bookingData.destination_id);
-              console.log('🔍 Debug - Predefined dates:', predefinedDates);
+              // If no service dates, try destination dates
+              if (predefinedDates.length === 0) {
+                predefinedDates = getDestinationGroupTourDates(bookingData.destination_id);
+              }
+              
               
               if (predefinedDates.length === 0) {
                 return (
@@ -709,6 +713,9 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
               
               return (
                 <div className="space-y-2">
+                  <p className="text-sm text-gray-600 mb-3">
+                    📅 <strong>Group Tour Dates:</strong> Select from available tour dates below
+                  </p>
                   {predefinedDates.map((date: any) => (
                     <label key={date.id} className="flex items-center space-x-3 cursor-pointer p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                       <input
@@ -740,14 +747,20 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
               );
             } else {
               // Show regular date picker for other services
+              
               return (
-                <input
-                  type="date"
-                  value={bookingData.booking_date}
-                  onChange={(e) => setBookingData(prev => ({ ...prev, booking_date: e.target.value }))}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                />
+                <div>
+                  <p className="text-sm text-gray-600 mb-3">
+                    📅 <strong>Flexible Dates:</strong> Choose any date that works for you
+                  </p>
+                  <input
+                    type="date"
+                    value={bookingData.booking_date}
+                    onChange={(e) => setBookingData(prev => ({ ...prev, booking_date: e.target.value }))}
+                    min={new Date().toISOString().split('T')[0]}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                </div>
               );
             }
           })()}
@@ -879,7 +892,7 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
             <p className="text-gray-600">
               <Calendar className="w-4 h-4 inline mr-1" />
               {(() => {
-                const selectedService = services.find(s => s.id === bookingData.service_id);
+                const selectedService = services.find(s => s.id === bookingData.service_ids[0]);
                 if (selectedService?.is_group_tour && bookingData.booking_date.includes('|')) {
                   const [date, time] = bookingData.booking_date.split('|');
                   return `${new Date(date).toLocaleDateString()} at ${time}`;
@@ -978,17 +991,11 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
   );
 
   if (showTicket && bookingConfirmed) {
-    // Debug logging
-    console.log('BookingInterface - Passing to TicketGenerator:');
-    console.log('- selectedAddOns:', selectedAddOns);
-    console.log('- selectedAddOns.length:', selectedAddOns.length);
-    console.log('- bookingData:', bookingData);
-    
     return (
       <TicketGenerator
         bookingData={bookingData}
         destinationName={getDestinationName(bookingData.destination_id)}
-        serviceName={getServiceName(bookingData.service_id)}
+        serviceName={bookingData.service_ids.map(id => getServiceName(id)).join(', ')}
         selectedAddOns={selectedAddOns}
         onClose={handleBookingComplete}
         onNavigateToHome={handleRedirectToHome}

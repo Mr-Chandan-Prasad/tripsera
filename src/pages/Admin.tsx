@@ -127,9 +127,20 @@ const Admin: React.FC = () => {
     return destination ? destination.name : 'Unknown Destination';
   };
 
-  const getServiceName = (serviceId: string) => {
-    const service = services.find(s => s.id === serviceId);
-    return service ? service.name : 'Unknown Service';
+  const getServiceName = (serviceIdOrIds: string | string[]) => {
+    // Handle both old format (string) and new format (array)
+    if (Array.isArray(serviceIdOrIds)) {
+      // New format: array of service IDs
+      const serviceNames = serviceIdOrIds.map(id => {
+        const service = services.find(s => s.id === id);
+        return service ? service.name : 'Unknown Service';
+      });
+      return serviceNames.length > 0 ? serviceNames.join(', ') : 'No Services';
+    } else {
+      // Old format: single service ID
+      const service = services.find(s => s.id === serviceIdOrIds);
+      return service ? service.name : 'Unknown Service';
+    }
   };
 
   const toggleAvailability = async (itemId: string, itemType: 'destinations' | 'services') => {
@@ -257,6 +268,7 @@ const Admin: React.FC = () => {
   };
 
 
+
   const handleDelete = async (table: string, id: string) => {
     if (confirm('Are you sure you want to delete this item?')) {
       try {
@@ -355,7 +367,7 @@ const Admin: React.FC = () => {
       'Email': booking.email,
       'Mobile': booking.mobile,
       'Destination': getDestinationName(booking.destination_id),
-      'Service': getServiceName(booking.service_id),
+      'Service': getServiceName(booking.service_ids || booking.service_id),
       'Amount': booking.amount || booking.total_amount || 0,
       'Payment Status': booking.payment_status,
       'Booking Date': booking.booking_date,
@@ -481,7 +493,7 @@ const Admin: React.FC = () => {
                 <tr key={booking.id} className="border-b">
                   <td className="py-2">{booking.customer_name}</td>
                   <td className="py-2">{getDestinationName(booking.destination_id)}</td>
-                  <td className="py-2">{getServiceName(booking.service_id)}</td>
+                  <td className="py-2">{getServiceName(booking.service_ids || booking.service_id)}</td>
                   <td className="py-2">
                     <div className="flex items-center space-x-1">
                       <Users className="w-3 h-3 text-blue-600" />
@@ -515,7 +527,7 @@ const Admin: React.FC = () => {
         String(value).toLowerCase().includes(searchQuery.toLowerCase())
       ) ||
       getDestinationName(booking.destination_id).toLowerCase().includes(searchQuery.toLowerCase()) ||
-      getServiceName(booking.service_id).toLowerCase().includes(searchQuery.toLowerCase())
+      getServiceName(booking.service_ids || booking.service_id).toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     // Debug logging for payment proof
@@ -592,7 +604,7 @@ const Admin: React.FC = () => {
                       </div>
                     </td>
                     <td className="py-3 px-4">{getDestinationName(booking.destination_id)}</td>
-                    <td className="py-3 px-4">{getServiceName(booking.service_id)}</td>
+                    <td className="py-3 px-4">{getServiceName(booking.service_ids || booking.service_id)}</td>
                     <td className="py-3 px-4">
                       <div className="flex items-center space-x-2">
                         <Users className="w-4 h-4 text-blue-600" />
@@ -1399,18 +1411,45 @@ const Admin: React.FC = () => {
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <button
-                        onClick={() => {
-                          const modal = document.getElementById(`coordination-modal-${service.id}`);
-                          if (modal) {
-                            modal.classList.remove('hidden');
-                            modal.classList.add('flex');
-                          }
-                        }}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm font-semibold transition-colors"
-                      >
-                        Configure
-                      </button>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => {
+                            const modal = document.getElementById(`coordination-modal-${service.id}`);
+                            if (modal) {
+                              modal.classList.remove('hidden');
+                              modal.classList.add('flex');
+                            }
+                          }}
+                          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm font-semibold transition-colors"
+                        >
+                          Configure
+                        </button>
+                        <button
+                          onClick={() => {
+                            // Toggle group tour status
+                            const updatedServices = services.map(s => 
+                              s.id === service.id 
+                                ? { ...s, is_group_tour: !s.is_group_tour }
+                                : s
+                            );
+                            localStorage.setItem('services', JSON.stringify(updatedServices));
+                            showSuccess(
+                              'Group Tour Status Updated',
+                              `${service.name} is now ${!service.is_group_tour ? 'marked as' : 'unmarked from'} a group tour`,
+                              3000
+                            );
+                            // Refetch services data to update the UI without page refresh
+                            refetchServices();
+                          }}
+                          className={`px-3 py-1 rounded text-sm font-semibold transition-colors ${
+                            service.is_group_tour 
+                              ? 'bg-green-500 hover:bg-green-600 text-white' 
+                              : 'bg-orange-500 hover:bg-orange-600 text-white'
+                          }`}
+                        >
+                          {service.is_group_tour ? 'Group Tour ✓' : 'Make Group Tour'}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -1993,7 +2032,7 @@ const Admin: React.FC = () => {
                   <p className="text-sm"><strong>Customer:</strong> {bookingToCancel.customer_name}</p>
                   <p className="text-sm"><strong>Email:</strong> {bookingToCancel.email}</p>
                   <p className="text-sm"><strong>Destination:</strong> {getDestinationName(bookingToCancel.destination_id)}</p>
-                  <p className="text-sm"><strong>Service:</strong> {getServiceName(bookingToCancel.service_id)}</p>
+                  <p className="text-sm"><strong>Service:</strong> {getServiceName(bookingToCancel.service_ids || bookingToCancel.service_id)}</p>
                   <p className="text-sm"><strong>Date:</strong> {new Date(bookingToCancel.booking_date).toLocaleDateString()}</p>
                   <p className="text-sm"><strong>Amount:</strong> ₹{(bookingToCancel.amount || bookingToCancel.total_amount || 0).toLocaleString()}</p>
                 </div>

@@ -6,7 +6,6 @@ import NotificationContainer from './components/common/NotificationContainer';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { AuthProvider } from './hooks/useFirebaseAuth';
 import { useNotification } from './hooks/useNotification';
-// import { testMySQLConnection, checkMySQLHealth } from './hooks/useMySQL';
 import { runPerformanceTests } from './utils/performanceTest';
 
 // Lazy load pages for better performance
@@ -23,29 +22,8 @@ function App() {
   const { notifications, removeNotification } = useNotification();
 
   useEffect(() => {
-    // Test MySQL connection on app start
-    const initApp = async () => {
-      try {
-        console.log('🔍 Testing MySQL connection...');
-        const connectionResult = await testMySQLConnection();
-        
-        if (connectionResult.status === 'success') {
-          console.log('✅ MySQL connection successful:', connectionResult.message);
-        } else {
-          console.warn('⚠️ MySQL connection failed:', connectionResult.message);
-          console.log('💡 Make sure MySQL server is running and backend is started');
-        }
-        
-        // Health check
-        const healthResult = await checkMySQLHealth();
-        console.log('🏥 Health check:', healthResult);
-        
-      } catch (error) {
-        console.error('❌ Database initialization failed:', error);
-      }
-    };
-
-    initApp();
+    // Initialize localStorage data
+    console.log('🚀 Initializing Tripsera application...');
     
     // Run performance tests in development
     if (process.env.NODE_ENV === 'development') {

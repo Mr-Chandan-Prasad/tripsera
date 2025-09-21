@@ -59,6 +59,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isFirebaseAvailable) {
       console.log('⚠️ Firebase not available - using mock authentication');
+      // Create a mock user for testing
+      setUser({
+        uid: 'mock-user-123',
+        email: 'test@example.com',
+        displayName: 'Test User',
+        role: 'customer'
+      } as AuthUser);
       setLoading(false);
       return;
     }
@@ -91,7 +98,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     if (!isFirebaseAvailable) {
-      throw new Error('Firebase authentication is not available. Please configure Firebase or use the app without authentication.');
+      // Mock authentication for testing
+      console.log('Using mock authentication');
+      setLoading(true);
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Create mock user
+      const mockUser = {
+        uid: `mock-${Date.now()}`,
+        email: email,
+        displayName: email.split('@')[0],
+        role: email.includes('admin') ? 'admin' : 'customer'
+      } as AuthUser;
+      
+      setUser(mockUser);
+      setLoading(false);
+      return;
     }
     
     try {
@@ -112,7 +136,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     role: 'admin' | 'customer' = 'customer'
   ) => {
     if (!isFirebaseAvailable) {
-      throw new Error('Firebase authentication is not available. Please configure Firebase or use the app without authentication.');
+      // Mock signup for testing
+      console.log('Using mock signup');
+      setLoading(true);
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Create mock user
+      const mockUser = {
+        uid: `mock-${Date.now()}`,
+        email: email,
+        displayName: displayName,
+        role: role
+      } as AuthUser;
+      
+      setUser(mockUser);
+      setLoading(false);
+      return;
     }
     
     try {

@@ -41,9 +41,23 @@ const MyBookings: React.FC = () => {
   }, [titleIndex, fullTitle.length]);
 
   // Filter bookings based on Firebase user authentication
-  const customerBookings = user ? bookings.filter(booking => 
-    booking.email && booking.email.toLowerCase() === user.email?.toLowerCase()
-  ) : [];
+  // For testing: if no user is logged in, show all bookings
+  const customerBookings = user ? bookings.filter(booking => {
+    const matches = booking.email && booking.email.toLowerCase() === user.email?.toLowerCase();
+    console.log('Debug - Checking booking:', {
+      bookingEmail: booking.email,
+      userEmail: user.email,
+      matches: matches,
+      bookingId: booking.id
+    });
+    return matches;
+  }) : bookings; // Show all bookings if no user is logged in (for testing)
+
+  // Debug logging
+  console.log('Debug - User:', user?.email);
+  console.log('Debug - All bookings:', bookings.length);
+  console.log('Debug - Customer bookings:', customerBookings.length);
+  console.log('Debug - All bookings data:', bookings);
 
   // Apply search and status filters
   const filteredBookings = customerBookings.filter(booking => {
@@ -261,6 +275,30 @@ const MyBookings: React.FC = () => {
                 : "No bookings match your search criteria."
               }
             </p>
+            
+            {/* Debug Information */}
+            <div className="bg-gray-100 p-4 rounded-lg mb-6 text-left max-w-md mx-auto">
+              <h4 className="font-semibold text-gray-700 mb-2">Debug Info:</h4>
+              <p className="text-sm text-gray-600">User Email: {user?.email || 'Not logged in (showing all bookings)'}</p>
+              <p className="text-sm text-gray-600">Total Bookings: {bookings.length}</p>
+              <p className="text-sm text-gray-600">Your Bookings: {customerBookings.length}</p>
+              {bookings.length > 0 && (
+                <div className="mt-2">
+                  <p className="text-sm text-gray-600">All Booking Emails:</p>
+                  <ul className="text-xs text-gray-500 ml-4">
+                    {bookings.slice(0, 3).map((booking, index) => (
+                      <li key={index}>• {booking.email || 'No email'}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {bookings.length === 0 && (
+                <div className="mt-2">
+                  <p className="text-sm text-red-600">⚠️ No bookings found in localStorage</p>
+                  <p className="text-xs text-gray-500">Try creating a test booking or make a real booking</p>
+                </div>
+              )}
+            </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
                 href="/bookings"
@@ -268,6 +306,30 @@ const MyBookings: React.FC = () => {
               >
                 Book Your First Trip
               </a>
+              
+              <button
+                onClick={() => {
+                  // Check what's in localStorage
+                  const allBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                  console.log('=== DEBUG: All bookings in localStorage ===');
+                  console.log('Total bookings:', allBookings.length);
+                  console.log('All bookings:', allBookings);
+                  console.log('Your email:', user?.email);
+                  
+                  if (allBookings.length > 0) {
+                    console.log('Booking emails:', allBookings.map((b: any) => b.email));
+                    const yourBookings = allBookings.filter((b: any) => 
+                      b.email && b.email.toLowerCase() === user?.email?.toLowerCase()
+                    );
+                    console.log('Your bookings:', yourBookings);
+                  }
+                  
+                  alert(`Found ${allBookings.length} total bookings. Your email: ${user?.email || 'Not logged in'}. Check console for details.`);
+                }}
+                className="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              >
+                Debug Bookings
+              </button>
             </div>
           </div>
         ) : (
