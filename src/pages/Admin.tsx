@@ -828,6 +828,7 @@ const Admin: React.FC = () => {
           { name: 'image_url', label: 'Primary Image URL', type: 'url', required: true },
           { name: 'gallery_images', label: 'Additional Image URLs (comma separated)', type: 'textarea' },
           { name: 'price', label: 'Base Price', type: 'number', required: true },
+          { name: 'price_unit', label: 'Price Unit (e.g., per km, per hour, per person)', type: 'text', placeholder: 'per km' },
           { name: 'price_range_min', label: 'Min Price (for range)', type: 'number' },
           { name: 'price_range_max', label: 'Max Price (for range)', type: 'number' },
           { name: 'rating', label: 'Rating (1-5)', type: 'number', min: 1, max: 5 },
@@ -842,6 +843,7 @@ const Admin: React.FC = () => {
           { name: 'description', label: 'Description', type: 'textarea' },
           { name: 'image_url', label: 'Image URL', type: 'url' },
           { name: 'price', label: 'Base Price', type: 'number', required: true },
+          { name: 'price_unit', label: 'Price Unit (e.g., per km, per hour, per person)', type: 'text', placeholder: 'per km' },
           { name: 'price_range_min', label: 'Min Price (for range)', type: 'number' },
           { name: 'price_range_max', label: 'Max Price (for range)', type: 'number' },
         ];
@@ -947,18 +949,79 @@ const Admin: React.FC = () => {
                 ) : column === 'gallery_images' ? ( // ADDED BLOCK for gallery_images
                   item[column] ? (
                     <div className="flex gap-1">
-                      {item[column].split(',').filter(Boolean).slice(0, 3).map((imgUrl: string, imgIndex: number) => (
-                        <img key={imgIndex} src={imgUrl.trim()} alt={`Gallery ${imgIndex}`} className="w-10 h-10 object-cover rounded" onError={(e) => e.currentTarget.src='https://via.placeholder.com/50'} />
-                      ))}
-                      {item[column].split(',').filter(Boolean).length > 3 && (
-                        <span className="text-sm text-gray-500">+{item[column].split(',').filter(Boolean).length - 3} more</span>
-                      )}
+                      {(() => {
+                        // Handle different data formats for gallery_images
+                        let imageUrls = [];
+                        try {
+                          if (typeof item[column] === 'string') {
+                            // Try to parse as JSON first
+                            if (item[column].startsWith('[') || item[column].startsWith('{')) {
+                              const parsed = JSON.parse(item[column]);
+                              imageUrls = Array.isArray(parsed) ? parsed : [parsed];
+                            } else {
+                              // Split by comma if it's a comma-separated string
+                              imageUrls = item[column].split(',').filter(Boolean);
+                            }
+                          } else if (Array.isArray(item[column])) {
+                            imageUrls = item[column];
+                          } else {
+                            imageUrls = [item[column]];
+                          }
+                        } catch (e) {
+                          // Fallback to comma splitting
+                          imageUrls = String(item[column]).split(',').filter(Boolean);
+                        }
+                        
+                        return imageUrls.slice(0, 3).map((imgUrl: string, imgIndex: number) => (
+                          <img 
+                            key={imgIndex} 
+                            src={String(imgUrl).trim()} 
+                            alt={`Gallery ${imgIndex}`} 
+                            className="w-10 h-10 object-cover rounded" 
+                            onError={(e) => {
+                              const target = e.currentTarget;
+                              if (!target.src.includes('placeholder')) {
+                                target.src = 'https://via.placeholder.com/50';
+                              }
+                            }}
+                          />
+                        ));
+                      })()}
+                      {(() => {
+                        let totalImages = 0;
+                        try {
+                          if (typeof item[column] === 'string') {
+                            if (item[column].startsWith('[') || item[column].startsWith('{')) {
+                              const parsed = JSON.parse(item[column]);
+                              totalImages = Array.isArray(parsed) ? parsed.length : 1;
+                            } else {
+                              totalImages = item[column].split(',').filter(Boolean).length;
+                            }
+                          } else if (Array.isArray(item[column])) {
+                            totalImages = item[column].length;
+                          } else {
+                            totalImages = 1;
+                          }
+                        } catch (e) {
+                          totalImages = String(item[column]).split(',').filter(Boolean).length;
+                        }
+                        
+                        return totalImages > 3 && (
+                          <span className="text-sm text-gray-500">+{totalImages - 3} more</span>
+                        );
+                      })()}
                     </div>
                   ) : (
                     'No additional images'
                   )
                 ) : column === 'price' || column === 'amount' || column === 'original_price' ? ( // Moved price related checks here
-                  `₹${(item[column] || 0).toLocaleString()}`
+                  `₹${(item[column] || 0).toLocaleString()}${item.price_unit ? ` ${item.price_unit}` : ''}`
+                ) : column === 'price_unit' ? ( // ADDED BLOCK for price unit
+                  item[column] ? (
+                    <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">
+                      {item[column]}
+                    </span>
+                  ) : 'No unit'
                 ) : column === 'rating' ? ( // ADDED BLOCK for rating
                   item[column] ? `${item[column]}/5` : 'N/A'
                 ) : column === 'inclusions' || column === 'exclusions' || column === 'itinerary' ? ( // ADDED BLOCK for text fields
@@ -1176,7 +1239,7 @@ const Admin: React.FC = () => {
                   <tr key={dest.id} className="border-b hover:bg-gray-50">
                     <td className="py-3 px-4">
                       <div className="font-semibold">{dest.name}</div>
-                      <div className="text-sm text-gray-500">₹{dest.price.toLocaleString()}</div>
+                      <div className="text-sm text-gray-500">₹{dest.price.toLocaleString()}{dest.price_unit ? ` ${dest.price_unit}` : ''}</div>
                     </td>
                     <td className="py-3 px-4">
                       <input
@@ -1383,7 +1446,7 @@ const Admin: React.FC = () => {
                       <div className="text-sm text-gray-500">{service.description}</div>
                     </td>
                     <td className="py-3 px-4">
-                      <span className="font-semibold text-green-600">₹{service.price.toLocaleString()}</span>
+                      <span className="font-semibold text-green-600">₹{service.price.toLocaleString()}{service.price_unit ? ` ${service.price_unit}` : ''}</span>
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex flex-wrap gap-2">
@@ -1881,9 +1944,9 @@ const Admin: React.FC = () => {
       case 'destinations':
         return renderDataTable(
           destinations,
-          ['name', 'price', 'rating', 'image_url', 'gallery_images', 'inclusions', 'exclusions', 'itinerary'], 'destinations');
+          ['name', 'price', 'price_unit', 'rating', 'image_url', 'gallery_images', 'inclusions', 'exclusions', 'itinerary'], 'destinations');
       case 'services':
-        return renderDataTable(services, ['name', 'description', 'image_url', 'price'], 'services');
+        return renderDataTable(services, ['name', 'description', 'image_url', 'price', 'price_unit'], 'services');
       case 'addons':
         return <AddOnsManager />;
       case 'gallery':

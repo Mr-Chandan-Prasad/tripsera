@@ -413,8 +413,8 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
         seats_selected: bookingData.seats_selected
       }));
       
-      setShowPayment(false);
       setBookingConfirmed(true);
+      console.log('BookingInterface - Payment success: setBookingConfirmed(true)');
       
       // Update customer tracking
       updateCustomerData({
@@ -425,11 +425,14 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
       
       // Only show ticket if payment is confirmed as paid
       if (paymentData.paymentValidated) {
+        console.log('BookingInterface - Payment validated, setting showTicket(true)');
         setShowTicket(true);
         // Show welcome message after successful booking
         setTimeout(() => {
           setShowWelcomeMessage(true);
         }, 3000);
+      } else {
+        console.log('BookingInterface - Payment not validated, not showing ticket');
       }
     } catch (error) {
       console.error('Payment update error:', error);
@@ -661,6 +664,24 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Services * (Select one or more)
           </label>
+          {bookingData.service_ids.some(id => {
+            const service = services.find(s => s.id === id);
+            return service?.is_group_tour;
+          }) && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center space-x-2">
+                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">✓</span>
+                </div>
+                <div>
+                  <p className="text-blue-800 font-medium text-sm">Group Tour Selected - All-Inclusive Package</p>
+                  <p className="text-blue-600 text-xs mt-1">
+                    Your group tour includes all available services for this destination. No need to select individual services!
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
           <div className="space-y-3 max-h-60 overflow-y-auto border border-gray-300 rounded-lg p-3">
             {services.map((service) => {
               const availability = getAvailabilityStatus(service.id, 'services');
@@ -676,17 +697,40 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
                     checked={isSelected}
                     onChange={(e) => {
                       if (isDisabled) return;
-                      const newServiceIds = e.target.checked
-                        ? [...bookingData.service_ids, service.id]
-                        : bookingData.service_ids.filter(id => id !== service.id);
-                      setBookingData(prev => ({ ...prev, service_ids: newServiceIds }));
+                      
+                      // If this is a group tour service, handle it specially
+                      if (service.is_group_tour) {
+                        if (e.target.checked) {
+                          // Select group tour: automatically include ALL available services
+                          const allAvailableServiceIds = services
+                            .filter(s => s.is_available && getAvailabilityStatus(s.id, 'services').status !== 'full')
+                            .map(s => s.id);
+                          setBookingData(prev => ({ ...prev, service_ids: allAvailableServiceIds }));
+                        } else {
+                          // Deselect group tour: clear all services
+                          setBookingData(prev => ({ ...prev, service_ids: [] }));
+                        }
+                      } else {
+                        // Regular service selection
+                        const newServiceIds = e.target.checked
+                          ? [...bookingData.service_ids, service.id]
+                          : bookingData.service_ids.filter(id => id !== service.id);
+                        setBookingData(prev => ({ ...prev, service_ids: newServiceIds }));
+                      }
                     }}
                     disabled={isDisabled}
                     className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
                   />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-gray-900">{service.name}</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="font-medium text-gray-900">{service.name}</span>
+                        {service.is_group_tour && (
+                          <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">
+                            All-Inclusive Package
+                          </span>
+                        )}
+                      </div>
                       <span className="text-orange-600 font-semibold">{formatPrice(service)}</span>
                     </div>
                     <div className="text-sm text-gray-600 mt-1">
@@ -712,27 +756,72 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
           
           {bookingData.service_ids.length > 0 && (
             <div className="mt-3">
-              <div className="text-sm text-gray-600 mb-2">Selected Services:</div>
-              <div className="flex flex-wrap gap-2">
-                {bookingData.service_ids.map(serviceId => {
-                  const service = services.find(s => s.id === serviceId);
-                  return service ? (
-                    <span key={serviceId} className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-orange-100 text-orange-800">
-                      {service.name}
-                      <button
-                        type="button"
-                        onClick={() => setBookingData(prev => ({ 
-                          ...prev, 
-                          service_ids: prev.service_ids.filter(id => id !== serviceId) 
-                        }))}
-                        className="ml-2 text-orange-600 hover:text-orange-800"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ) : null;
-                })}
-              </div>
+              {(() => {
+                const hasGroupTour = bookingData.service_ids.some(id => {
+                  const service = services.find(s => s.id === id);
+                  return service?.is_group_tour;
+                });
+                
+                if (hasGroupTour) {
+                  return (
+                    <div>
+                      <div className="text-sm text-gray-600 mb-2">Package Selected:</div>
+                      <div className="flex flex-wrap gap-2">
+                        {bookingData.service_ids.map(serviceId => {
+                          const service = services.find(s => s.id === serviceId);
+                          if (service?.is_group_tour) {
+                            return (
+                              <span key={serviceId} className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+                                {service.name} (All-Inclusive)
+                                <button
+                                  type="button"
+                                  onClick={() => setBookingData(prev => ({ 
+                                    ...prev, 
+                                    service_ids: [] 
+                                  }))}
+                                  className="ml-2 text-blue-600 hover:text-blue-800"
+                                >
+                                  ×
+                                </button>
+                              </span>
+                            );
+                          }
+                          return null;
+                        })}
+                      </div>
+                      <div className="mt-2 text-xs text-blue-600">
+                        ✓ Includes all available services for this destination
+                      </div>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div>
+                      <div className="text-sm text-gray-600 mb-2">Selected Services:</div>
+                      <div className="flex flex-wrap gap-2">
+                        {bookingData.service_ids.map(serviceId => {
+                          const service = services.find(s => s.id === serviceId);
+                          return service ? (
+                            <span key={serviceId} className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-orange-100 text-orange-800">
+                              {service.name}
+                              <button
+                                type="button"
+                                onClick={() => setBookingData(prev => ({ 
+                                  ...prev, 
+                                  service_ids: prev.service_ids.filter(id => id !== serviceId) 
+                                }))}
+                                className="ml-2 text-orange-600 hover:text-orange-800"
+                              >
+                                ×
+                              </button>
+                            </span>
+                          ) : null;
+                        })}
+                      </div>
+                    </div>
+                  );
+                }
+              })()}
             </div>
           )}
           
@@ -989,7 +1078,7 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
                 return (
                   <div className="flex justify-between items-center">
                     <span>Destination ({(destination as any).name}):</span>
-                    <span className="text-gray-600">₹{getPriceForCalculation(destination as any).toLocaleString()}</span>
+                    <span className="text-gray-600">₹{getPriceForCalculation(destination as any).toLocaleString()}{(destination as any).price_unit ? ` ${(destination as any).price_unit}` : ''}</span>
                   </div>
                 );
               }
@@ -1003,7 +1092,7 @@ const BookingInterface: React.FC<BookingInterfaceProps> = ({
                 return (
                   <div key={serviceId} className="flex justify-between items-center">
                     <span>Service ({(service as any).name}):</span>
-                    <span className="text-gray-600">₹{getPriceForCalculation(service as any).toLocaleString()}</span>
+                    <span className="text-gray-600">₹{getPriceForCalculation(service as any).toLocaleString()}{(service as any).price_unit ? ` ${(service as any).price_unit}` : ''}</span>
                   </div>
                 );
               }

@@ -8,6 +8,7 @@ export interface PriceRange {
 export interface ItemWithPrice {
   price: number;
   price_range?: PriceRange;
+  price_unit?: string;
 }
 
 /**
@@ -17,10 +18,13 @@ export interface ItemWithPrice {
  */
 export function formatPrice(item: ItemWithPrice | null | undefined): string {
   if (!item) return '₹0';
+  
+  const unit = item.price_unit ? ` ${item.price_unit}` : '';
+  
   if (item.price_range) {
-    return `₹${item.price_range.min.toLocaleString()} - ₹${item.price_range.max.toLocaleString()}`;
+    return `₹${item.price_range.min.toLocaleString()} - ₹${item.price_range.max.toLocaleString()}${unit}`;
   }
-  return `₹${(item.price || 0).toLocaleString()}`;
+  return `₹${(item.price || 0).toLocaleString()}${unit}`;
 }
 
 /**

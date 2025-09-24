@@ -254,17 +254,6 @@ const AddOnsManager: React.FC = () => {
             <Package className="w-8 h-8 text-blue-500" />
           </div>
         </div>
-        <div className="admin-card">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 font-inter">Avg. Price</p>
-              <p className="text-2xl font-bold text-purple-600 font-poppins">
-                ₹{addons.length > 0 ? Math.round(addons.reduce((sum, a) => sum + a.price, 0) / addons.length).toLocaleString() : '0'}
-              </p>
-            </div>
-            <DollarSign className="w-8 h-8 text-purple-500" />
-          </div>
-        </div>
       </div>
 
       {/* Filters */}

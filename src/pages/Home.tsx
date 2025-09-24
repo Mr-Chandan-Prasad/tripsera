@@ -2,6 +2,7 @@ import React, { useState, useEffect, memo, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Star, MapPin, Calendar, Users, ArrowRight, Play } from 'lucide-react';
 import { useLocalStorageQuery, initializeSampleData, addNewDestinationsAndServices } from '../hooks/useLocalStorage';
+import { formatPrice } from '../utils/priceUtils';
 import AdvancedSearchBar from '../components/common/AdvancedSearchBar';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import LazyImage from '../components/common/LazyImage';
@@ -330,7 +331,7 @@ const Home: React.FC = memo(() => {
                       <div>
                         <span className="text-sm text-gray-500 font-inter">Starting from</span>
                         <div className="text-2xl font-bold text-gradient font-poppins">
-                          ₹{destination.price.toLocaleString()}
+                          {formatPrice(destination)}
                         </div>
                       </div>
                       

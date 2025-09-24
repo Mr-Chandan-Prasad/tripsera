@@ -110,8 +110,9 @@ const PaymentProcessor: React.FC<PaymentProcessorProps> = ({
       // More realistic payment validation - require actual payment proof or valid payment details
       let isSuccess = false;
       
-      if (selectedMethod === 'qr' && paymentProof) {
-        // QR payment with proof uploaded
+      if (selectedMethod === 'qr') {
+        // QR payment - assume success if QR method is selected
+        // User has scanned QR and paid, no proof upload required
         isSuccess = true;
       } else if (selectedMethod === 'upi' && upiId && upiId.includes('@')) {
         // Valid UPI ID provided
@@ -125,10 +126,12 @@ const PaymentProcessor: React.FC<PaymentProcessorProps> = ({
       }
 
       if (isSuccess) {
+        console.log('PaymentProcessor - Payment successful, setting status to success');
         setPaymentStatus('success');
         
         // Call success callback after a short delay
         setTimeout(() => {
+          console.log('PaymentProcessor - Calling onSuccess callback');
           onSuccess({
             method: selectedMethod,
             transactionId: txnId,
@@ -137,8 +140,11 @@ const PaymentProcessor: React.FC<PaymentProcessorProps> = ({
             paymentValidated: true,
             timestamp: new Date().toISOString()
           });
+          // Close the payment modal immediately after success
+          onCancel();
         }, 2000);
       } else {
+        console.log('PaymentProcessor - Payment failed');
         setPaymentStatus('failed');
       }
     } catch (error) {

@@ -219,10 +219,11 @@ export function updateBookingCount(itemId: string, itemType: 'destinations' | 's
     items[itemIndex].current_bookings += seatsToAdd;
     items[itemIndex].updated_at = new Date().toISOString();
     
-    // Check if item should be marked as unavailable
-    if (items[itemIndex].current_bookings >= items[itemIndex].max_capacity) {
-      items[itemIndex].is_available = false;
-    }
+    // Don't mark as unavailable when full - keep it visible but show as fully booked
+    // Only mark as unavailable if admin manually disables it
+    // if (items[itemIndex].current_bookings >= items[itemIndex].max_capacity) {
+    //   items[itemIndex].is_available = false;
+    // }
     
     localStorage.setItem(itemType, JSON.stringify(items));
     return true;
@@ -244,10 +245,10 @@ export function removeBookingCount(itemId: string, itemType: 'destinations' | 's
     items[itemIndex].current_bookings = Math.max(0, items[itemIndex].current_bookings - seatsToRemove);
     items[itemIndex].updated_at = new Date().toISOString();
     
-    // Mark as available if there's capacity
-    if (items[itemIndex].current_bookings < items[itemIndex].max_capacity) {
-      items[itemIndex].is_available = true;
-    }
+    // Don't automatically mark as available - let admin control availability manually
+    // if (items[itemIndex].current_bookings < items[itemIndex].max_capacity) {
+    //   items[itemIndex].is_available = true;
+    // }
     
     localStorage.setItem(itemType, JSON.stringify(items));
     return true;
