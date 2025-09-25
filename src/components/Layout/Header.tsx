@@ -27,7 +27,7 @@ const Header: React.FC = () => {
     { name: 'Memories', href: '/gallery' },
     { name: 'Your Trips', href: '/my-bookings' },
     { name: 'Plan & Reserve', href: '/bookings' },
-    { name: 'Let\'s Connect', href: '/contact' },
+    { name: "Let's Connect", href: '/contact' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -192,24 +192,26 @@ const Header: React.FC = () => {
                 </Link>
               ))}
               
-              {/* Mobile Dark Mode Toggle */}
-              <div className="pt-3 border-t border-purple-600">
-                <button
-                  onClick={toggleDarkMode}
-                  className="w-full flex items-center justify-center space-x-3 text-white px-4 py-3 rounded-lg hover:bg-white/10 transition-colors duration-300 font-semibold"
-                >
-                  {isDarkMode ? (
-                    <>
-                      <Sun className="w-5 h-5" />
-                      <span>Light Mode</span>
-                    </>
-                  ) : (
-                    <>
-                      <Moon className="w-5 h-5" />
-                      <span>Dark Mode</span>
-                    </>
-                  )}
-                </button>
+              {/* Mobile Theme Toggle */}
+              <div className="pt-3 border-t border-purple-600 space-y-3">
+                <div className="flex space-x-2">
+                  <button
+                    onClick={toggleDarkMode}
+                    className="flex-1 flex items-center justify-center space-x-3 text-white px-4 py-3 rounded-lg hover:bg-white/10 transition-colors duration-300 font-semibold"
+                  >
+                    {isDarkMode ? (
+                      <>
+                        <Sun className="w-5 h-5" />
+                        <span>Light Mode</span>
+                      </>
+                    ) : (
+                      <>
+                        <Moon className="w-5 h-5" />
+                        <span>Dark Mode</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
               
               {/* Mobile Authentication */}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Star, MapPin, Calendar, Users, ArrowRight, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Star, MapPin, Calendar, Users, ArrowRight, Play, Award, Shield, Globe } from 'lucide-react';
 import { useLocalStorageQuery, initializeSampleData, addNewDestinationsAndServices } from '../hooks/useLocalStorage';
 import { formatPrice } from '../utils/priceUtils';
 import AdvancedSearchBar from '../components/common/AdvancedSearchBar';
@@ -9,7 +9,6 @@ import LazyImage from '../components/common/LazyImage';
 import DestinationDetailsModal from '../components/destinations/DestinationDetailsModal';
 import WelcomeMessage from '../components/common/WelcomeMessage';
 import { getCustomerData, shouldShowWelcomeMessage, markWelcomeMessageShown, getPersonalizedGreeting } from '../utils/customerTracking';
-import { withPerformanceMonitoring } from '../components/common/PerformanceWrapper';
 
 interface SearchFilters {
   query: string;
@@ -188,13 +187,21 @@ const Home: React.FC = memo(() => {
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent z-10"></div>
         
         <div className="relative z-20 text-center px-4 sm:px-6 max-w-6xl mx-auto py-8 sm:py-12">
+          {/* KTDC Official Badge */}
+          <div className="mb-6 animate-fade-in">
+            <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20">
+              <Award className="w-6 h-6 text-yellow-400" />
+              <span className="text-white font-semibold text-lg">Official KTDC Partner</span>
+              <Shield className="w-6 h-6 text-green-400" />
+            </div>
+          </div>
+          
           <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500 leading-tight mb-4 sm:mb-6 font-poppins kannada-text">
-            {heroTitle}
+            Discover the Soul of Karnataka
             {titleIndex < fullTitle.length && <span className="border-r-4 border-yellow-400 animate-pulse">|</span>}
           </h1>
           <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-3 sm:mb-4 animate-fade-in font-poppins animate-slide-up">
-            Let us guide you through a world of wonder<br className="hidden sm:block" />
-            <span className="sm:hidden"> </span>your dream escape starts here.
+            Let us guide you through a world of wonder, your dream escape starts here.
           </h2>
           <p className="text-sm sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-6 sm:mb-8 animate-fade-in delay-200 font-inter px-2">
             Find the best travel deals and explore amazing destinations with personalized search.
@@ -228,13 +235,47 @@ const Home: React.FC = memo(() => {
         </div>
       </section>
 
+      {/* KTDC Features Section */}
+      <section className="py-12 bg-gradient-to-r from-orange-50 to-red-50 dark:from-gray-800 dark:to-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Why Choose Tripsera for Karnataka?
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Experience Karnataka with official KTDC services and authentic local experiences
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+              <Award className="w-12 h-12 text-orange-500 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Official KTDC Partner</h3>
+              <p className="text-gray-600 dark:text-gray-300">Authentic Karnataka tourism experiences with government-approved services</p>
+            </div>
+            
+            <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+              <Shield className="w-12 h-12 text-green-500 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Trusted & Secure</h3>
+              <p className="text-gray-600 dark:text-gray-300">Safe and reliable booking with 24/7 customer support in Kannada and English</p>
+            </div>
+            
+            <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+              <Globe className="w-12 h-12 text-blue-500 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Local Expertise</h3>
+              <p className="text-gray-600 dark:text-gray-300">Local guides and authentic experiences curated by Karnataka tourism experts</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Kannada Text Display */}
-      <section className="py-8 bg-gradient-to-r from-yellow-50 to-orange-50">
+      <section className="py-8 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-gray-700 dark:to-gray-800">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-4 kannada-text leading-relaxed py-3 animate-fade-in-up">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 dark:text-white mb-4 kannada-text leading-relaxed py-3 animate-fade-in-up">
             ಎಲ್ಲಾದರೂ ಇರು ಎಂತಾದರೂ ಇರು ಎಂದೆಂದಿಗೂ ನೀ ಕನ್ನಡವಾಗಿರು
           </h2>
-          <p className="text-lg text-gray-600 italic">
+          <p className="text-lg text-gray-600 dark:text-gray-300 italic">
             "Wherever you are, however you are, forever remain Kannada"
           </p>
         </div>
@@ -681,4 +722,4 @@ const Home: React.FC = memo(() => {
 Home.displayName = 'Home';
 
 // Export with performance monitoring
-export default withPerformanceMonitoring(Home, 'Home');
+export default Home;

@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 // LocalStorage-only hooks for data management
 export function useLocalStorageQuery<T>(
   table: string,
-  select: string = '*',
+  _select: string = '*',
   filters?: Record<string, any>
 ) {
   const [data, setData] = useState<T[]>([]);

@@ -38,10 +38,10 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <ThemeProvider>
-        <WishlistProvider>
-          <AuthProvider>
-            <NotificationProvider>
+        <ThemeProvider>
+          <WishlistProvider>
+            <AuthProvider>
+              <NotificationProvider>
               <Router>
                 <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
                   <Suspense fallback={
@@ -74,10 +74,10 @@ function App() {
                   />
                 </div>
               </Router>
-            </NotificationProvider>
-          </AuthProvider>
-        </WishlistProvider>
-      </ThemeProvider>
+              </NotificationProvider>
+            </AuthProvider>
+          </WishlistProvider>
+        </ThemeProvider>
     </ErrorBoundary>
   );
 }

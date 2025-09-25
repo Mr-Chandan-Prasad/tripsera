@@ -418,7 +418,16 @@ const Admin: React.FC = () => {
 
   const renderDashboard = () => (
     <div className="space-y-6">
-      <h2 className="text-3xl font-bold text-gray-800">Dashboard Overview</h2>
+      <div className="text-center mb-8">
+        <h2 className="text-4xl font-bold text-gray-800 mb-2">
+          Karnataka Tourism Dashboard
+        </h2>
+        <p className="text-xl text-gray-600">Official KTDC Partner Platform</p>
+        <div className="mt-4 inline-flex items-center space-x-2 bg-orange-100 text-orange-800 px-4 py-2 rounded-full">
+          <Shield className="w-5 h-5" />
+          <span className="font-semibold">Official KTDC Partner</span>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl">
@@ -469,6 +478,36 @@ const Admin: React.FC = () => {
             </div>
             <CreditCard className="w-12 h-12 text-indigo-200" />
           </div>
+        </div>
+      </div>
+
+      {/* Tourism Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-800">Karnataka Destinations</h3>
+            <MapPin className="w-8 h-8 text-orange-500" />
+          </div>
+          <p className="text-3xl font-bold text-orange-600">{stats.totalDestinations}</p>
+          <p className="text-sm text-gray-600">Active Destinations</p>
+        </div>
+        
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-800">Services</h3>
+            <Settings className="w-8 h-8 text-blue-500" />
+          </div>
+          <p className="text-3xl font-bold text-blue-600">{stats.totalServices}</p>
+          <p className="text-sm text-gray-600">Available Services</p>
+        </div>
+        
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-800">Inquiries</h3>
+            <MessageSquare className="w-8 h-8 text-green-500" />
+          </div>
+          <p className="text-3xl font-bold text-green-600">{stats.totalInquiries}</p>
+          <p className="text-sm text-gray-600">Customer Inquiries</p>
         </div>
       </div>
 
