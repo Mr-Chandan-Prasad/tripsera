@@ -197,7 +197,7 @@ const Home: React.FC = memo(() => {
           </div>
           
           <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500 leading-tight mb-4 sm:mb-6 font-poppins kannada-text">
-            Discover the Soul of Karnataka
+            {heroTitle}
             {titleIndex < fullTitle.length && <span className="border-r-4 border-yellow-400 animate-pulse">|</span>}
           </h1>
           <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-3 sm:mb-4 animate-fade-in font-poppins animate-slide-up">
